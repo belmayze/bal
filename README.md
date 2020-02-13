@@ -1,2 +1,2 @@
-# bal
+# BAL
 Belmayze Accelerate-development Library
