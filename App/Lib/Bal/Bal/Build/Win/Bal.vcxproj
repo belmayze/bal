@@ -20,7 +20,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <ProjectGuid>{74184AC5-B481-400B-81DC-F68212A2CC2E}</ProjectGuid>
+    <ProjectGuid>{63D1843C-2FB4-437E-9116-41DAD7803C07}</ProjectGuid>
     <RootNamespace>Bal</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
