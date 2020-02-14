@@ -7,6 +7,7 @@
     <IntDir>$(SolutionDir)..\..\.tmp\Build\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
     <IncludePath>$(SolutionDir)..\..\Include;$(IncludePath)</IncludePath>
     <SourcePath>$(SolutionDir)..\..\Source;$(SourcePath)</SourcePath>
+    <LibraryPath>$(SolutionDir)..\..\Rom\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
@@ -23,6 +24,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <ForcedIncludeFiles>common/balDef.h</ForcedIncludeFiles>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup />

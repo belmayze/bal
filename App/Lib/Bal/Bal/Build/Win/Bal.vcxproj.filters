@@ -4,15 +4,42 @@
     <Filter Include="heap">
       <UniqueIdentifier>{809be5c6-9a61-4389-b235-fae0568bfa3a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="memory">
+      <UniqueIdentifier>{5ffbf1de-f46d-450f-8257-0cf20c0d708b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{9abe106c-9db0-4f83-aeb2-b7a9f50f5286}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="framework">
+      <UniqueIdentifier>{cc18720e-4cf7-4b87-9e11-7c2111787a36}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\heap\balHeap.cpp">
       <Filter>heap</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\framework\balFramework.cpp">
+      <Filter>framework</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\memory\balSingletonFinalizer.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\heap\balHeap.h">
       <Filter>heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\memory\balSingleton.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\common\balDef.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\framework\balFramework.h">
+      <Filter>framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\memory\balSingletonFinalizer.h">
+      <Filter>memory</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
