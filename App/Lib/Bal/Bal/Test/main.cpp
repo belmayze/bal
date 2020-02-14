@@ -7,6 +7,7 @@
  */
 // bal
 #include <framework/balFramework.h>
+#include <io/balLog.h>
 
 int main()
 {

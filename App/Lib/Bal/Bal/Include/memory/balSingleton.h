@@ -6,8 +6,6 @@
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 #pragma once
-// C++
-#include <memory>
 // bal
 #include <memory/balSingletonFinalizer.h>
 

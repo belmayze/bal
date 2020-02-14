@@ -50,3 +50,11 @@
 #endif // BAL_BUILD_IS_TEST
 
 #define BAL_STATIC_ASSERT(cond, ...) static_assert(cond, __VA_ARGS__)
+
+// プラットフォーム別の必須 include
+#if BAL_PLATFORM_IS_WIN
+#   include <Windows.h>
+#endif
+// 使っていい C++ の include
+#include <array>
+#include <memory>

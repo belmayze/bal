@@ -13,6 +13,9 @@
     <Filter Include="framework">
       <UniqueIdentifier>{cc18720e-4cf7-4b87-9e11-7c2111787a36}</UniqueIdentifier>
     </Filter>
+    <Filter Include="io">
+      <UniqueIdentifier>{4797ac8e-28cc-4492-b72d-1075f7ad8616}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\heap\balHeap.cpp">
@@ -23,6 +26,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\memory\balSingletonFinalizer.cpp">
       <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\io\balLog.cpp">
+      <Filter>io</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -40,6 +46,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\memory\balSingletonFinalizer.h">
       <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\io\balLog.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\io\balLog_inl.h">
+      <Filter>io</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
