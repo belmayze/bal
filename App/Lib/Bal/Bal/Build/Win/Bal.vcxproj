@@ -7,6 +7,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\container\balString.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\container\balStringPtr.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\..\Source\framework\balFramework.cpp">
       <SubType>
       </SubType>
@@ -16,10 +24,26 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\..\Source\memory\balMemUtil.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\..\Source\memory\balSingletonFinalizer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\common\balDef.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\container\balString.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\container\balStringPtr.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\container\balString_inl.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -33,6 +57,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\..\Include\io\balLog_inl.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\memory\balMemUtil.h">
       <SubType>
       </SubType>
     </ClInclude>

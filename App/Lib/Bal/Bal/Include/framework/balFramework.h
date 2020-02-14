@@ -6,6 +6,8 @@
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 #pragma once
+// bal
+#include <container/balStringPtr.h>
 
 // ----------------------------------------------------------------------------
 namespace bal {
@@ -16,7 +18,7 @@ public:
     //! 初期化構造体
     struct InitializeArg
     {
-
+        const StringPtr mTitle;
     };
 
 public:

@@ -16,6 +16,12 @@
     <Filter Include="io">
       <UniqueIdentifier>{4797ac8e-28cc-4492-b72d-1075f7ad8616}</UniqueIdentifier>
     </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{e65f32e0-01bc-41de-b96d-5bde4fcdb281}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="container">
+      <UniqueIdentifier>{c279ef77-e25e-4d0a-9aad-9319deba30a4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\heap\balHeap.cpp">
@@ -29,6 +35,15 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\io\balLog.cpp">
       <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\container\balString.cpp">
+      <Filter>container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\container\balStringPtr.cpp">
+      <Filter>container</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\memory\balMemUtil.cpp">
+      <Filter>memory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +67,18 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\io\balLog_inl.h">
       <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\container\balString.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\container\balStringPtr.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\container\balString_inl.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\memory\balMemUtil.h">
+      <Filter>memory</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
