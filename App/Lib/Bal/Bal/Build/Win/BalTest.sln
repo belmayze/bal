@@ -4,23 +4,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.28803.156
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BalTest", "BalTest.vcxproj", "{9641DDEA-93DD-4CA3-8A25-3C6620E02765}"
+	ProjectSection(ProjectDependencies) = postProject
+		{63D1843C-2FB4-437E-9116-41DAD7803C07} = {63D1843C-2FB4-437E-9116-41DAD7803C07}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Bal", "Bal.vcxproj", "{63D1843C-2FB4-437E-9116-41DAD7803C07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9641DDEA-93DD-4CA3-8A25-3C6620E02765}.Debug|x64.ActiveCfg = Debug|x64
 		{9641DDEA-93DD-4CA3-8A25-3C6620E02765}.Debug|x64.Build.0 = Debug|x64
-		{9641DDEA-93DD-4CA3-8A25-3C6620E02765}.Debug|x86.ActiveCfg = Debug|Win32
-		{9641DDEA-93DD-4CA3-8A25-3C6620E02765}.Debug|x86.Build.0 = Debug|Win32
-		{9641DDEA-93DD-4CA3-8A25-3C6620E02765}.Release|x64.ActiveCfg = Release|x64
-		{9641DDEA-93DD-4CA3-8A25-3C6620E02765}.Release|x64.Build.0 = Release|x64
-		{9641DDEA-93DD-4CA3-8A25-3C6620E02765}.Release|x86.ActiveCfg = Release|Win32
-		{9641DDEA-93DD-4CA3-8A25-3C6620E02765}.Release|x86.Build.0 = Release|Win32
+		{63D1843C-2FB4-437E-9116-41DAD7803C07}.Debug|x64.ActiveCfg = Debug|x64
+		{63D1843C-2FB4-437E-9116-41DAD7803C07}.Debug|x64.Build.0 = Debug|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
