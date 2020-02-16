@@ -24,6 +24,11 @@ public:
      */
     void setCurrentHeap(HeapBase* p_heap) { mpCurrentHeap = p_heap; }
 
+    /*!
+     * ヒープを取得する
+     */
+    HeapBase* getCurrentHeap() { return mpCurrentHeap; }
+
 private:
     HeapBase* mpCurrentHeap = nullptr;
 };

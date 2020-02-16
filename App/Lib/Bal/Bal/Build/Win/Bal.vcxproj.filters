@@ -54,6 +54,9 @@
     <ClCompile Include="..\..\Source\heap\balHeapManager.cpp">
       <Filter>heap</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\heap\balHeap.cpp">
+      <Filter>heap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\memory\balSingleton.h">
@@ -102,6 +105,12 @@
       <Filter>memory</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\heap\balHeapManager.h">
+      <Filter>heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\container\balArray.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\heap\balHeap.h">
       <Filter>heap</Filter>
     </ClInclude>
   </ItemGroup>

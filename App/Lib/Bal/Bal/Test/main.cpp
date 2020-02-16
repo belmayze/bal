@@ -8,6 +8,7 @@
 // bal
 #include <framework/balFramework.h>
 #include <io/balLog.h>
+#include <container/balArray.h>
 #include <container/balString.h>
 // test
 #include "testHeap.h"
@@ -16,7 +17,13 @@ int main()
 {
     bal::Framework framework;
 
-    test::TestHeap test("TestHeap"); test.exec();
+    bal::Array<std::unique_ptr<test::TestBase>, 1> arr = {
+        std::make_unique<test::TestHeap>("TestHeap")
+    };
+    for (auto& test : arr)
+    {
+        test->exec();
+    }
 
     return 0;
 }
