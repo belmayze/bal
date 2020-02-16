@@ -8,6 +8,10 @@
 #pragma once
 // bal
 #include <container/balStringPtr.h>
+#include <memory/balUniquePtr.h>
+
+// 前方宣言
+namespace bal { class HeapBase; }
 
 // ----------------------------------------------------------------------------
 namespace bal {
@@ -37,6 +41,9 @@ public:
      * @param[in] arg 初期化引数構造体
      */
     void initialize(const InitializeArg& arg);
+
+private:
+    UniquePtr<HeapBase> mpMainHeap;
 };
 
 }

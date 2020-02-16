@@ -7,6 +7,8 @@
  */
 // bal
 #include <framework/balFramework.h>
+#include <heap/balHeapManager.h>
+#include <heap/balHeapOS.h>
 #include <memory/balSingletonFinalizer.h>
 
 namespace bal {
@@ -29,7 +31,9 @@ Framework::~Framework()
 
 void Framework::initialize( const InitializeArg& arg )
 {
-
+    // ヒープマネージャーに登録
+    mpMainHeap = HeapOS::Create(); // 仮
+    HeapManager::GetInstance().setCurrentHeap(mpMainHeap.get());
 }
 
 // ----------------------------------------------------------------------------

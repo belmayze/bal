@@ -57,4 +57,3 @@
 #endif
 // 使っていい C++ の include
 #include <array>
-#include <memory>

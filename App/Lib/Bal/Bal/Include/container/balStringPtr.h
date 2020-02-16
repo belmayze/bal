@@ -6,38 +6,44 @@
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 #pragma once
+// bal
+#include <container/balStringBase.h>
 
 // ----------------------------------------------------------------------------
 namespace bal {
 
 /*!
  * ポインターのみ保持している文字列クラス
+ * 使用メモリーは少ないですが、内部文字列は変更できません
  */
-class StringPtr
+class StringPtr : public StringBase
 {
 public:
     /*! ポインターから初期化 */
     constexpr StringPtr(const char* p) :mpStr(p) { BAL_ASSERT(mpStr != nullptr); calcSize_(); }
 
+    /*! デストラクター */
+    virtual ~StringPtr() {}
+
     /*!
      * 文字列ポインター取得
      */
-    constexpr const char* c_str() const { return mpStr; }
+    virtual const char* c_str() const override { return mpStr; }
 
     /*!
      * 文字列の長さを取得
      */
-    constexpr std::size_t size() const { return mSize; }
+    virtual std::size_t size() const override { return mSize; }
 
     /*!
      * 文字列の長さを取得
      */
-    constexpr std::size_t length() const { return mSize; }
+    virtual std::size_t length() const override { return mSize; }
 
     /*!
      * 空文字かチェック
      */
-    constexpr bool empty() const { return *mpStr == '\0'; }
+    virtual bool empty() const override { return *mpStr == '\0'; }
 
 private:
     const char* mpStr = "";

@@ -7,6 +7,7 @@
  */
 // bal
 #include <io/balLog.h>
+#include <memory/balUniquePtr.h>
 
 namespace bal {
 
@@ -17,7 +18,7 @@ void Log::Print_(char* str)
 #if BAL_PLATFORM_IS_WIN
     {
 #   if defined(UNICODE)
-        std::unique_ptr<TCHAR[]> tchar;
+        UniquePtr<TCHAR[]> tchar;
         int len = MultiByteToWideChar(CP_ACP, 0, str, -1, nullptr, 0);
         tchar = std::make_unique<TCHAR[]>(len);
         MultiByteToWideChar(CP_ACP, 0, str, -1, tchar.get(), len);

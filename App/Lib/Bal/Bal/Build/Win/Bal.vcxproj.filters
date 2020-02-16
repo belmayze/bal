@@ -24,9 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Source\heap\balHeap.cpp">
-      <Filter>heap</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\framework\balFramework.cpp">
       <Filter>framework</Filter>
     </ClCompile>
@@ -45,11 +42,20 @@
     <ClCompile Include="..\..\Source\memory\balMemUtil.cpp">
       <Filter>memory</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\heap\balHeapBase.cpp">
+      <Filter>heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\heap\balHeapOS.cpp">
+      <Filter>heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\memory\balUniquePtr.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\heap\balHeapManager.cpp">
+      <Filter>heap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Include\heap\balHeap.h">
-      <Filter>heap</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\memory\balSingleton.h">
       <Filter>memory</Filter>
     </ClInclude>
@@ -79,6 +85,24 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\memory\balMemUtil.h">
       <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\container\balStringBase.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\heap\balHeapBase.h">
+      <Filter>heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\heap\balHeapOS.h">
+      <Filter>heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\balMath.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\memory\balUniquePtr.h">
+      <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\heap\balHeapManager.h">
+      <Filter>heap</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

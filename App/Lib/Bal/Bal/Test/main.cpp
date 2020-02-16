@@ -9,10 +9,14 @@
 #include <framework/balFramework.h>
 #include <io/balLog.h>
 #include <container/balString.h>
+// test
+#include "testHeap.h"
 
 int main()
 {
     bal::Framework framework;
+
+    test::TestHeap test("TestHeap"); test.exec();
 
     return 0;
 }

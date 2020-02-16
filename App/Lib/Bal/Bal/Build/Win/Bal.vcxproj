@@ -19,7 +19,15 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\..\Source\heap\balHeap.cpp" />
+    <ClCompile Include="..\..\Source\heap\balHeapBase.cpp" />
+    <ClCompile Include="..\..\Source\heap\balHeapManager.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\heap\balHeapOS.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="..\..\Source\io\balLog.cpp">
       <SubType>
       </SubType>
@@ -29,6 +37,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\..\Source\memory\balSingletonFinalizer.cpp" />
+    <ClCompile Include="..\..\Source\memory\balUniquePtr.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\common\balDef.h">
@@ -36,6 +48,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\..\Include\container\balString.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\container\balStringBase.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -51,12 +67,24 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\..\Include\heap\balHeap.h" />
+    <ClInclude Include="..\..\Include\heap\balHeapBase.h" />
+    <ClInclude Include="..\..\Include\heap\balHeapManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\heap\balHeapOS.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="..\..\Include\io\balLog.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\..\Include\io\balLog_inl.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\balMath.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -69,6 +97,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\..\Include\memory\balSingletonFinalizer.h" />
+    <ClInclude Include="..\..\Include\memory\balUniquePtr.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

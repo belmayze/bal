@@ -14,7 +14,7 @@ namespace bal {
 // ----------------------------------------------------------------------------
 
 template <std::size_t N>
-String<N>& String<N>::assign(const StringPtr& str)
+String<N>& String<N>::assign(const StringBase& str)
 {
     std::size_t size = str.size();
     if (size >= N)
