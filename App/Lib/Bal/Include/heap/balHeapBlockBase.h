@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balHeapBase.h
+ * @file   balHeapBlockBase.h
  * @brief  
  * @author belmayze
  *
@@ -9,17 +9,19 @@
 // bal
 #include <container/balStringPtr.h>
 
+namespace bal::heap { class Container; }
+
 // ----------------------------------------------------------------------------
-namespace bal {
+namespace bal::heap {
 
 /*!
  * ヒープ基底クラス
  */
-class HeapBase
+class BlockBase
 {
 public:
     /*! デストラクター */
-    virtual ~HeapBase() {}
+    virtual ~BlockBase() {}
 
     /*!
      * メモリー確保
@@ -30,12 +32,13 @@ public:
 
 protected:
     const StringPtr mName;
+    Container*      mpTopContainer;
 
 protected:
     // コンストラクターで作ることはできません
-    HeapBase() = delete;
-    HeapBase(const StringPtr& name): mName(name) {}
-    HeapBase(const HeapBase&) = delete;
+    BlockBase() = delete;
+    BlockBase(const StringPtr& name): mName(name) {}
+    BlockBase(const BlockBase&) = delete;
 
 private:
     /*!

@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balHeapRoot.h
+ * @file   balHeapRootBlock.h
  * @brief  
  * @author belmayze
  *
@@ -8,18 +8,19 @@
 #pragma once
 // bal
 #include <container/balStringPtr.h>
-#include <heap/balHeapBase.h>
+#include <heap/balHeapBlockBase.h>
 
 namespace bal { class Framework; }
 
 // ----------------------------------------------------------------------------
-namespace bal {
+namespace bal::heap {
 
-class HeapRoot : public HeapBase
+class RootBlock : public BlockBase
 {
     friend Framework; // ルートヒープが唯一作れるクラス
 
 public:
+    // ヒープ破棄関数
     struct Deleter
     {
         void operator()(void* ptr) const;
@@ -30,13 +31,13 @@ private:
      * ルートヒープの作成
      * @note フレームワークからのみ作成できます
      */
-    static UniquePtr<HeapRoot, Deleter> Create(std::size_t size);
+    static UniquePtr<RootBlock, Deleter> Create(std::size_t size);
 
 private:
     /*!
      * コンストラクター
      */
-    HeapRoot(const StringPtr& name) :HeapBase(name) {}
+    RootBlock(const StringPtr& name) :BlockBase(name) {}
 
     /*!
      * 確保内部関数

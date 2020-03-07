@@ -42,22 +42,25 @@
     <ClCompile Include="..\..\Source\memory\balMemUtil.cpp">
       <Filter>memory</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\heap\balHeapBase.cpp">
-      <Filter>heap</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\heap\balHeapOS.cpp">
-      <Filter>heap</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\memory\balUniquePtr.cpp">
       <Filter>memory</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\heap\balHeapManager.cpp">
       <Filter>heap</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\heap\balHeap.cpp">
+    <ClCompile Include="..\..\Source\heap\balHeapContainer.cpp">
       <Filter>heap</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\heap\balHeapRoot.cpp">
+    <ClCompile Include="..\..\Source\heap\balHeapBlock.cpp">
+      <Filter>heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\heap\balHeapBlockBase.cpp">
+      <Filter>heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\heap\balHeapRootBlock.cpp">
+      <Filter>heap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\heap\balHeapBlockOS.cpp">
       <Filter>heap</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,12 +98,6 @@
     <ClInclude Include="..\..\Include\container\balStringBase.h">
       <Filter>container</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\heap\balHeapBase.h">
-      <Filter>heap</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\heap\balHeapOS.h">
-      <Filter>heap</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\math\balMath.h">
       <Filter>math</Filter>
     </ClInclude>
@@ -113,10 +110,19 @@
     <ClInclude Include="..\..\Include\container\balArray.h">
       <Filter>container</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\heap\balHeap.h">
+    <ClInclude Include="..\..\Include\heap\balHeapContainer.h">
       <Filter>heap</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\heap\balHeapRoot.h">
+    <ClInclude Include="..\..\Include\heap\balHeapBlock.h">
+      <Filter>heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\heap\balHeapBlockBase.h">
+      <Filter>heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\heap\balHeapRootBlock.h">
+      <Filter>heap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\heap\balHeapBlockOS.h">
       <Filter>heap</Filter>
     </ClInclude>
   </ItemGroup>

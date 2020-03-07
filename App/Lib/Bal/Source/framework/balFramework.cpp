@@ -31,8 +31,8 @@ Framework::~Framework()
 void Framework::initialize( const InitializeArg& arg )
 {
     // ルートヒープを確保
-    mpRootHeap = HeapRoot::Create(arg.mHeapSize);
-    HeapManager::GetInstance(mpRootHeap.get()).setCurrentHeap(mpRootHeap.get());
+    mpRootHeap = heap::RootBlock::Create(arg.mHeapSize);
+    heap::Manager::GetInstance(mpRootHeap.get()).setCurrentHeap(mpRootHeap.get());
 }
 
 // ----------------------------------------------------------------------------

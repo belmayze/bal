@@ -8,11 +8,8 @@
 #pragma once
 // bal
 #include <container/balStringPtr.h>
-#include <heap/balHeapRoot.h>
+#include <heap/balHeapRootBlock.h>
 #include <memory/balUniquePtr.h>
-
-// 前方宣言
-namespace bal { class HeapRoot; }
 
 // ----------------------------------------------------------------------------
 namespace bal {
@@ -45,7 +42,7 @@ public:
     void initialize(const InitializeArg& arg);
 
 private:
-    UniquePtr<HeapRoot, HeapRoot::Deleter> mpRootHeap;
+    UniquePtr<heap::RootBlock, heap::RootBlock::Deleter> mpRootHeap;
 };
 
 }

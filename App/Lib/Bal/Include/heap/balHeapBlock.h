@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balHeap.h
+ * @file   balHeapBlock.h
  * @brief  
  * @author belmayze
  *
@@ -7,12 +7,12 @@
  */
 #pragma once
 // bal
-#include <heap/balHeapBase.h>
+#include <heap/balHeapBlockBase.h>
 
 // ----------------------------------------------------------------------------
-namespace bal {
+namespace bal::heap {
 
-class Heap : public HeapBase
+class Block : public BlockBase
 {
 public:
     /*!
@@ -21,7 +21,7 @@ public:
      * @param[in] name     名前
      * @param[in] p_parent 親ヒープ
      */
-    static std::unique_ptr<Heap> Create(std::size_t size, const StringPtr& name, HeapBase* p_parent);
+    static std::unique_ptr<Block> Create(std::size_t size, const StringPtr& name, BlockBase* p_parent);
 
 private:
     std::unique_ptr<std::uint8_t[]> mpRootPtr;
@@ -30,7 +30,7 @@ private:
     /*!
      * コンストラクター
      */
-    Heap(const StringPtr& name) :HeapBase(name) {}
+    Block(const StringPtr& name) :BlockBase(name) {}
 
     /*!
      * 確保内部関数

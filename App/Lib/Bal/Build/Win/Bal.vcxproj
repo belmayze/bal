@@ -19,20 +19,15 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\..\Source\heap\balHeap.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\heap\balHeapBase.cpp" />
+    <ClCompile Include="..\..\Source\heap\balHeapBlock.cpp" />
+    <ClCompile Include="..\..\Source\heap\balHeapBlockBase.cpp" />
+    <ClCompile Include="..\..\Source\heap\balHeapBlockOS.cpp" />
+    <ClCompile Include="..\..\Source\heap\balHeapContainer.cpp" />
     <ClCompile Include="..\..\Source\heap\balHeapManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\..\Source\heap\balHeapOS.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\heap\balHeapRoot.cpp" />
+    <ClCompile Include="..\..\Source\heap\balHeapRootBlock.cpp" />
     <ClCompile Include="..\..\Source\io\balLog.cpp">
       <SubType>
       </SubType>
@@ -76,20 +71,15 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\..\Include\heap\balHeap.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\heap\balHeapBase.h" />
+    <ClInclude Include="..\..\Include\heap\balHeapBlock.h" />
+    <ClInclude Include="..\..\Include\heap\balHeapBlockBase.h" />
+    <ClInclude Include="..\..\Include\heap\balHeapBlockOS.h" />
+    <ClInclude Include="..\..\Include\heap\balHeapContainer.h" />
     <ClInclude Include="..\..\Include\heap\balHeapManager.h">
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\..\Include\heap\balHeapOS.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\heap\balHeapRoot.h" />
+    <ClInclude Include="..\..\Include\heap\balHeapRootBlock.h" />
     <ClInclude Include="..\..\Include\io\balLog.h">
       <SubType>
       </SubType>

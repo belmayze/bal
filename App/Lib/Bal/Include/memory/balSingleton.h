@@ -41,7 +41,7 @@ private:
      * インスタンスを確保するとき、ヒープから確保します
      * @note カレントヒープが存在しない場所で使うことを想定しています
      */
-    static T& GetInstance(HeapBase* p_heap)
+    static T& GetInstance(heap::BlockBase* p_heap)
     {
         if (!mpInstance) { Create_(p_heap); }
         return GetInstance();
@@ -60,7 +60,7 @@ private:
     /*!
      * インスタンスを生成します
      */
-    static void Create_(HeapBase* p_heap)
+    static void Create_(heap::BlockBase* p_heap)
     {
         mpInstance = make_unique<T>(p_heap);
         SingletonFinalizer::AddFunc(&Singleton<T>::Destroy_);

@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balHeapOS.cpp
+ * @file   balHeapBlockOS.cpp
  * @brief  
  * @author belmayze
  *
@@ -8,21 +8,21 @@
 // C++
 #include <memory>
 // bal
-#include <heap/balHeapOS.h>
+#include <heap/balHeapBlockOS.h>
 
-namespace bal {
+namespace bal::heap {
 
 // ----------------------------------------------------------------------------
 
-UniquePtr<HeapOS> HeapOS::Create(const StringPtr& name)
+UniquePtr<BlockOS> BlockOS::Create(const StringPtr& name)
 {
-    HeapOS* ptr = new HeapOS(name);
-    return std::unique_ptr<HeapOS>(ptr);
+    BlockOS* ptr = new BlockOS(name);
+    return std::unique_ptr<BlockOS>(ptr);
 }
 
 // ----------------------------------------------------------------------------
 
-void* HeapOS::allocImpl_(std::size_t size)
+void* BlockOS::allocImpl_(std::size_t size)
 {
     return malloc(size);
 }

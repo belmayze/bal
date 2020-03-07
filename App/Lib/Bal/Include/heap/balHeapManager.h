@@ -10,27 +10,27 @@
 #include <memory/balSingleton.h>
 
 // 前方宣言
-namespace bal { class HeapBase; }
+namespace bal::heap { class BlockBase; }
 
 // ----------------------------------------------------------------------------
-namespace bal {
+namespace bal::heap {
 
-class HeapManager : public Singleton<HeapManager>
+class Manager : public Singleton<Manager>
 {
 public:
     /*! 
      * カレントヒープを設定します
      * @param[in] p_heap ヒープ
      */
-    void setCurrentHeap(HeapBase* p_heap) { mpCurrentHeap = p_heap; }
+    void setCurrentHeap(BlockBase* p_heap) { mpCurrentHeap = p_heap; }
 
     /*!
      * ヒープを取得する
      */
-    HeapBase* getCurrentHeap() { return mpCurrentHeap; }
+    BlockBase* getCurrentHeap() { return mpCurrentHeap; }
 
 private:
-    HeapBase* mpCurrentHeap = nullptr;
+    BlockBase* mpCurrentHeap = nullptr;
 };
 
 }

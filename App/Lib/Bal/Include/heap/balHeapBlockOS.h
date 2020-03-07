@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balHeapOS.h
+ * @file   balHeapBlockOS.h
  * @brief  
  * @author belmayze
  *
@@ -7,25 +7,25 @@
  */
 #pragma once
 // bal
-#include <heap/balHeapBase.h>
+#include <heap/balHeapBlockBase.h>
 #include <memory/balUniquePtr.h>
 
 // ----------------------------------------------------------------------------
-namespace bal {
+namespace bal::heap {
 
-class HeapOS : public HeapBase
+class BlockOS : public BlockBase
 {
 public:
     /*!
      * ヒープを作成する
      */
-    static UniquePtr<HeapOS> Create(const StringPtr& name);
+    static UniquePtr<BlockOS> Create(const StringPtr& name);
 
 private:
     /*!
      * コンストラクター
      */
-    HeapOS(const StringPtr& name) :HeapBase(name) {}
+    BlockOS(const StringPtr& name) :BlockBase(name) {}
 
     /*!
      * メモリー確保
