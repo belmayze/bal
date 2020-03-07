@@ -51,6 +51,9 @@
 
 #define BAL_STATIC_ASSERT(cond, ...) static_assert(cond, __VA_ARGS__)
 
+// ログ
+#define BAL_LOG_INFO(format, ...) bal::Log::Print(format, __VA_ARGS__)
+
 // プラットフォーム別の必須 include
 #if BAL_PLATFORM_IS_WIN
 #   include <Windows.h>
@@ -58,4 +61,5 @@
 // 使っていい C++ の include
 #include <array>
 // bal
+#include <io/balLog.h>
 #include <memory/balUniquePtr.h>

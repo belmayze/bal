@@ -18,11 +18,7 @@ void Log::Print(Formats... args)
 {
     constexpr int cMaxLength = 1024;
     char str[cMaxLength];
-#if BAL_PLATFORM_IS_WIN
-    sprintf_s(str, args...);
-#else
-    sprintf(str, args...);
-#endif
+    snprintf(str, cMaxLength, args...);
     Print_(str);
 }
 

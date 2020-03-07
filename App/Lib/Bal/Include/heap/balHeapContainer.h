@@ -19,7 +19,7 @@ namespace bal::heap {
 // --------------------------------------------------------
 class Container
 {
-private:
+public:
     // 前方タグ
     struct ForwardTag
     {
@@ -47,6 +47,36 @@ public:
      * 開放済みフラグ
      */
     bool isFree() const;
+
+    /*!
+     * 使用フラグを立てる
+     */
+    void setFree(bool free);
+
+    /*!
+     * コンテナを分割して、先頭の方を返す
+     */
+    Container* split(std::uint32_t size);
+
+    /*!
+     * 前後を判断して、結合できる場合は結合します
+     */
+    void merge();
+
+    /*!
+     * データポインターを取得する
+     */
+    void* getData();
+
+    /*!
+     * サイズを取得する
+     */
+    std::uint32_t getSize() const;
+
+    /*!
+     * 管理領域も含めたサイズを取得する
+     */
+    std::uint32_t getAllSize() const;
 
     /*!
      * 次のコンテナを取得

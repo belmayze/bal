@@ -18,11 +18,12 @@ void Log::Print_(char* str)
 #if BAL_PLATFORM_IS_WIN
     {
 #   if defined(UNICODE)
-        UniquePtr<TCHAR[]> tchar;
+        TCHAR* tchar = nullptr;
         int len = MultiByteToWideChar(CP_ACP, 0, str, -1, nullptr, 0);
-        tchar = std::make_unique<TCHAR[]>(len);
-        MultiByteToWideChar(CP_ACP, 0, str, -1, tchar.get(), len);
-        OutputDebugString(tchar.get());
+        tchar = reinterpret_cast<TCHAR*>(malloc(len * sizeof(TCHAR)));
+        MultiByteToWideChar(CP_ACP, 0, str, -1, tchar, len);
+        OutputDebugString(tchar);
+        free(tchar);
 #   else
         OutputDebugString(str);
 #   endif // UNICODE

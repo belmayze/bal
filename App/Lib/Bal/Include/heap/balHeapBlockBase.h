@@ -8,8 +8,7 @@
 #pragma once
 // bal
 #include <container/balStringPtr.h>
-
-namespace bal::heap { class Container; }
+#include <heap/balHeapContainer.h>
 
 // ----------------------------------------------------------------------------
 namespace bal::heap {
@@ -31,8 +30,9 @@ public:
     void* alloc(std::size_t size, std::size_t alignment = 4);
 
 protected:
-    const StringPtr mName;
-    Container*      mpTopContainer;
+    const StringPtr        mName;
+    std::uint32_t          mSize;
+    Container::BackwardTag mBackwardTag;
 
 protected:
     // コンストラクターで作ることはできません
