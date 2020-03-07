@@ -6,6 +6,8 @@
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 #pragma once
+// bal
+#include <container/balStringPtr.h>
 
 // ----------------------------------------------------------------------------
 namespace bal {
@@ -27,8 +29,12 @@ public:
     void* alloc(std::size_t size, std::size_t alignment = 4);
 
 protected:
+    const StringPtr mName;
+
+protected:
     // コンストラクターで作ることはできません
-    HeapBase() {}
+    HeapBase() = delete;
+    HeapBase(const StringPtr& name): mName(name) {}
     HeapBase(const HeapBase&) = delete;
 
 private:

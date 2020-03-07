@@ -1,38 +1,37 @@
 ﻿/*!
- * @file   balFramework.cpp
+ * @file   balHeapRoot.cpp
  * @brief  
  * @author belmayze
  *
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 // bal
-#include <framework/balFramework.h>
-#include <heap/balHeapManager.h>
-#include <memory/balSingletonFinalizer.h>
+#include <heap/balHeapRoot.h>
 
 namespace bal {
 
 // ----------------------------------------------------------------------------
 
-Framework::Framework()
+void HeapRoot::Deleter::operator()(void* ptr) const
 {
-
+    free(ptr);
 }
 
 // ----------------------------------------------------------------------------
 
-Framework::~Framework()
+UniquePtr<HeapRoot, HeapRoot::Deleter> HeapRoot::Create(std::size_t size)
 {
-    SingletonFinalizer::Finalize();
+    // ルートヒープは OS から確保
+    void* ptr = malloc(size);
+    UniquePtr<HeapRoot, Deleter> p_heap = UniquePtr<HeapRoot, Deleter>(new (ptr) HeapRoot("RootHeap"));
+    return p_heap;
 }
 
 // ----------------------------------------------------------------------------
 
-void Framework::initialize( const InitializeArg& arg )
+void* HeapRoot::allocImpl_(std::size_t size)
 {
-    // ルートヒープを確保
-    mpRootHeap = HeapRoot::Create(arg.mHeapSize);
-    HeapManager::GetInstance(mpRootHeap.get()).setCurrentHeap(mpRootHeap.get());
+    return nullptr;
 }
 
 // ----------------------------------------------------------------------------

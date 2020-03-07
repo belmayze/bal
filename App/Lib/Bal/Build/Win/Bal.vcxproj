@@ -32,6 +32,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\..\Source\heap\balHeapRoot.cpp" />
     <ClCompile Include="..\..\Source\io\balLog.cpp">
       <SubType>
       </SubType>
@@ -88,6 +89,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\..\Include\heap\balHeapRoot.h" />
     <ClInclude Include="..\..\Include\io\balLog.h">
       <SubType>
       </SubType>

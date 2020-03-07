@@ -19,6 +19,9 @@ namespace bal {
 class StringPtr : public StringBase
 {
 public:
+    /*! 空文字で初期化 */
+    constexpr StringPtr() :StringPtr("") { }
+
     /*! ポインターから初期化 */
     constexpr StringPtr(const char* p) :mpStr(p) { BAL_ASSERT(mpStr != nullptr); calcSize_(); }
 

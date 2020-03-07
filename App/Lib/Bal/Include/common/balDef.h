@@ -57,3 +57,5 @@
 #endif
 // 使っていい C++ の include
 #include <array>
+// bal
+#include <memory/balUniquePtr.h>

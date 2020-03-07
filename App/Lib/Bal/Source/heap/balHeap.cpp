@@ -17,7 +17,7 @@ std::unique_ptr<Heap> Heap::Create(std::size_t size, const StringPtr& name, Heap
     std::unique_ptr<std::uint8_t[]> p_buf;
     p_buf = std::make_unique<std::uint8_t[]>(size);
     std::unique_ptr<Heap> p_heap = std::unique_ptr<Heap>(new Heap(name));
-    p_heap->mBuffer = std::move(p_buf);
+    p_heap->mpRootPtr = std::move(p_buf);
     return p_heap;
 }
 

@@ -8,10 +8,11 @@
 #pragma once
 // bal
 #include <container/balStringPtr.h>
+#include <heap/balHeapRoot.h>
 #include <memory/balUniquePtr.h>
 
 // 前方宣言
-namespace bal { class HeapBase; }
+namespace bal { class HeapRoot; }
 
 // ----------------------------------------------------------------------------
 namespace bal {
@@ -22,7 +23,8 @@ public:
     //! 初期化構造体
     struct InitializeArg
     {
-        const StringPtr mTitle;
+        StringPtr   mTitle    = ""; //!< タイトル名
+        std::size_t mHeapSize = 0;  //!< アプリケーションが使用する全体メモリー量
     };
 
 public:
@@ -43,7 +45,7 @@ public:
     void initialize(const InitializeArg& arg);
 
 private:
-    UniquePtr<HeapBase> mpMainHeap;
+    UniquePtr<HeapRoot, HeapRoot::Deleter> mpRootHeap;
 };
 
 }

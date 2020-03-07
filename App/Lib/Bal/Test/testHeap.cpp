@@ -15,7 +15,7 @@ namespace test {
 
 void TestHeap::exec_()
 {
-    auto heap = bal::HeapOS::Create();
+    auto heap = bal::HeapOS::Create("Test");
     {
         void* ptr = heap->alloc(100);
         bal::Log::Print("Alloc [%p]\n", ptr);

@@ -19,9 +19,14 @@ public:
     /*!
      * ヒープを作成する
      */
-    static UniquePtr<HeapOS> Create();
+    static UniquePtr<HeapOS> Create(const StringPtr& name);
 
 private:
+    /*!
+     * コンストラクター
+     */
+    HeapOS(const StringPtr& name) :HeapBase(name) {}
+
     /*!
      * メモリー確保
      */

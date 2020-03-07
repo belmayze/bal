@@ -14,9 +14,10 @@ namespace bal {
 
 // ----------------------------------------------------------------------------
 
-UniquePtr<HeapOS> HeapOS::Create()
+UniquePtr<HeapOS> HeapOS::Create(const StringPtr& name)
 {
-    return std::make_unique<HeapOS>();
+    HeapOS* ptr = new HeapOS(name);
+    return std::unique_ptr<HeapOS>(ptr);
 }
 
 // ----------------------------------------------------------------------------

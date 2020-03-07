@@ -8,11 +8,22 @@
 #pragma once
 // C++
 #include <memory>
+// Heap
+#include <heap/balHeapBase.h>
+
+namespace bal { class HeapBase; }
 
 // ----------------------------------------------------------------------------
 namespace bal {
 
 template <class T, class D = std::default_delete<T>>
 using UniquePtr = std::unique_ptr<T, D>;
+
+template <class T, class... Args, std::enable_if_t<!std::is_array_v<T>, int> = 0>
+UniquePtr<T> make_unique(HeapBase* p_heap, Args&&... args)
+{
+    void* ptr = p_heap->alloc(sizeof(T));
+    return UniquePtr<T>(new (ptr) T(std::forward<Args>(args)...));
+}
 
 }

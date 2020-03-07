@@ -7,7 +7,6 @@
  */
 #pragma once
 // bal
-#include <container/balStringPtr.h>
 #include <heap/balHeapBase.h>
 
 // ----------------------------------------------------------------------------
@@ -25,14 +24,13 @@ public:
     static std::unique_ptr<Heap> Create(std::size_t size, const StringPtr& name, HeapBase* p_parent);
 
 private:
-    const StringPtr& mName;
-    std::unique_ptr<std::uint8_t[]> mBuffer;
+    std::unique_ptr<std::uint8_t[]> mpRootPtr;
 
 private:
     /*!
      * コンストラクター
      */
-    Heap(const StringPtr& name) :mName(name) {}
+    Heap(const StringPtr& name) :HeapBase(name) {}
 
     /*!
      * 確保内部関数
