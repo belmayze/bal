@@ -20,8 +20,7 @@ using UniquePtr = std::unique_ptr<T, D>;
 template <class T, class... Args, std::enable_if_t<!std::is_array_v<T>, int> = 0>
 UniquePtr<T> make_unique(heap::BlockBase* p_heap, Args&&... args)
 {
-    void* ptr = p_heap->alloc(sizeof(T));
-    return UniquePtr<T>(new (ptr) T(std::forward<Args>(args)...));
+    return UniquePtr<T>(new (p_heap) T(std::forward<Args>(args)...));
 }
 
 }

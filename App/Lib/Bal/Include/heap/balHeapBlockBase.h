@@ -49,3 +49,9 @@ private:
 };
 
 }
+
+void* operator new(std::size_t size);
+void* operator new(std::size_t size, bal::heap::BlockBase* p_heap);
+
+void operator delete(void* ptr);
+void operator delete(void* ptr, bal::heap::BlockBase* p_heap);
