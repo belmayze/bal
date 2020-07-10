@@ -13,12 +13,27 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
+		Development|x64 = Development|x64
+		Test|x64 = Test|x64
+		Shipping|x64 = Shipping|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9641DDEA-93DD-4CA3-8A25-3C6620E02765}.Debug|x64.ActiveCfg = Debug|x64
 		{9641DDEA-93DD-4CA3-8A25-3C6620E02765}.Debug|x64.Build.0 = Debug|x64
+		{9641DDEA-93DD-4CA3-8A25-3C6620E02765}.Development|x64.ActiveCfg = Development|x64
+		{9641DDEA-93DD-4CA3-8A25-3C6620E02765}.Development|x64.Build.0 = Development|x64
+		{9641DDEA-93DD-4CA3-8A25-3C6620E02765}.Test|x64.ActiveCfg = Test|x64
+		{9641DDEA-93DD-4CA3-8A25-3C6620E02765}.Test|x64.Build.0 = Test|x64
+		{9641DDEA-93DD-4CA3-8A25-3C6620E02765}.Shipping|x64.ActiveCfg = Shipping|x64
+		{9641DDEA-93DD-4CA3-8A25-3C6620E02765}.Shipping|x64.Build.0 = Shipping|x64
 		{63D1843C-2FB4-437E-9116-41DAD7803C07}.Debug|x64.ActiveCfg = Debug|x64
 		{63D1843C-2FB4-437E-9116-41DAD7803C07}.Debug|x64.Build.0 = Debug|x64
+		{63D1843C-2FB4-437E-9116-41DAD7803C07}.Development|x64.ActiveCfg = Development|x64
+		{63D1843C-2FB4-437E-9116-41DAD7803C07}.Development|x64.Build.0 = Development|x64
+		{63D1843C-2FB4-437E-9116-41DAD7803C07}.Test|x64.ActiveCfg = Test|x64
+		{63D1843C-2FB4-437E-9116-41DAD7803C07}.Test|x64.Build.0 = Test|x64
+		{63D1843C-2FB4-437E-9116-41DAD7803C07}.Shipping|x64.ActiveCfg = Shipping|x64
+		{63D1843C-2FB4-437E-9116-41DAD7803C07}.Shipping|x64.Build.0 = Shipping|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
