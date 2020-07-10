@@ -57,7 +57,6 @@ Container* Container::split(std::uint32_t size)
     BAL_ASSERT(isFree());
 
     ForwardTag* p_forward_tag = reinterpret_cast<ForwardTag*>(this);
-    BackwardTag* p_backward_tag = reinterpret_cast<BackwardTag*>(this + cForwardTagSize + p_forward_tag->mAllocSize);
     // 分割できるかチェック（データ容量とタグ、分割先のタグの合計以上であれば分割できる）
     if (size < (p_forward_tag->mAllocSize + cAllTagSize * 2))
     {

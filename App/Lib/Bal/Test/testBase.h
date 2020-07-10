@@ -15,6 +15,9 @@ namespace test {
 class TestBase
 {
 public:
+    /*! デストラクター */
+    virtual ~TestBase() {}
+
     /*! テスト開始 */
     void exec();
 

@@ -59,6 +59,7 @@
 #   include <Windows.h>
 #endif
 // 使っていい C++ の include
+#include <cstdint>
 #include <array>
 // bal
 #include <io/balLog.h>

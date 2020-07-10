@@ -16,6 +16,7 @@ class TestHeap : public TestBase
 {
 public:
     TestHeap(const bal::StringPtr& name) : TestBase(name) {}
+    virtual ~TestHeap() {}
     virtual void exec_() override;
 };
 

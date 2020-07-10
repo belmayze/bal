@@ -13,7 +13,7 @@ namespace bal {
 
 void Log::Print_(char* str)
 {
-    printf(str);
+    printf_s(str);
 
 #if BAL_PLATFORM_IS_WIN
     {
