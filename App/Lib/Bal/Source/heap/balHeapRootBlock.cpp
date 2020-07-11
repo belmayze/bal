@@ -20,11 +20,11 @@ void RootBlock::Deleter::operator()(void* ptr) const
 
 // ----------------------------------------------------------------------------
 
-UniquePtr<RootBlock, RootBlock::Deleter> RootBlock::Create(std::size_t size)
+std::unique_ptr<RootBlock, RootBlock::Deleter> RootBlock::Create(std::size_t size)
 {
     // ルートヒープは OS から確保
     void* ptr = malloc(size);
-    UniquePtr<RootBlock, Deleter> p_heap = UniquePtr<RootBlock, Deleter>(new (ptr) RootBlock("RootHeap"));
+    std::unique_ptr<RootBlock, Deleter> p_heap = std::unique_ptr<RootBlock, Deleter>(new (ptr) RootBlock("RootHeap"));
     p_heap->mBackwardTag.mAllSize = 0;
     p_heap->mSize = static_cast<std::uint32_t>(size);
 

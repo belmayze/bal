@@ -9,7 +9,7 @@
 
 namespace bal {
 
-UniquePtr<heap::Manager> Singleton<heap::Manager>::mpInstance;
+std::unique_ptr<heap::Manager> Singleton<heap::Manager>::mpInstance;
 
 }
 

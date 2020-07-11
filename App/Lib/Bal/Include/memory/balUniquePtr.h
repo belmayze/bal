@@ -14,13 +14,10 @@
 // ----------------------------------------------------------------------------
 namespace bal {
 
-template <class T, class D = std::default_delete<T>>
-using UniquePtr = std::unique_ptr<T, D>;
-
 template <class T, class... Args, std::enable_if_t<!std::is_array_v<T>, int> = 0>
-UniquePtr<T> make_unique(heap::BlockBase* p_heap, Args&&... args)
+std::unique_ptr<T> make_unique(heap::BlockBase* p_heap, Args&&... args)
 {
-    return UniquePtr<T>(new (p_heap) T(std::forward<Args>(args)...));
+    return std::unique_ptr<T>(new (p_heap) T(std::forward<Args>(args)...));
 }
 
 }

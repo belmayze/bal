@@ -19,7 +19,7 @@ public:
     /*!
      * ヒープを作成する
      */
-    static UniquePtr<BlockOS> Create(const StringPtr& name);
+    static std::unique_ptr<BlockOS> Create(const StringPtr& name);
 
 private:
     /*!

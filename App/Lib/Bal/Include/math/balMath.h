@@ -6,26 +6,11 @@
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 #pragma once
-// c++
-#include <cmath>
 
-// ----------------------------------------------------------------------------
-namespace bal {
+#if BAL_PLATFORM_IS_WIN64
 
-template <typename T>
-class Math
-{
-public:
-    /*!
-     * 切り上げ
-     * @param[in] a     入力
-     * @param[in] times 倍数
-     */
-    static constexpr int Ceil(T a, T times)
-    {
-        float t = static_cast<float>(a) / static_cast<float>(times);
-        return static_cast<T>(std::ceil(t) * static_cast<float>(times));
-    }
-}; 
+#   include "math/win64/balMathWin64.h"
 
-}
+namespace bal { using Math = MathWin64; }
+
+#endif // BAL_PLATFORM_IS_WIN64

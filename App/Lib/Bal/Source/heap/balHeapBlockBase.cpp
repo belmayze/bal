@@ -14,7 +14,7 @@ namespace bal::heap {
 
 void* BlockBase::alloc(std::size_t size, std::size_t alignment)
 {
-    std::size_t alignmented_size = Math<std::size_t>::Ceil(size, alignment);
+    std::size_t alignmented_size = Math::Ceil(size, alignment);
     return allocImpl_(alignmented_size);
 }
 

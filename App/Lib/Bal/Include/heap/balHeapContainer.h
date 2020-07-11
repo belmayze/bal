@@ -28,7 +28,7 @@ public:
     // 後方タグ
     struct BackwardTag
     {
-        uint32_t mAllSize;   //!< 管理領域も含めたメモリー量
+        uint32_t mAllSize = 0; //!< 管理領域も含めたメモリー量
     };
 
 public:

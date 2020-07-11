@@ -31,7 +31,7 @@ private:
      * ルートヒープの作成
      * @note フレームワークからのみ作成できます
      */
-    static UniquePtr<RootBlock, Deleter> Create(std::size_t size);
+    static std::unique_ptr<RootBlock, Deleter> Create(std::size_t size);
 
 private:
     /*!

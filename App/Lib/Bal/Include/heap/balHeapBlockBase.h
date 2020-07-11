@@ -31,7 +31,7 @@ public:
 
 protected:
     const StringPtr        mName;
-    std::uint32_t          mSize;
+    std::uint32_t          mSize = 0;
     Container::BackwardTag mBackwardTag;
 
 protected:

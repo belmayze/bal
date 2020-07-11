@@ -14,7 +14,7 @@ namespace bal::heap {
 
 // ----------------------------------------------------------------------------
 
-UniquePtr<BlockOS> BlockOS::Create(const StringPtr& name)
+std::unique_ptr<BlockOS> BlockOS::Create(const StringPtr& name)
 {
     BlockOS* ptr = new BlockOS(name);
     return std::unique_ptr<BlockOS>(ptr);

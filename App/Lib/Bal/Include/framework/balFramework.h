@@ -42,7 +42,7 @@ public:
     void initialize(const InitializeArg& arg);
 
 private:
-    UniquePtr<heap::RootBlock, heap::RootBlock::Deleter> mpRootHeap;
+    std::unique_ptr<heap::RootBlock, heap::RootBlock::Deleter> mpRootHeap;
 };
 
 }

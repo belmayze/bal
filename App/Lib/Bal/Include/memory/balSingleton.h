@@ -74,7 +74,7 @@ private:
         mpInstance.reset();
     }
 
-    static UniquePtr<T> mpInstance;
+    static std::unique_ptr<T> mpInstance;
 };
 
 }
