@@ -7,7 +7,7 @@
  */
 #pragma once
 // bal
-#include "math/balMathCommon.h"
+#include <math/balMathCommon.h>
 
 // ----------------------------------------------------------------------------
 namespace bal {

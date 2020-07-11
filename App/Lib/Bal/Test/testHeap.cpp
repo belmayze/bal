@@ -21,6 +21,7 @@ void TestHeap::exec_()
         bal::Log::Print("Alloc [%p]\n", ptr);
         free(ptr);
     }
+
 }
 
 }

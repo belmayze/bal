@@ -6,7 +6,7 @@
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 // bal
-#include "time/balDateTime.h"
+#include <time/balDateTime.h>
 
 namespace bal
 {
@@ -18,62 +18,38 @@ void DateTime::now()
     mTimePoint  = std::chrono::system_clock::now();
     time_t time = std::chrono::system_clock::to_time_t(mTimePoint);
 
-    tm* p = nullptr;
-    localtime_s(p , &time);
-    if (p)
-    {
-        mTime = *p;
-    }
-}
-
-// ----------------------------------------------------------------------------
-
-int DateTime::getYear() const
-{
-    return mTime.tm_year;
-}
-
-// ----------------------------------------------------------------------------
-
-int DateTime::getMonth() const
-{
-    return mTime.tm_mon;
-}
-
-// ----------------------------------------------------------------------------
-
-int DateTime::getDate() const
-{
-    return mTime.tm_mday;
-}
-
-// ----------------------------------------------------------------------------
-
-int DateTime::getHours() const
-{
-    return mTime.tm_hour;
-}
-
-// ----------------------------------------------------------------------------
-
-int DateTime::getMinutes() const
-{
-    return mTime.tm_min;
-}
-
-// ----------------------------------------------------------------------------
-
-int DateTime::getSeconds() const
-{
-    return mTime.tm_sec;
+    localtime_s(&mTime, &time);
 }
 
 // ----------------------------------------------------------------------------
 
 int DateTime::getMilliseconds() const
 {
-    // @TODO:
-    return 0;
+    std::chrono::milliseconds milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(mTimePoint.time_since_epoch());
+    return static_cast<int>(milliseconds.count() % 1000);
+}
+
+// ----------------------------------------------------------------------------
+
+int DateTime::getMicroseconds() const
+{
+    std::chrono::microseconds microseconds = std::chrono::duration_cast<std::chrono::microseconds>(mTimePoint.time_since_epoch());
+    return static_cast<int>(microseconds.count() % 1000);
+}
+
+// ----------------------------------------------------------------------------
+
+int DateTime::getNanoseconds() const
+{
+    std::chrono::nanoseconds nanoseconds = std::chrono::duration_cast<std::chrono::nanoseconds>(mTimePoint.time_since_epoch());
+    return static_cast<int>(nanoseconds.count() % 1000);
+}
+
+// ----------------------------------------------------------------------------
+
+TimeSpan DateTime::operator-(const DateTime& rhs) const
+{
+    return TimeSpan(std::chrono::duration_cast<std::chrono::microseconds>(rhs.mTimePoint - this->mTimePoint));
 }
 
 // ----------------------------------------------------------------------------

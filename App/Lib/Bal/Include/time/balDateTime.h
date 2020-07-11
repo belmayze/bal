@@ -8,6 +8,8 @@
 #pragma once
  // std
 #include <chrono>
+// bal
+#include <time/balTimeSpan.h>
 
 // ----------------------------------------------------------------------------
 namespace bal {
@@ -26,41 +28,65 @@ public:
     /*!
      * 年を取得します
      */
-    int getYear() const;
+    inline int getYear() const { return mTime.tm_year + 1900; }
 
     /*!
      * 月を取得します
+     * @note 0～11 の間で返します
      */
-    int getMonth() const;
+    inline int getMonth() const { return mTime.tm_mon; }
 
     /*!
      * 日を取得します
+     * @note 1～31 の間で返します
      */
-    int getDate() const;
+    inline int getDate() const { return mTime.tm_mday; }
 
     /*!
      * 時を取得します
+     * @note 0～23 の間で返します
      */
-    int getHours() const;
+    inline int getHours() const { return mTime.tm_hour; }
 
     /*!
      * 分を取得します
+     * @note 0～59 の間で返します
      */
-    int getMinutes() const;
+    inline int getMinutes() const { return mTime.tm_min; }
 
     /*!
      * 秒を取得します
+     * @note 0～60 の間で返します
      */
-    int getSeconds() const;
+    inline int getSeconds() const { return mTime.tm_sec; }
 
     /*!
      * ミリ秒を取得します
+     * @note 0～999 の間で返します
      */
     int getMilliseconds() const;
 
+    /*!
+     * マイクロ秒を取得します
+     * @note 0～999 の間で返します
+     */
+    int getMicroseconds() const;
+
+    /*!
+     * ナノ秒を取得します
+     * @note 0～999 の間で返します
+     */
+    int getNanoseconds() const;
+
+public:
+    /*!
+     * DateTime の差を求めます
+     */
+    TimeSpan operator-(const DateTime& rhs) const;
+
 private:
-    std::chrono::system_clock::time_point mTimePoint;
-    tm                                    mTime;
+    std::chrono::system_clock::time_point mTimePoint; //!< 現在の時刻
+    tm                                    mTime;      //!< 現在の時刻（C）
 };
 
 }
