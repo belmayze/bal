@@ -21,7 +21,7 @@ void TestBase::exec()
         exec_();
     }
     bal::DateTime end;
-    bal::TimeSpan diff = start - end;
+    bal::TimeSpan diff = end - start;
     bal::Log::Print("====テスト終了====\n");
     bal::Log::Print("処理時間 [%dms]\n", diff.getMilliseconds());
 }

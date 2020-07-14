@@ -146,5 +146,11 @@
     <ClInclude Include="..\..\Include\time\balTimeSpan.h">
       <Filter>time</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\math\balMathCommonMatrix.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\win64\balMathWin64Matrix.h">
+      <Filter>math\win64</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -49,7 +49,7 @@ int DateTime::getNanoseconds() const
 
 TimeSpan DateTime::operator-(const DateTime& rhs) const
 {
-    return TimeSpan(std::chrono::duration_cast<std::chrono::microseconds>(rhs.mTimePoint - this->mTimePoint));
+    return TimeSpan(std::chrono::duration_cast<std::chrono::microseconds>(this->mTimePoint - rhs.mTimePoint));
 }
 
 // ----------------------------------------------------------------------------
