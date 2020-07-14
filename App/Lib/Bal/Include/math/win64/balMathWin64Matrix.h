@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balMathCommon.h
+ * @file   balMathWin64Matrix.h
  * @brief  
  * @author belmayze
  *
@@ -10,18 +10,15 @@
 #include <intrin.h>
 // bal
 #include <math/balMathCommonMatrix.h>
+#include <math/win64/balMathWin64Vector.h>
 
 // ----------------------------------------------------------------------------
 namespace bal {
 
 class alignas(16) MathWin64Matrix44
 {
-public:
-    union
-    {
-        float  m[4][4];
-        __m128 mVec[4];
-    };
+    using Matrix44 = MathWin64Matrix44;
+    using Vector3  = MathWin64Vector3;
 
 public:
     //! コンストラクター
@@ -31,6 +28,17 @@ public:
         m[1][0] = 0.f; m[1][1] = 1.f; m[1][2] = 0.f; m[1][3] = 0.f;
         m[2][0] = 0.f; m[2][1] = 0.f; m[2][2] = 1.f; m[2][3] = 0.f;
         m[3][0] = 0.f; m[3][1] = 0.f; m[3][2] = 0.f; m[3][3] = 1.f;
+    }
+
+    /*!
+     * 回転とスケールをセットします
+     */
+    void setRotateScale(const Vector3& rot, const Vector3& scale)
+    {
+        // @TODO: rotate
+        m[0][0] = scale.getX(); m[0][1] = 0.f;          m[0][2] = 0.f;
+        m[1][0] = 0.f;          m[1][1] = scale.getY(); m[1][2] = 0.f;
+        m[2][0] = 0.f;          m[2][1] = 0.f;          m[2][2] = scale.getZ();
     }
 
     /*!
@@ -59,12 +67,12 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    // operator
+    // operator -+*/
     // ------------------------------------------------------------------------
     /*!
      * 行列同士の乗算
      */
-    MathWin64Matrix44 operator*(const MathWin64Matrix44& rhs) const
+    Matrix44 operator*(const Matrix44& rhs) const
     {
         // まずは行列を倒置
         __m128 tmp0, tmp1, tmp2, tmp3;
@@ -80,7 +88,7 @@ public:
         row3 = _mm_shuffle_ps(tmp2, tmp3, 0xDD);
 
         // 乗算 + 加算
-        MathWin64Matrix44 result;
+        Matrix44 result;
         alignas(32) float tmp[4];
 
         tmp0 = _mm_mul_ps(mVec[0], row0);
@@ -121,6 +129,19 @@ public:
 
         return result;
     }
+
+    // ------------------------------------------------------------------------
+    // operator cast
+    // ------------------------------------------------------------------------
+    const float* operator[](int row) const { return m[row]; }
+          float* operator[](int row)       { return m[row]; }
+
+private:
+    union
+    {
+        float  m[4][4];
+        __m128 mVec[4];
+    };
 }; 
 
 }
