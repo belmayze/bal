@@ -44,6 +44,8 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\..\Source\math\balDegree.cpp" />
+    <ClCompile Include="..\..\Source\math\balRadian.cpp" />
     <ClCompile Include="..\..\Source\memory\balMemUtil.cpp">
       <SubType>
       </SubType>
@@ -101,13 +103,16 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\..\Include\math\balDegree.h" />
     <ClInclude Include="..\..\Include\math\balMath.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="..\..\Include\math\balMathCommon.h" />
     <ClInclude Include="..\..\Include\math\balMathCommonMatrix.h" />
+    <ClInclude Include="..\..\Include\math\balMathCommonMatrix_inl.h" />
     <ClInclude Include="..\..\Include\math\balMathCommonVector.h" />
+    <ClInclude Include="..\..\Include\math\balRadian.h" />
     <ClInclude Include="..\..\Include\math\win64\balMathWin64.h" />
     <ClInclude Include="..\..\Include\math\win64\balMathWin64Matrix.h" />
     <ClInclude Include="..\..\Include\math\win64\balMathWin64Vector.h" />

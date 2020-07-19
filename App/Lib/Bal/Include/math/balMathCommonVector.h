@@ -12,6 +12,23 @@
 // ----------------------------------------------------------------------------
 namespace bal {
 
+// ----------------------------------------------------------------------------
+
+class alignas(16) MathCommonVector4
+{
+public:
+    //! コンストラクター
+    MathCommonVector4()
+    {
+        m[0] = 0.f; m[1] = 0.f; m[2] = 0.f; m[3] = 0.f;
+    }
+
+protected:
+    float m[4];
+};
+
+// ----------------------------------------------------------------------------
+
 class MathCommonVector3
 {
 public:
@@ -31,7 +48,7 @@ public:
     inline float getY() const { return m[1]; }
     inline float getZ() const { return m[2]; }
 
-private:
+protected:
     float m[3];
 }; 
 

@@ -15,6 +15,34 @@ namespace bal {
 class MathCommon
 {
 public:
+    //! π
+    static constexpr float Pi() { return 3.14159265358979323f; }
+
+public:
+    /*!
+     * 平方根
+     * @param[in] x 数値
+     */
+    static inline float Sqrt(float x) { return std::sqrt(x); }
+
+    /*!
+     * 正弦
+     * @param[in] x 数値
+     */
+    static inline float Sin(const Radian& x) { return std::sin(x); }
+
+    /*!
+     * 余弦
+     * @param[in] x 数値
+     */
+    static inline float Cos(const Radian& x) { return std::cos(x); }
+
+    /*!
+     * 正接
+     * @param[in] x 数値
+     */
+    static inline float Tan(const Radian& x) { return std::tan(x); }
+
     /*!
      * 切り上げ
      * @param[in] a     入力

@@ -29,8 +29,8 @@ void TestHeap::exec_()
         bal::DateTime start;
         {
             bal::MathMatrix44 m0, m1, m2;
-            m0.setRotateScale(bal::MathVector3(), bal::MathVector3(1.f, 2.f, 3.f));
-            m1.setTranslate(2.f, 2.f, 2.f);
+            m0.setScale(bal::MathVector3(1.f, 2.f, 3.f));
+            m1.setTranslate(bal::MathVector3(2.f, 2.f, 2.f));
             for (int i = 0; i < 10000000; ++i)
             {
                 m2 = m0 * m1;
@@ -55,8 +55,8 @@ void TestHeap::exec_()
         bal::DateTime start;
         {
             bal::MathCommonMatrix44 m0, m1, m2;
-            m0.setRotateScale(bal::MathVector3(), bal::MathVector3(1.f, 2.f, 3.f));
-            m1.setTranslate(2.f, 2.f, 2.f);
+            m0.setScale(bal::MathVector3(1.f, 2.f, 3.f));
+            m1.setTranslate(bal::MathVector3(2.f, 2.f, 2.f));
             for (int i = 0; i < 10000000; ++i)
             {
                 m2 = m0 * m1;
@@ -84,7 +84,7 @@ void TestHeap::exec_()
         bal::DateTime start;
         {
             bal::MathMatrix44 m;
-            m.setTranslate(1.f, 2.f, 3.f);
+            m.setTranslate(bal::MathVector3(1.f, 2.f, 3.f));
             for (int i = 0; i < 10000000; ++i)
             {
                 m.setTranspose();
@@ -98,7 +98,7 @@ void TestHeap::exec_()
         bal::DateTime start;
         {
             bal::MathCommonMatrix44 m;
-            m.setTranslate(1.f, 2.f, 3.f);
+            m.setTranslate(bal::MathVector3(1.f, 2.f, 3.f));
             for (int i = 0; i < 10000000; ++i)
             {
                 m.setTranspose();

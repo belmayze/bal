@@ -72,6 +72,12 @@
     <ClCompile Include="..\..\Source\time\balDateTime.cpp">
       <Filter>time</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\math\balDegree.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\math\balRadian.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\memory\balSingleton.h">
@@ -156,6 +162,15 @@
       <Filter>math\win64</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\math\balMathCommonVector.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\balDegree.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\balRadian.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\balMathCommonMatrix_inl.h">
       <Filter>math</Filter>
     </ClInclude>
   </ItemGroup>

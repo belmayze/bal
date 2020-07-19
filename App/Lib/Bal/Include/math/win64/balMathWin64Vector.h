@@ -14,23 +14,19 @@
 // ----------------------------------------------------------------------------
 namespace bal {
 
-class alignas(16) MathWin64Vector4
+class alignas(16) MathWin64Vector4 : public MathCommonVector4
 {
 public:
     //! コンストラクター
-    MathWin64Vector4()
-    {
-        m[0] = 0.f; m[1] = 0.f; m[2] = 0.f; m[3] = 0.f;
-    }
+    using MathCommonVector4::MathCommonVector4;
 
-private:
-    union
-    {
-        float  m[4];
-        __m128 mVec;
-    };
 };
 
-using MathWin64Vector3 = MathCommonVector3;
+class MathWin64Vector3 : public MathCommonVector3
+{
+public:
+    //! コンストラクター
+    using MathCommonVector3::MathCommonVector3;
+};
 
 }
