@@ -41,6 +41,30 @@ public:
      */
     operator float() const { return mValue; }
 
+    // ------------------------------------------------------------------------
+    // operator +-*/
+    // ------------------------------------------------------------------------
+    //! 足し算
+    Radian operator +(const Radian& rhs) const { return Radian(mValue + rhs.mValue); }
+    //! 引き算
+    Radian operator -(const Radian& rhs) const { return Radian(mValue - rhs.mValue); }
+    //! 掛け算
+    Radian operator *(float rhs) const { return Radian(mValue * rhs); }
+    //! 割り算
+    Radian operator /(float rhs) const { return Radian(mValue / rhs); }
+
+    //! 足し算
+    Radian& operator *=(const Radian& rhs) { mValue += rhs.mValue; return *this; }
+    //! 引き算
+    Radian& operator -=(const Radian& rhs) { mValue -= rhs.mValue; return *this; }
+    //! 掛け算
+    Radian& operator *=(float rhs) { mValue *= rhs; return *this; }
+    //! 割り算
+    Radian& operator /=(float rhs) { mValue /= rhs; return *this; }
+
+    //! 変化
+    Radian operator -() const { return Radian(-mValue); }
+
 private:
     float mValue = 0.f;
 };

@@ -173,5 +173,14 @@
     <ClInclude Include="..\..\Include\math\balMathCommonMatrix_inl.h">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\math\balMathCommonVector_inl.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\win64\balMathWin64Matrix_inl.h">
+      <Filter>math\win64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\win64\balMathWin64Vector_inl.h">
+      <Filter>math\win64</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

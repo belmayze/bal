@@ -93,6 +93,38 @@ inline void MathCommonMatrix44::setTranspose()
 }
 
 // ------------------------------------------------------------------------
+
+inline void MathCommonMatrix44::setLookAtRH(const MathVector3& eye_pt, const MathVector3& look_at, const MathVector3& up)
+{
+    // カメラの姿勢ベクトルを計算する
+    MathVector3 x, y, z;
+    z = (eye_pt - look_at).calcNormalize(); // 視線ベクトル
+    y = up.calcNormalize();
+    x = y.calcCross(z);
+    y = z.calcCross(x); // 上方向ベクトルを再計算
+
+    // 行列をセットします
+    // View 行列は、姿勢ベクトルは逆行列（倒置）になり、移動量は反転する
+    m[0][0] = x.getX(); m[0][1] = x.getY(); m[0][2] = x.getZ(); m[0][3] = -x.calcDot(eye_pt);
+    m[1][0] = y.getX(); m[1][1] = y.getY(); m[1][2] = y.getZ(); m[1][3] = -y.calcDot(eye_pt);
+    m[2][0] = z.getX(); m[2][1] = z.getY(); m[2][2] = z.getZ(); m[2][3] = -z.calcDot(eye_pt);
+    m[3][0] = 0.f;      m[3][1] = 0.f;      m[3][2] = 0.f;      m[3][3] = 0.f;
+}
+
+// ------------------------------------------------------------------------
+
+inline void MathCommonMatrix44::setPerspectiveProjectionRH(const Radian& fovy, float aspect, float z_near, float z_far)
+{
+    float f = 1.f / Math::Tan(fovy * 0.5f); // 距離 = 1 の時の Y 方向の大きさ
+    float n = 1.f / (z_far - z_near);       // 奥行の長さを 1 に正規化する係数
+
+    m[0][0] = f / aspect; m[0][1] = 0.f; m[0][2] =  0.f;       m[0][3] =  0.f;
+    m[1][0] = 0.f;        m[1][1] = f;   m[1][2] =  0.f;       m[1][3] =  0.f;
+    m[2][0] = 0.f;        m[2][1] = 0.f; m[2][2] = -z_far * n; m[2][3] = -z_far * z_near * n;
+    m[3][0] = 0.f;        m[3][1] = 0.f; m[3][2] = -1.f;       m[3][3] =  0.f;
+}
+
+// ------------------------------------------------------------------------
 // operator -+*/
 // ------------------------------------------------------------------------
 inline MathCommonMatrix44 MathCommonMatrix44::operator*(const MathCommonMatrix44& rhs) const
