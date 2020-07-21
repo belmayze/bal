@@ -116,6 +116,12 @@ public:
     inline       float& operator[](int x)       { return m[x]; }
     inline const float& operator[](int x) const { return m[x]; }
 
+    // ------------------------------------------------------------------------
+    // operator cast
+    // ------------------------------------------------------------------------
+    explicit operator       float* ()       { return m; }
+    explicit operator const float* () const { return m; }
+
 protected:
     float m[4];
 };

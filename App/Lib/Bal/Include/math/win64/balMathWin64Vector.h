@@ -32,7 +32,12 @@ class alignas(16) MathWin64Vector4 : public MathCommonVector4
 public:
     //! コンストラクター
     using MathCommonVector4::MathCommonVector4;
-
+    
+    //! キャスト
+    MathWin64Vector4(const MathCommonVector4& v)
+    {
+        *this = v;
+    }
 };
 
 }
