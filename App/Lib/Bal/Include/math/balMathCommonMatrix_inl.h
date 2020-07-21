@@ -23,6 +23,39 @@ inline void MathCommonMatrix44::setScale(const MathVector3& scale)
 
 // ------------------------------------------------------------------------
 
+inline void MathCommonMatrix44::setRotateX(const Radian& radian)
+{
+    float sin = Math::Sin(radian);
+    float cos = Math::Cos(radian);
+    m[0][0] = 1.f; m[0][1] = 0.f; m[0][2] =  0.f;
+    m[1][0] = 0.f; m[1][1] = cos; m[1][2] = -sin;
+    m[2][0] = 0.f; m[2][1] = sin; m[2][2] =  cos;
+}
+
+// ------------------------------------------------------------------------
+
+inline void MathCommonMatrix44::setRotateY(const Radian& radian)
+{
+    float sin = Math::Sin(radian);
+    float cos = Math::Cos(radian);
+    m[0][0] =  cos; m[0][1] = 0.f; m[0][2] = sin;
+    m[1][0] =  0.f; m[1][1] = 1.f; m[1][2] = 0.f;
+    m[2][0] = -sin; m[2][1] = 0.f; m[2][2] = cos;
+}
+
+// ------------------------------------------------------------------------
+
+inline void MathCommonMatrix44::setRotateZ(const Radian& radian)
+{
+    float sin = Math::Sin(radian);
+    float cos = Math::Cos(radian);
+    m[0][0] = cos; m[0][1] = -sin; m[0][2] = 0.f;
+    m[1][0] = sin; m[1][1] =  cos; m[1][2] = 0.f;
+    m[2][0] = 0.f; m[2][1] =  0.f; m[2][2] = 1.f;
+}
+
+// ------------------------------------------------------------------------
+
 inline void MathCommonMatrix44::setRotate(const Radian& x, const Radian& y, const Radian& z)
 {
     float sinX = Math::Sin(x), sinY = Math::Sin(y), sinZ = Math::Sin(z);
@@ -113,6 +146,18 @@ inline void MathCommonMatrix44::setLookAtRH(const MathVector3& eye_pt, const Mat
 
 // ------------------------------------------------------------------------
 
+inline void MathCommonMatrix44::setPerspectiveOrthoRH(float width, float height, float z_near, float z_far)
+{
+    float n = 1.f / (z_far - z_near); // 奥行の長さを 1 に正規化する係数
+
+    m[0][0] = 2.f / width; m[0][1] = 0.f;          m[0][2] = 0.f; m[0][3] = 0.f;
+    m[1][0] = 0.f;         m[1][1] = 2.f / height; m[1][2] = 0.f; m[1][3] = 0.f;
+    m[2][0] = 0.f;         m[2][1] = 0.f;          m[2][2] = n;   m[2][3] = -z_near * n;
+    m[3][0] = 0.f;         m[3][1] = 0.f;          m[3][2] = 0.f; m[3][3] = 1.f;
+}
+
+// ------------------------------------------------------------------------
+
 inline void MathCommonMatrix44::setPerspectiveProjectionRH(const Radian& fovy, float aspect, float z_near, float z_far)
 {
     float f = 1.f / Math::Tan(fovy * 0.5f); // 距離 = 1 の時の Y 方向の大きさ
@@ -149,6 +194,18 @@ inline MathCommonMatrix44 MathCommonMatrix44::operator*(const MathCommonMatrix44
     result.m[3][1] = m[3][0] * rhs.m[0][1] + m[3][1] * rhs.m[1][1] + m[3][2] * rhs.m[2][1] + m[3][3] * rhs.m[3][1];
     result.m[3][2] = m[3][0] * rhs.m[0][2] + m[3][1] * rhs.m[1][2] + m[3][2] * rhs.m[2][2] + m[3][3] * rhs.m[3][2];
     result.m[3][3] = m[3][0] * rhs.m[0][3] + m[3][1] * rhs.m[1][3] + m[3][2] * rhs.m[2][3] + m[3][3] * rhs.m[3][3];
+    return result;
+}
+
+// ------------------------------------------------------------------------
+
+inline MathCommonVector4 MathCommonMatrix44::operator*(const MathCommonVector4& rhs) const
+{
+    MathCommonVector4 result;
+    result[0] = m[0][0] * rhs[0] + m[0][1] * rhs[1] + m[0][2] * rhs[2] + m[0][3] * rhs[3];
+    result[1] = m[1][0] * rhs[0] + m[1][1] * rhs[1] + m[1][2] * rhs[2] + m[1][3] * rhs[3];
+    result[2] = m[2][0] * rhs[0] + m[2][1] * rhs[1] + m[2][2] * rhs[2] + m[2][3] * rhs[3];
+    result[3] = m[3][0] * rhs[0] + m[3][1] * rhs[1] + m[3][2] * rhs[2] + m[3][3] * rhs[3];
     return result;
 }
 

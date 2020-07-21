@@ -113,7 +113,8 @@ public:
     // ------------------------------------------------------------------------
     // operator at
     // ------------------------------------------------------------------------
-    inline float operator[](int x) const { return m[x]; }
+    inline       float& operator[](int x)       { return m[x]; }
+    inline const float& operator[](int x) const { return m[x]; }
 
 protected:
     float m[4];

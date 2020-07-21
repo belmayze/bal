@@ -55,8 +55,29 @@ public:
     inline void setScale(const MathVector3& scale);
 
     /*!
+     * X軸回転をセットします
+     * @param[in] radian 角度
+     */
+    inline void setRotateX(const Radian& radian);
+
+    /*!
+     * Y軸回転をセットします
+     * @param[in] radian 角度
+     */
+    inline void setRotateY(const Radian& radian);
+
+    /*!
+     * Z軸回転をセットします
+     * @param[in] radian 角度
+     */
+    inline void setRotateZ(const Radian& radian);
+
+    /*!
      * 回転をセットします
      * @note Z * Y * X を計算します
+     * @param[in] x X軸角度
+     * @param[in] y Y軸角度
+     * @param[in] z Z軸角度
      */
     inline void setRotate(const Radian& x, const Radian& y, const Radian& z);
 
@@ -86,6 +107,15 @@ public:
      */
     inline void setLookAtRH(const MathVector3& eye_pt, const MathVector3& look_at, const MathVector3& up);
 
+    /*! 
+     * 右手座標系の平行投影行列を作成します
+     * @param[in] width  画面の横幅
+     * @param[in] height 画面の高さ
+     * @param[in] z_near Z方向の近距離限界
+     * @param[in] z_far  Z方向の遠距離限界
+     */
+    inline void setPerspectiveOrthoRH(float width, float height, float z_near, float z_far);
+
     /*!
      * 右手座標系のプロジェクション行列を作成します
      * @note 出力される Z は、0.0～1.0 の範囲です
@@ -101,6 +131,8 @@ public:
     // ------------------------------------------------------------------------
     /*! 行列同士の乗算 */
     inline MathCommonMatrix44 operator*(const MathCommonMatrix44& rhs) const;
+    /*! ベクトルとの乗算 */
+    inline MathCommonVector4 operator*(const MathCommonVector4& rhs) const;
 
     // ------------------------------------------------------------------------
     // operator at
