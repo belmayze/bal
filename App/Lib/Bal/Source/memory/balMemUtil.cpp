@@ -12,7 +12,7 @@ namespace bal {
 
 // ----------------------------------------------------------------------------
 
-void MemUtil::Copy(void* p_dst, const void* p_src, std::size_t size)
+void MemUtil::Copy(void* p_dst, const void* p_src, size_t size)
 {
 #if BAL_PLATFORM_IS_WIN
     memcpy_s(p_dst, size, p_src, size);

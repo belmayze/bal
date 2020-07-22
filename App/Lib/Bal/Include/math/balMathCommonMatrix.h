@@ -48,6 +48,7 @@ public:
         m[3][0] = m30; m[3][1] = m31; m[3][2] = m32; m[3][3] = m33;
     }
 
+public:
     /*!
      * スケールをセットします
      * @param[in] scale スケール値
@@ -126,6 +127,22 @@ public:
      */
     inline void setPerspectiveProjectionRH(const Radian& fovy, float aspect, float z_near, float z_far);
 
+public:
+    /*!
+     * 行にベクトルをセットします
+     * @param[in] index インデックス
+     * @param[in] v     ベクトル
+     */
+    inline void setCol(int index, const MathVector4& v);
+
+    /*!
+     * 列にベクトルをセットします
+     * @param[in] index インデックス
+     * @param[in] v     ベクトル
+     */
+    inline void setRow(int index, const MathVector4& v);
+
+public:
     // ------------------------------------------------------------------------
     // operator -+*/
     // ------------------------------------------------------------------------

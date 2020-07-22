@@ -17,7 +17,7 @@ class MemUtil
 {
 public:
     /*! memcpy */
-    static void Copy(void* p_dst, const void* p_src, std::size_t size);
+    static void Copy(void* p_dst, const void* p_src, size_t size);
 };
 
 }

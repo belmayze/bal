@@ -36,12 +36,12 @@ public:
     /*!
      * 文字列の長さを取得
      */
-    virtual std::size_t size() const override { return mSize; }
+    virtual size_t size() const override { return mSize; }
 
     /*!
      * 文字列の長さを取得
      */
-    virtual std::size_t length() const override { return mSize; }
+    virtual size_t length() const override { return mSize; }
 
     /*!
      * 空文字かチェック
@@ -50,7 +50,7 @@ public:
 
 private:
     const char* mpStr = "";
-    std::size_t mSize = 0;
+    size_t      mSize = 0;
 
 private:
     /*! 文字列の長さを計算する */

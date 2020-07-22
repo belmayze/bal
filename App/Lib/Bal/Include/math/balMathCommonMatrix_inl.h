@@ -170,6 +170,23 @@ inline void MathCommonMatrix44::setPerspectiveProjectionRH(const Radian& fovy, f
 }
 
 // ------------------------------------------------------------------------
+
+inline void MathCommonMatrix44::setCol(int index, const MathVector4& v)
+{
+    std::memcpy(m[index], static_cast<const float*>(v), sizeof(float) * 4);
+}
+
+// ------------------------------------------------------------------------
+
+inline void MathCommonMatrix44::setRow(int index, const MathVector4& v)
+{
+    m[0][index] = v[0];
+    m[1][index] = v[1];
+    m[2][index] = v[2];
+    m[3][index] = v[3];
+}
+
+// ------------------------------------------------------------------------
 // operator -+*/
 // ------------------------------------------------------------------------
 inline MathCommonMatrix44 MathCommonMatrix44::operator*(const MathCommonMatrix44& rhs) const

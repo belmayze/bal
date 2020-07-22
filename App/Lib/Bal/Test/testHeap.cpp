@@ -6,7 +6,8 @@
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 // bal
-#include <heap/balHeapBlockOS.h>
+#include <heap/balHeapBlock.h>
+#include <heap/balHeapManager.h>
 #include <io/balLog.h>
 #include <math/balMath.h>
 #include <time/balDateTime.h>
@@ -17,11 +18,13 @@ namespace test {
 
 void TestHeap::exec_()
 {
-    auto heap = bal::heap::BlockOS::Create("Test");
+    bal::heap::BlockBase* p_root_heap = bal::heap::Manager::GetInstance().getCurrentHeap();
+
+    auto heap = bal::heap::Block::Create(1 * 1024, "Test", p_root_heap);
     {
         void* ptr = heap->alloc(100);
         bal::Log::Print("Alloc [%p]\n", ptr);
-        free(ptr);
+        delete ptr;
     }
 
     // 行列乗算

@@ -56,7 +56,7 @@ public:
     /*!
      * コンテナを分割して、先頭の方を返す
      */
-    Container* split(std::uint32_t size);
+    Container* split(uint32_t size);
 
     /*!
      * 前後を判断して、結合できる場合は結合します
@@ -71,12 +71,12 @@ public:
     /*!
      * サイズを取得する
      */
-    std::uint32_t getSize() const;
+    uint32_t getSize() const;
 
     /*!
      * 管理領域も含めたサイズを取得する
      */
-    std::uint32_t getAllSize() const;
+    uint32_t getAllSize() const;
 
     /*!
      * 次のコンテナを取得
@@ -87,6 +87,12 @@ public:
      * 前のコンテナを取得
      */
     Container* getPrev();
+
+    /*!
+     * データを特定の値で埋めます
+     * @param[in] data 埋めたいデータ
+     */
+    void setFill(uint8_t data);
 };
 
 }

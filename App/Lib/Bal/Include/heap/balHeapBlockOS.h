@@ -30,7 +30,7 @@ private:
     /*!
      * メモリー確保
      */
-    virtual void* allocImpl_(std::size_t size) override;
+    virtual void* allocImpl_(size_t size) override;
 };
 
 }

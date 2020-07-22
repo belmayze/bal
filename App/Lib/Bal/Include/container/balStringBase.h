@@ -27,12 +27,12 @@ public:
     /*!
      * 文字列の長さを取得
      */
-    virtual std::size_t size() const = 0;
+    virtual size_t size() const = 0;
 
     /*!
      * 文字列の長さを取得
      */
-    virtual std::size_t length() const = 0;
+    virtual size_t length() const = 0;
 
     /*!
      * 空文字かチェック

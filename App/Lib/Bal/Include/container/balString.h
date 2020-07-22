@@ -15,7 +15,7 @@ namespace bal {
 /*!
  * 文字列
  */
-template <std::size_t N>
+template <size_t N>
 class String : public StringBase
 {
     BAL_STATIC_ASSERT(N > 0, "String<N>: N > 0");
@@ -34,12 +34,12 @@ public:
     /*!
      * 文字列の長さを取得
      */
-    virtual std::size_t size() const override { return mSize; }
+    virtual size_t size() const override { return mSize; }
 
     /*!
      * 文字列の長さを取得
      */
-    virtual std::size_t length() const override { return mSize; }
+    virtual size_t length() const override { return mSize; }
 
     /*!
      * 空文字かチェック
@@ -54,7 +54,7 @@ public:
 
 private:
     char        mStr[N];
-    std::size_t mSize = 0;
+    size_t mSize = 0;
 };
 
 }

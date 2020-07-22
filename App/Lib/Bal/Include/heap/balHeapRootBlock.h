@@ -31,7 +31,7 @@ private:
      * ルートヒープの作成
      * @note フレームワークからのみ作成できます
      */
-    static std::unique_ptr<RootBlock, Deleter> Create(std::size_t size);
+    static std::unique_ptr<RootBlock, Deleter> Create(size_t size);
 
 private:
     /*!
@@ -43,7 +43,7 @@ private:
      * 確保内部関数
      * @param[in] size アライメント済みのサイズ
      */
-    virtual void* allocImpl_(std::size_t size);
+    virtual void* allocImpl_(size_t size);
 };
 
 }

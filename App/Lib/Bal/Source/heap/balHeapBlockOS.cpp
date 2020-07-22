@@ -22,7 +22,7 @@ std::unique_ptr<BlockOS> BlockOS::Create(const StringPtr& name)
 
 // ----------------------------------------------------------------------------
 
-void* BlockOS::allocImpl_(std::size_t size)
+void* BlockOS::allocImpl_(size_t size)
 {
     return malloc(size);
 }

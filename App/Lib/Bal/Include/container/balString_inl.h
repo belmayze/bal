@@ -13,10 +13,10 @@ namespace bal {
 
 // ----------------------------------------------------------------------------
 
-template <std::size_t N>
+template <size_t N>
 String<N>& String<N>::assign(const StringBase& str)
 {
-    std::size_t size = str.size();
+    size_t size = str.size();
     if (size >= N)
     {
         BAL_ASSERT(size < N);

@@ -20,8 +20,8 @@ public:
     //! 初期化構造体
     struct InitializeArg
     {
-        StringPtr   mTitle    = ""; //!< タイトル名
-        std::size_t mHeapSize = 0;  //!< アプリケーションが使用する全体メモリー量
+        StringPtr mTitle    = ""; //!< タイトル名
+        size_t    mHeapSize = 0;  //!< アプリケーションが使用する全体メモリー量
     };
 
 public:

@@ -27,12 +27,13 @@ public:
      * @param[in] size      サイズ
      * @param[in] alignment アライメント
      */
-    void* alloc(std::size_t size, std::size_t alignment = 4);
+    void* alloc(size_t size, size_t alignment = 4);
 
 protected:
-    const StringPtr        mName;
-    std::uint32_t          mSize = 0;
-    Container::BackwardTag mBackwardTag;
+    const StringPtr            mName;
+    std::unique_ptr<uint8_t[]> mpRootPtr;
+    uint32_t                   mSize = 0;
+    Container::BackwardTag     mBackwardTag;
 
 protected:
     // コンストラクターで作ることはできません
@@ -45,13 +46,19 @@ private:
      * 確保内部関数
      * @param[in] size アライメント済みのサイズ
      */
-    virtual void* allocImpl_(std::size_t size) = 0;
+    virtual void* allocImpl_(size_t size) = 0;
 };
 
 }
 
-void* operator new(std::size_t size);
-void* operator new(std::size_t size, bal::heap::BlockBase* p_heap);
+void* operator new(size_t size);
+void* operator new(size_t size, bal::heap::BlockBase* p_heap);
+
+void* operator new[](size_t size);
+void* operator new[](size_t size, bal::heap::BlockBase* p_heap);
 
 void operator delete(void* ptr);
 void operator delete(void* ptr, bal::heap::BlockBase* p_heap);
+
+void operator delete[](void* ptr);
+void operator delete[](void* ptr, bal::heap::BlockBase* p_heap);

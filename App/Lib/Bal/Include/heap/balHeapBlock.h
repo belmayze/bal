@@ -21,10 +21,7 @@ public:
      * @param[in] name     名前
      * @param[in] p_parent 親ヒープ
      */
-    static std::unique_ptr<Block> Create(std::size_t size, const StringPtr& name, BlockBase* p_parent);
-
-private:
-    std::unique_ptr<std::uint8_t[]> mpRootPtr;
+    static std::unique_ptr<Block> Create(size_t size, const StringPtr& name, BlockBase* p_parent);
 
 private:
     /*!
@@ -36,7 +33,7 @@ private:
      * 確保内部関数
      * @param[in] size アライメント済みのサイズ
      */
-    virtual void* allocImpl_(std::size_t size);
+    virtual void* allocImpl_(size_t size);
 };
 
 }
