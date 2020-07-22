@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Source\app\balApiEntry.cpp" />
     <ClCompile Include="..\..\Source\container\balString.cpp">
       <SubType>
       </SubType>
@@ -58,6 +59,7 @@
     <ClCompile Include="..\..\Source\time\balDateTime.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\Include\app\balApiEntry.h" />
     <ClInclude Include="..\..\Include\common\balDef.h">
       <SubType>
       </SubType>

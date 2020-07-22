@@ -5,15 +5,19 @@
  *
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
+// Windows
+#include <Windows.h>
+#include <tchar.h>
 // bal
 #include <framework/balFramework.h>
 #include <io/balLog.h>
 #include <container/balArray.h>
 #include <container/balString.h>
+#include <memory/balUniquePtr.h>
 // test
 #include "testHeap.h"
 
-int main()
+int balMain()
 {
     bal::Framework framework;
     {
@@ -24,7 +28,7 @@ int main()
     }
 
     bal::Array<std::unique_ptr<test::TestBase>, 1> arr = {
-        std::make_unique<test::TestHeap>("TestHeap")
+        bal::make_unique<test::TestHeap>(nullptr, "TestHeap")
     };
     for (auto& test : arr)
     {

@@ -28,6 +28,7 @@ void* operator new(size_t size)
 }
 void* operator new(size_t size, bal::heap::BlockBase* p_heap)
 {
+    if (!p_heap) { p_heap = bal::heap::Manager::GetInstance().getCurrentHeap(); }
     return p_heap->alloc(size);
 }
 void* operator new[](size_t size)
@@ -37,6 +38,7 @@ void* operator new[](size_t size)
 }
 void* operator new[](size_t size, bal::heap::BlockBase* p_heap)
 {
+    if (!p_heap) { p_heap = bal::heap::Manager::GetInstance().getCurrentHeap(); }
     return p_heap->alloc(size);
 }
 // 破棄

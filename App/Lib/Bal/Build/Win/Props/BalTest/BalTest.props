@@ -5,7 +5,7 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <AdditionalDependencies>bal.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile />

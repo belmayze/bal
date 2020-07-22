@@ -28,6 +28,9 @@
     <Filter Include="time">
       <UniqueIdentifier>{6d511198-11fe-49a5-b889-e597bf75d13f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="app">
+      <UniqueIdentifier>{39861e8e-1acc-4505-940a-5add9f6e66b1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\framework\balFramework.cpp">
@@ -77,6 +80,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\math\balRadian.cpp">
       <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\app\balApiEntry.cpp">
+      <Filter>app</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -181,6 +187,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\math\win64\balMathWin64Vector_inl.h">
       <Filter>math\win64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\app\balApiEntry.h">
+      <Filter>app</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
