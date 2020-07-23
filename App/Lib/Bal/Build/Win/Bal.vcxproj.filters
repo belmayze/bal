@@ -84,6 +84,9 @@
     <ClCompile Include="..\..\Source\app\balApiEntry.cpp">
       <Filter>app</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\app\balApplicationBase.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\memory\balSingleton.h">
@@ -190,6 +193,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\app\balApiEntry.h">
       <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\app\balApplicationBase.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\balMathCommonSize.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\win64\balMathWin64Size.h">
+      <Filter>math\win64</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

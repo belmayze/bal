@@ -14,6 +14,19 @@
 // ----------------------------------------------------------------------------
 namespace bal {
 
+class MathWin64Vector2 : public MathCommonVector2
+{
+public:
+    //! コンストラクター
+    using MathCommonVector2::MathCommonVector2;
+
+    //! キャスト
+    MathWin64Vector2(const MathCommonVector2& v)
+    {
+        *this = v;
+    }
+};
+
 class MathWin64Vector3 : public MathCommonVector3
 {
 public:

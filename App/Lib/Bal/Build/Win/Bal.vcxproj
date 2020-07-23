@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\app\balApiEntry.cpp" />
+    <ClCompile Include="..\..\Source\app\balApplicationBase.cpp" />
     <ClCompile Include="..\..\Source\container\balString.cpp">
       <SubType>
       </SubType>
@@ -60,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\app\balApiEntry.h" />
+    <ClInclude Include="..\..\Include\app\balApplicationBase.h" />
     <ClInclude Include="..\..\Include\common\balDef.h">
       <SubType>
       </SubType>
@@ -113,12 +115,14 @@
     <ClInclude Include="..\..\Include\math\balMathCommon.h" />
     <ClInclude Include="..\..\Include\math\balMathCommonMatrix.h" />
     <ClInclude Include="..\..\Include\math\balMathCommonMatrix_inl.h" />
+    <ClInclude Include="..\..\Include\math\balMathCommonSize.h" />
     <ClInclude Include="..\..\Include\math\balMathCommonVector.h" />
     <ClInclude Include="..\..\Include\math\balMathCommonVector_inl.h" />
     <ClInclude Include="..\..\Include\math\balRadian.h" />
     <ClInclude Include="..\..\Include\math\win64\balMathWin64.h" />
     <ClInclude Include="..\..\Include\math\win64\balMathWin64Matrix.h" />
     <ClInclude Include="..\..\Include\math\win64\balMathWin64Matrix_inl.h" />
+    <ClInclude Include="..\..\Include\math\win64\balMathWin64Size.h" />
     <ClInclude Include="..\..\Include\math\win64\balMathWin64Vector.h" />
     <ClInclude Include="..\..\Include\math\win64\balMathWin64Vector_inl.h" />
     <ClInclude Include="..\..\Include\memory\balMemUtil.h">

@@ -9,6 +9,7 @@
 #include <Windows.h>
 #include <tchar.h>
 // bal
+#include <app/balApplicationBase.h>
 #include <framework/balFramework.h>
 #include <io/balLog.h>
 #include <container/balArray.h>
@@ -17,23 +18,46 @@
 // test
 #include "testHeap.h"
 
-int balMain()
+class Main : public bal::ApplicationBase
 {
-    bal::Framework framework;
+public:
+    /*!
+     * bal のブートセットアップ関数です
+     * balMain() の前に呼ばれ、起動のセットアップを行います
+     * @param[in]     api_entry 起動したときのオプション設定などが入っているクラスです
+     * @param[in,out] p_arg     ブートの設定を格納する
+     */
+    virtual void setupBoot(const bal::ApiEntry& api_entry, bal::ApiEntry::BootArg* p_arg)
     {
-        bal::Framework::InitializeArg init_arg;
-        init_arg.mTitle    = "";
-        init_arg.mHeapSize = 100 * 1024 * 1024;
-        framework.initialize(init_arg);
+        //p_arg->mBootMode = bal::ApiEntry::BootMode::Application;
+        p_arg->mBootMode = bal::ApiEntry::BootMode::Console;
     }
 
-    bal::Array<std::unique_ptr<test::TestBase>, 1> arr = {
-        bal::make_unique<test::TestHeap>(nullptr, "TestHeap")
-    };
-    for (auto& test : arr)
+    /*!
+     * bal のエントリーポイントです
+     * @param[in] api_entry 起動したときのオプション設定などが入っているクラスです
+     */
+    virtual int main(const bal::ApiEntry& api_entry)
     {
-        test->exec();
-    }
+        bal::Framework framework;
+        {
+            bal::Framework::InitializeArg init_arg;
+            init_arg.mTitle      = "Test";
+            init_arg.mHeapSize   = 100 * 1024 * 1024;
+            init_arg.mRenderSize = bal::MathSize(640, 480);
+            framework.initialize(api_entry, init_arg);
+        }
 
-    return 0;
-}
+        bal::Array<std::unique_ptr<test::TestBase>, 1> arr = {
+            bal::make_unique<test::TestHeap>(nullptr, "TestHeap")
+        };
+        for (auto& test : arr)
+        {
+            test->exec();
+        }
+
+        return 0;
+    }
+};
+
+Main gMain;
