@@ -36,14 +36,14 @@ void TestHeap::exec_()
             m0.setScale(bal::MathVector3(1.f, 2.f, 3.f));
             m1.setTranslate(bal::MathVector3(2.f, 2.f, 2.f));
             v0 = bal::MathVector4(1.f, 2.f, 3.f, 1.f);
-            for (int i = 0; i < 10000000; ++i)
+            for (int i = 0; i < 50000000; ++i)
             {
                 m2 = m0 * m1;
             }
-            for (int i = 0; i < 10000000; ++i)
-            {
-                v1 = m2 * v0;
-            }
+            //for (int i = 0; i < 10000000; ++i)
+            //{
+            //    v1 = m2 * v0;
+            //}
 
             //bal::Log::Print(
             //    "Matrix: %.1f, %.1f, %.1f, %.1f\n"
@@ -72,14 +72,14 @@ void TestHeap::exec_()
             m0.setScale(bal::MathVector3(1.f, 2.f, 3.f));
             m1.setTranslate(bal::MathVector3(2.f, 2.f, 2.f));
             v0 = bal::MathCommonVector4(1.f, 2.f, 3.f, 1.f);
-            for (int i = 0; i < 10000000; ++i)
+            for (int i = 0; i < 50000000; ++i)
             {
                 m2 = m0 * m1;
             }
-            for (int i = 0; i < 10000000; ++i)
-            {
-                v1 = m2 * v0;
-            }
+            //for (int i = 0; i < 10000000; ++i)
+            //{
+            //    v1 = m2 * v0;
+            //}
 
             //bal::Log::Print(
             //    "Matrix: %.1f, %.1f, %.1f, %.1f\n"
@@ -108,7 +108,7 @@ void TestHeap::exec_()
         {
             bal::MathMatrix44 m;
             m.setTranslate(bal::MathVector3(1.f, 2.f, 3.f));
-            for (int i = 0; i < 10000000; ++i)
+            for (int i = 0; i < 100000000; ++i)
             {
                 m.setTranspose();
             }
@@ -122,7 +122,7 @@ void TestHeap::exec_()
         {
             bal::MathCommonMatrix44 m;
             m.setTranslate(bal::MathVector3(1.f, 2.f, 3.f));
-            for (int i = 0; i < 10000000; ++i)
+            for (int i = 0; i < 100000000; ++i)
             {
                 m.setTranspose();
             }
