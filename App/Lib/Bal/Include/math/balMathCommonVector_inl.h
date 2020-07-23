@@ -27,6 +27,13 @@ inline float MathCommonVector2::setNormalize()
 
 // ----------------------------------------------------------------------------
 
+inline float MathCommonVector2::calcLengthSq() const
+{
+    return m[0] * m[0] + m[1] * m[1];
+}
+
+// ----------------------------------------------------------------------------
+
 inline float MathCommonVector2::calcLength() const
 {
     return Math::Sqrt(m[0] * m[0] + m[1] * m[1]);
@@ -66,6 +73,13 @@ inline float MathCommonVector3::setNormalize()
 
     m[0] *= length_inv; m[1] *= length_inv; m[2] *= length_inv;
     return length;
+}
+
+// ----------------------------------------------------------------------------
+
+inline float MathCommonVector3::calcLengthSq() const
+{
+    return m[0] * m[0] + m[1] * m[1] + m[2] * m[2];
 }
 
 // ----------------------------------------------------------------------------

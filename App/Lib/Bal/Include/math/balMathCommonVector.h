@@ -35,6 +35,11 @@ public:
     inline float setNormalize();
 
     /*!
+     * ベクトルの大きさの二乗を返します
+     */
+    inline float calcLengthSq() const;
+
+    /*!
      * ベクトルの大きさを返します
      */
     inline float calcLength() const;
@@ -131,6 +136,11 @@ public:
      * @return float 正規化前のベクトルの大きさを返します
      */
     inline float setNormalize();
+
+    /*!
+     * ベクトルの大きさの二乗を返します
+     */
+    inline float calcLengthSq() const;
 
     /*!
      * ベクトルの大きさを求めます

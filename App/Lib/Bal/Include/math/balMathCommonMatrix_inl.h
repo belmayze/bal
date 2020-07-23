@@ -141,7 +141,7 @@ inline void MathCommonMatrix44::setLookAtRH(const MathVector3& eye_pt, const Mat
     m[0][0] = x.getX(); m[0][1] = x.getY(); m[0][2] = x.getZ(); m[0][3] = -x.calcDot(eye_pt);
     m[1][0] = y.getX(); m[1][1] = y.getY(); m[1][2] = y.getZ(); m[1][3] = -y.calcDot(eye_pt);
     m[2][0] = z.getX(); m[2][1] = z.getY(); m[2][2] = z.getZ(); m[2][3] = -z.calcDot(eye_pt);
-    m[3][0] = 0.f;      m[3][1] = 0.f;      m[3][2] = 0.f;      m[3][3] = 0.f;
+    m[3][0] = 0.f;      m[3][1] = 0.f;      m[3][2] = 0.f;      m[3][3] = 1.f;
 }
 
 // ------------------------------------------------------------------------
