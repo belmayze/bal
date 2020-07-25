@@ -29,8 +29,8 @@ public:
      */
     virtual void setupBoot(const bal::ApiEntry& api_entry, bal::ApiEntry::BootArg* p_arg)
     {
-        //p_arg->mBootMode = bal::ApiEntry::BootMode::Application;
-        p_arg->mBootMode = bal::ApiEntry::BootMode::Console;
+        p_arg->mBootMode = bal::ApiEntry::BootMode::Application;
+        //p_arg->mBootMode = bal::ApiEntry::BootMode::Console;
     }
 
     /*!
@@ -61,13 +61,13 @@ public:
      */
     virtual bool onLoop()
     {
-        bal::Array<std::unique_ptr<test::TestBase>, 1> arr = {
-            bal::make_unique<test::TestHeap>(nullptr, "TestHeap")
-        };
-        for (auto& test : arr)
-        {
-            test->exec();
-        }
+        //bal::Array<std::unique_ptr<test::TestBase>, 1> arr = {
+        //    bal::make_unique<test::TestHeap>(nullptr, "TestHeap")
+        //};
+        //for (auto& test : arr)
+        //{
+        //    test->exec();
+        //}
 
         return true;
     }

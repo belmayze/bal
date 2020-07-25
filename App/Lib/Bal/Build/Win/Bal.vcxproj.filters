@@ -31,6 +31,9 @@
     <Filter Include="app">
       <UniqueIdentifier>{39861e8e-1acc-4505-940a-5add9f6e66b1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="graphics">
+      <UniqueIdentifier>{57384b29-ff00-4fd0-80d9-ddee0406d440}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\framework\balFramework.cpp">
@@ -86,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\app\balApplicationBase.cpp">
       <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\balGraphicsDirectX.cpp">
+      <Filter>graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +208,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\math\win64\balMathWin64Size.h">
       <Filter>math\win64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\balIGraphics.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\balGraphicsDirectX.h">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

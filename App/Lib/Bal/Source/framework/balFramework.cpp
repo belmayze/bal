@@ -11,6 +11,7 @@
 #include <app/balApiEntry.h>
 #include <app/balApplicationBase.h>
 #include <framework/balFramework.h>
+#include <graphics/balGraphicsDirectX.h>
 #include <heap/balHeapManager.h>
 #include <memory/balSingletonFinalizer.h>
 
@@ -127,7 +128,11 @@ void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg)
         );
         if (!mHwnd) { return; }
 
-        // @TODO: グラフィックスの初期化
+        // グラフィックスの初期化
+        mpGraphics = make_unique<gfx::DirectX>(nullptr);
+        gfx::IGraphics::InitializeArg init_arg;
+        init_arg.mHwnd = mHwnd;
+        mpGraphics->initialize(init_arg);
 
         // ウィンドウの表示
         ShowWindow(mHwnd, SW_SHOWNORMAL);

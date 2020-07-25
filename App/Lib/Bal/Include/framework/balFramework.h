@@ -14,6 +14,7 @@
 
 namespace bal { class ApiEntry; }
 namespace bal { class ApplicationBase; }
+namespace bal::gfx { class IGraphics; }
 
 // ----------------------------------------------------------------------------
 namespace bal {
@@ -55,7 +56,9 @@ public:
 
 private:
     std::unique_ptr<heap::RootBlock, heap::RootBlock::Deleter> mpRootHeap; //!< ルートヒープ
-    ApplicationBase* mpApplication = nullptr;
+
+    ApplicationBase*                mpApplication = nullptr;
+    std::unique_ptr<gfx::IGraphics> mpGraphics;
 
     HWND mHwnd;                //!< ウィンドウハンドル
     bool mInitialized = false; //!< 初期化完了フラグ
