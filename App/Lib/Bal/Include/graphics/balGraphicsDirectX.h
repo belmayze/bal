@@ -24,6 +24,9 @@ public:
      */
     virtual bool initialize(const InitializeArg& arg) override;
 
+    // @Debug
+    void loop();
+
     /*!
      * 破棄の処理を記述します
      */
@@ -31,13 +34,24 @@ public:
 
 private:
     // Com の deleter
-    template <class T>
     struct ComDeleter
     {
-        void operator()(T* ptr) { ptr->Release(); }
+        void operator()(IUnknown* ptr) { ptr->Release(); }
     };
 
 private:
+    std::unique_ptr<ID3D12Device6, ComDeleter>             mpDevice;
+    std::unique_ptr<IDXGISwapChain1, ComDeleter>           mpSwapChain;
+    std::unique_ptr<ID3D12CommandAllocator, ComDeleter>    mpCmdAllocator;
+    std::unique_ptr<ID3D12CommandQueue, ComDeleter>        mpCmdQueue;
+    std::unique_ptr<ID3D12GraphicsCommandList, ComDeleter> mpCmdList;
+    std::unique_ptr<ID3D12DescriptorHeap, ComDeleter>      mpDescriptorHeap;
+    std::unique_ptr<ID3D12Resource, ComDeleter>            mpRtvBuffers[2];
+    std::unique_ptr<ID3D12Fence, ComDeleter>               mpFence;
+    D3D12_CPU_DESCRIPTOR_HANDLE                            mRtvHandle;
+    UINT                                                   mRtvHandleSize      = 0;
+    UINT                                                   mCurrentBufferIndex = 0;
+    HANDLE                                                 mEventHandle;
 };
 
 }

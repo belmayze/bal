@@ -131,7 +131,8 @@ void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg)
         // グラフィックスの初期化
         mpGraphics = make_unique<gfx::DirectX>(nullptr);
         gfx::IGraphics::InitializeArg init_arg;
-        init_arg.mHwnd = mHwnd;
+        init_arg.mHwnd             = mHwnd;
+        init_arg.mRenderBufferSize = arg.mRenderSize;
         mpGraphics->initialize(init_arg);
 
         // ウィンドウの表示
@@ -172,6 +173,7 @@ void Framework::enterApplicationLoop()
             {
                 PostQuitMessage(0);
             }
+            reinterpret_cast<gfx::DirectX*>(mpGraphics.get())->loop();
         }
     } while (msg.message != WM_QUIT);
 
@@ -179,6 +181,8 @@ void Framework::enterApplicationLoop()
     ShowWindow(mHwnd, SW_HIDE);
 
     // @TODO: グラフィックスの終了処理
+    mpGraphics->destroy();
+    mpGraphics.reset();
 }
 
 // ----------------------------------------------------------------------------
