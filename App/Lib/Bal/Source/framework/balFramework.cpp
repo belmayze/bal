@@ -9,6 +9,7 @@
 #include <tchar.h>
 // bal
 #include <app/balApiEntry.h>
+#include <app/balApplicationBase.h>
 #include <framework/balFramework.h>
 #include <heap/balHeapManager.h>
 #include <memory/balSingletonFinalizer.h>
@@ -47,11 +48,15 @@ Framework::~Framework()
 
 // ----------------------------------------------------------------------------
 
-void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg )
+void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg)
 {
     // ルートヒープを確保
     mpRootHeap = heap::RootBlock::Create(arg.mHeapSize);
     heap::Manager::GetInstance(mpRootHeap.get()).setCurrentHeap(mpRootHeap.get());
+
+    // アプリケーション保持
+    mpApplication = arg.mpApplication;
+    if (!mpApplication) { return; }
 
     // アプリケーションモードであれば、アプリケーションウィンドウを用意する
     if (api_entry.getBootMode() == ApiEntry::BootMode::Application)
@@ -127,7 +132,48 @@ void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg )
         // ウィンドウの表示
         ShowWindow(mHwnd, SW_SHOWNORMAL);
         UpdateWindow(mHwnd);
+
+        // アプリケーションモードの時はループが有効になる
+        mEnableLoop = true;
     }
+
+    mInitialized = true;
+}
+
+// ----------------------------------------------------------------------------
+
+void Framework::enterApplicationLoop()
+{
+    if (!mInitialized) { return; }
+
+    // コンソールモードの時はループは不要
+    if (!mEnableLoop)
+    {
+        mpApplication->onLoop();
+        return;
+    }
+
+    // ウィンドウメッセージ確認
+    MSG msg;
+    do
+    {
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+        {
+            DispatchMessage(&msg);
+        }
+        else
+        {
+            if (!mpApplication->onLoop())
+            {
+                PostQuitMessage(0);
+            }
+        }
+    } while (msg.message != WM_QUIT);
+
+    // 終了処理
+    ShowWindow(mHwnd, SW_HIDE);
+
+    // @TODO: グラフィックスの終了処理
 }
 
 // ----------------------------------------------------------------------------

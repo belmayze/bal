@@ -42,12 +42,25 @@ public:
         bal::Framework framework;
         {
             bal::Framework::InitializeArg init_arg;
-            init_arg.mTitle      = "Test";
-            init_arg.mHeapSize   = 100 * 1024 * 1024;
-            init_arg.mRenderSize = bal::MathSize(640, 480);
+            init_arg.mTitle        = "Test";
+            init_arg.mHeapSize     = 100 * 1024 * 1024;
+            init_arg.mRenderSize   = bal::MathSize(640, 480);
+            init_arg.mpApplication = this;
             framework.initialize(api_entry, init_arg);
         }
 
+        framework.enterApplicationLoop();
+
+        return 0;
+    }
+
+    /*!
+     * アプリケーションモードの時、ループ処理が行われる関数です
+     * @note Console モードの場合は 1 回しか呼ばれません
+     * @return false を返せばループが終了します
+     */
+    virtual bool onLoop()
+    {
         bal::Array<std::unique_ptr<test::TestBase>, 1> arr = {
             bal::make_unique<test::TestHeap>(nullptr, "TestHeap")
         };
@@ -56,7 +69,7 @@ public:
             test->exec();
         }
 
-        return 0;
+        return true;
     }
 };
 

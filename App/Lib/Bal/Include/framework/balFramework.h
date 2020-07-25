@@ -13,6 +13,7 @@
 #include <memory/balUniquePtr.h>
 
 namespace bal { class ApiEntry; }
+namespace bal { class ApplicationBase; }
 
 // ----------------------------------------------------------------------------
 namespace bal {
@@ -23,9 +24,10 @@ public:
     //! 初期化構造体
     struct InitializeArg
     {
-        StringPtr mTitle    = ""; //!< タイトル名
-        size_t    mHeapSize = 0;  //!< アプリケーションが使用する全体メモリー量
-        MathSize  mRenderSize;    //!< レンダリングサイズ
+        StringPtr        mTitle        = "";      //!< タイトル名
+        size_t           mHeapSize     = 0;       //!< アプリケーションが使用する全体メモリー量
+        MathSize         mRenderSize;             //!< レンダリングサイズ
+        ApplicationBase* mpApplication = nullptr; //!< アプリケーション
     };
 
 public:
@@ -46,10 +48,18 @@ public:
      */
     void initialize(const ApiEntry& api_entry, const InitializeArg& arg);
 
+    /*!
+     * アプリケーションループに入ります
+     */
+    void enterApplicationLoop();
+
 private:
     std::unique_ptr<heap::RootBlock, heap::RootBlock::Deleter> mpRootHeap; //!< ルートヒープ
+    ApplicationBase* mpApplication = nullptr;
 
-    HWND mHwnd; //! ウィンドウハンドル
+    HWND mHwnd;                //!< ウィンドウハンドル
+    bool mInitialized = false; //!< 初期化完了フラグ
+    bool mEnableLoop  = false; //!< ループ処理可能フラグ
 };
 
 }
