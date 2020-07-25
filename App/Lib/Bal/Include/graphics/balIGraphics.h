@@ -19,6 +19,7 @@ public:
     {
         HWND     mHwnd;
         MathSize mRenderBufferSize;
+        uint32_t mBufferCount = 2;
     };
 
 public:

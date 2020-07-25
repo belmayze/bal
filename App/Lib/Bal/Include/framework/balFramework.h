@@ -25,10 +25,11 @@ public:
     //! 初期化構造体
     struct InitializeArg
     {
-        StringPtr        mTitle        = "";      //!< タイトル名
-        size_t           mHeapSize     = 0;       //!< アプリケーションが使用する全体メモリー量
-        MathSize         mRenderSize;             //!< レンダリングサイズ
-        ApplicationBase* mpApplication = nullptr; //!< アプリケーション
+        StringPtr        mTitle             = "";      //!< タイトル名
+        size_t           mHeapSize          = 0;       //!< アプリケーションが使用する全体メモリー量
+        MathSize         mRenderSize;                  //!< レンダリングサイズ
+        uint32_t         mRenderBufferCount = 2;       //!< レンダリングバッファー数
+        ApplicationBase* mpApplication      = nullptr; //!< アプリケーション
     };
 
 public:

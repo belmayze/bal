@@ -133,6 +133,7 @@ void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg)
         gfx::IGraphics::InitializeArg init_arg;
         init_arg.mHwnd             = mHwnd;
         init_arg.mRenderBufferSize = arg.mRenderSize;
+        init_arg.mBufferCount      = arg.mRenderBufferCount;
         mpGraphics->initialize(init_arg);
 
         // ウィンドウの表示
