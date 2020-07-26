@@ -34,6 +34,9 @@
     <Filter Include="graphics">
       <UniqueIdentifier>{57384b29-ff00-4fd0-80d9-ddee0406d440}</UniqueIdentifier>
     </Filter>
+    <Filter Include="graphics\d3d12">
+      <UniqueIdentifier>{ef31fcdc-2329-4ea9-9c52-6b687cf41b28}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\framework\balFramework.cpp">
@@ -90,8 +93,14 @@
     <ClCompile Include="..\..\Source\app\balApplicationBase.cpp">
       <Filter>app</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\graphics\balGraphicsDirectX.cpp">
-      <Filter>graphics</Filter>
+    <ClCompile Include="..\..\Source\graphics\d3d12\balGraphicsD3D12.cpp">
+      <Filter>graphics\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\d3d12\balCommandListD3D12.cpp">
+      <Filter>graphics\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\d3d12\balCommandQueueD3D12.cpp">
+      <Filter>graphics\d3d12</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -212,8 +221,29 @@
     <ClInclude Include="..\..\Include\graphics\balIGraphics.h">
       <Filter>graphics</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\graphics\balGraphicsDirectX.h">
+    <ClInclude Include="..\..\Include\graphics\balICommandList.h">
       <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\balICommandQueue.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\balViewport.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\balMathCommonColor.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\win64\balMathWin64Color.h">
+      <Filter>math\win64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\d3d12\balCommandListD3D12.h">
+      <Filter>graphics\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\d3d12\balGraphicsD3D12.h">
+      <Filter>graphics\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\d3d12\balCommandQueueD3D12.h">
+      <Filter>graphics\d3d12</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

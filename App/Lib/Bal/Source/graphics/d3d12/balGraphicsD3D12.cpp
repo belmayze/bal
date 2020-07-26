@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balHeapBlock.cpp
+ * @file   balGraphicsD3D12.cpp
  * @brief  
  * @author belmayze
  *
@@ -8,13 +8,24 @@
 // windows
 #include <wrl.h>
 // bal
-#include <graphics/balGraphicsDirectX.h>
+#include <graphics/balViewport.h>
+#include <graphics/d3d12/balCommandListD3D12.h>
+#include <graphics/d3d12/balCommandQueueD3D12.h>
+#include <graphics/d3d12/balGraphicsD3D12.h>
 
-namespace bal::gfx {
+namespace bal::gfx::d3d12 {
 
 // ----------------------------------------------------------------------------
 
-bool DirectX::initialize(const InitializeArg& arg)
+Graphics::Graphics() {}
+
+// ----------------------------------------------------------------------------
+
+Graphics::~Graphics() {}
+
+// ----------------------------------------------------------------------------
+
+bool Graphics::initialize(const InitializeArg& arg)
 {
     // フラグ
     UINT dxgi_factory_flags = 0;
@@ -59,43 +70,34 @@ bool DirectX::initialize(const InitializeArg& arg)
 
     // デバイス取得
     Microsoft::WRL::ComPtr<ID3D12Device6> p_device;
-    if (FAILED(D3D12CreateDevice(p_adapter.Get(), D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&p_device))))
+    if (FAILED(D3D12CreateDevice(p_adapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&p_device))))
     {
         return false;
     }
+    mpDevice.reset(p_device.Detach());
 
-    // コマンドアロケーター
-    Microsoft::WRL::ComPtr<ID3D12CommandAllocator> p_cmd_allocator;
-    if (FAILED(p_device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&p_cmd_allocator))))
+    // コマンドキュー
+    mpCmdQueue = make_unique<CommandQueue>(nullptr);
     {
-        return false;
-    }
-
-    // グラフィックスコマンド
-    Microsoft::WRL::ComPtr<ID3D12CommandQueue> p_cmd_queue;
-    {
-        D3D12_COMMAND_QUEUE_DESC desc = {};
-        desc.Type     = D3D12_COMMAND_LIST_TYPE_DIRECT;
-
-        if (FAILED(p_device->CreateCommandQueue(&desc, IID_PPV_ARGS(&p_cmd_queue))))
+        CommandQueue::InitializeArg init_arg;
+        init_arg.mpGraphics = this;
+        init_arg.mType      = CommandQueue::Type::Graphics;
+        if (!mpCmdQueue->initialize(init_arg))
         {
             return false;
         }
     }
 
     // コマンドリスト
-    Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> p_cmd_list;
+    mpCmdList = make_unique<CommandList>(nullptr);
     {
-        if (FAILED(p_device->CreateCommandList(
-            1, D3D12_COMMAND_LIST_TYPE_DIRECT,
-            p_cmd_allocator.Get(),
-            nullptr,
-            IID_PPV_ARGS(&p_cmd_list))))
+        CommandList::InitializeArg init_arg;
+        init_arg.mpGraphics = this;
+        if (!mpCmdList->initialize(init_arg))
         {
             return false;
         }
     }
-    p_cmd_list->Close();
 
     // スワップチェーン
     Microsoft::WRL::ComPtr<IDXGISwapChain1> p_swap_chain;
@@ -115,10 +117,10 @@ bool DirectX::initialize(const InitializeArg& arg)
         DXGI_SWAP_CHAIN_FULLSCREEN_DESC fullscreen_desc = {};
         fullscreen_desc.RefreshRate.Numerator   = 60;
         fullscreen_desc.RefreshRate.Denominator = 1;
-        fullscreen_desc.Windowed                = FALSE;
+        fullscreen_desc.Windowed                = TRUE;
 
         if (FAILED(p_factory->CreateSwapChainForHwnd(
-            p_cmd_queue.Get(),
+            reinterpret_cast<CommandQueue*>(mpCmdQueue.get())->getCommandQueue(),
             arg.mHwnd,
             &desc, &fullscreen_desc,
             nullptr,
@@ -137,13 +139,13 @@ bool DirectX::initialize(const InitializeArg& arg)
         desc.Type           = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
         desc.Flags          = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
-        if (FAILED(p_device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&p_descriptor_heap))))
+        if (FAILED(mpDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&p_descriptor_heap))))
         {
             return false;
         }
 
         // サイズを取得
-        descriptor_handle_size = p_device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+        descriptor_handle_size = mpDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     }
 
     // バッファ
@@ -158,18 +160,8 @@ bool DirectX::initialize(const InitializeArg& arg)
                 return false;
             }
 
-            p_device->CreateRenderTargetView(p_rtv_buffers[i_buffer].Get(), nullptr, handle_tmp);
+            mpDevice->CreateRenderTargetView(p_rtv_buffers[i_buffer].Get(), nullptr, handle_tmp);
             handle_tmp.ptr += descriptor_handle_size;
-        }
-    }
-
-    // フェンス
-    Microsoft::WRL::ComPtr<ID3D12Fence> p_fence;
-    HANDLE event_handle = CreateEvent(0, FALSE, FALSE, 0);
-    {
-        if (FAILED(p_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&p_fence))))
-        {
-            return false;
         }
     }
 
@@ -177,86 +169,64 @@ bool DirectX::initialize(const InitializeArg& arg)
     mBufferCount = arg.mBufferCount;
 
     // 必要な COM を保存
-    mpDevice.reset(p_device.Detach());
     mpSwapChain.reset(p_swap_chain.Detach());
-    mpCmdAllocator.reset(p_cmd_allocator.Detach());
-    mpCmdQueue.reset(p_cmd_queue.Detach());
-    mpCmdList.reset(p_cmd_list.Detach());
     mpDescriptorHeap.reset(p_descriptor_heap.Detach());
     mpRtvBuffers = make_unique<std::unique_ptr<ID3D12Resource, ComDeleter>[]>(nullptr, mBufferCount);
     for (uint32_t i_buffer = 0; i_buffer < mBufferCount; ++i_buffer)
     {
         mpRtvBuffers[i_buffer].reset(p_rtv_buffers[i_buffer].Detach());
     }
-    mpFence.reset(p_fence.Detach());
     mRtvHandle = rtv_handle;
     mRtvHandleSize = descriptor_handle_size;
-    mEventHandle = event_handle;
 
     return true;
 }
 
 // ----------------------------------------------------------------------------
 
-void DirectX::loop()
+void Graphics::loop()
 {
-    mpCmdAllocator->Reset();
-    mpCmdList->Reset(mpCmdAllocator.get(), nullptr);
+    mpCmdList->reset();
 
     D3D12_CPU_DESCRIPTOR_HANDLE rtv_handle = mRtvHandle;
     rtv_handle.ptr += mCurrentBufferIndex * mRtvHandleSize;
 
-    {
-        D3D12_RESOURCE_BARRIER desc = {};
-        desc.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-        desc.Transition.pResource   = mpRtvBuffers[mCurrentBufferIndex].get();
-        desc.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-        desc.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-        desc.Transition.StateAfter  = D3D12_RESOURCE_STATE_RENDER_TARGET;
-        mpCmdList->ResourceBarrier(1, &desc);
-    }
+    mpCmdList->resourceBarrier(
+        mpRtvBuffers[mCurrentBufferIndex].get(),
+        D3D12_RESOURCE_STATE_PRESENT,
+        D3D12_RESOURCE_STATE_RENDER_TARGET
+    );
 
-    D3D12_VIEWPORT vp;
-    vp.TopLeftX = 0;
-    vp.TopLeftY = 0;
-    vp.Width    = 640.f;
-    vp.Height   = 480.f;
-    vp.MinDepth = 0.f;
-    vp.MaxDepth = 1.f;
-    mpCmdList->RSSetViewports(1, &vp);
+    Viewport vp;
+    vp.setOrigin(MathVector2(0.f, 0.f));
+    vp.setSize(MathVector2(640.f, 480.f));
+    vp.setDepth(0.f, 1.f);
+    mpCmdList->setViewport(vp);
 
-    float clear_color[] = { 1.f, 0.f, 0.f, 1.f };
-    mpCmdList->ClearRenderTargetView(rtv_handle, clear_color, 0U, nullptr);
+    mpCmdList->clearColor(&rtv_handle, MathColor(1.f, 0.f, 0.f, 1.f));
 
-    {
-        D3D12_RESOURCE_BARRIER desc = {};
-        desc.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-        desc.Transition.pResource   = mpRtvBuffers[mCurrentBufferIndex].get();
-        desc.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-        desc.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-        desc.Transition.StateAfter  = D3D12_RESOURCE_STATE_PRESENT;
-        mpCmdList->ResourceBarrier(1, &desc);
-    }
+    mpCmdList->resourceBarrier(
+        mpRtvBuffers[mCurrentBufferIndex].get(),
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        D3D12_RESOURCE_STATE_PRESENT
+    );
 
-    mpCmdList->Close();
-    ID3D12CommandList* cmd_lists[] = { mpCmdList.get() };
-    mpCmdQueue->ExecuteCommandLists(1, cmd_lists);
+    mpCmdList->close();
+
+    mpCmdQueue->execute(mpCmdList.get());
 
     waitForPreviousFrame();
 }
 
 // ----------------------------------------------------------------------------
 
-void DirectX::waitForPreviousFrame()
+void Graphics::waitForPreviousFrame()
 {
     // 画面の反映
-    mpSwapChain->Present(0, 0);
+    mpSwapChain->Present(1, 0);
 
     // コマンドキューの終了待ち
-    mpFence->Signal(0);
-    mpFence->SetEventOnCompletion(1, mEventHandle);
-    mpCmdQueue->Signal(mpFence.get(), 1);
-    WaitForSingleObject(mEventHandle, INFINITE);
+    mpCmdQueue->waitExecuted();
 
     // バッファーを進める
     if (++mCurrentBufferIndex > (mBufferCount - 1)) { mCurrentBufferIndex = 0; }
@@ -264,17 +234,15 @@ void DirectX::waitForPreviousFrame()
 
 // ----------------------------------------------------------------------------
 
-bool DirectX::destroy()
+bool Graphics::destroy()
 {
     // 終了待ち
     waitForPreviousFrame();
 
     // 破棄
-    mpFence.reset();
     mpDescriptorHeap.reset();
     mpCmdList.reset();
     mpCmdQueue.reset();
-    mpCmdAllocator.reset();
     mpSwapChain.reset();
     mpRtvBuffers.reset();
     mpDevice.reset();

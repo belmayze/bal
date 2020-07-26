@@ -6,8 +6,6 @@
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 #pragma once
-// std
-#include <intrin.h>
 // bal
 #include <math/balMathCommonMatrix.h>
 #include <math/win64/balMathWin64Vector.h>

@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balMathWin64Size.h
+ * @file   balMathWin64Color.h
  * @brief  
  * @author belmayze
  *
@@ -7,21 +7,21 @@
  */
 #pragma once
 // bal
-#include <math/balMathCommonSize.h>
+#include <math/balMathCommonColor.h>
 
 // ----------------------------------------------------------------------------
 namespace bal {
 
-class MathWin64Size : public MathCommonSize
+class MathWin64Color : public MathCommonColor
 {
 public:
     //! コンストラクター
-    using MathCommonSize::MathCommonSize;
+    using MathCommonColor::MathCommonColor;
 
     //! キャスト
-    MathWin64Size(const MathCommonSize& s)
+    MathWin64Color(const MathCommonColor& color)
     {
-        *this = s;
+        *this = color;
     }
 };
 

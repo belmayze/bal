@@ -11,7 +11,7 @@
 #include <app/balApiEntry.h>
 #include <app/balApplicationBase.h>
 #include <framework/balFramework.h>
-#include <graphics/balGraphicsDirectX.h>
+#include <graphics/d3d12/balGraphicsD3D12.h>
 #include <heap/balHeapManager.h>
 #include <memory/balSingletonFinalizer.h>
 
@@ -129,12 +129,12 @@ void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg)
         if (!mHwnd) { return; }
 
         // グラフィックスの初期化
-        mpGraphics = make_unique<gfx::DirectX>(nullptr);
+        mpGraphics = make_unique<gfx::d3d12::Graphics>(nullptr);
         gfx::IGraphics::InitializeArg init_arg;
         init_arg.mHwnd             = mHwnd;
         init_arg.mRenderBufferSize = arg.mRenderSize;
         init_arg.mBufferCount      = arg.mRenderBufferCount;
-        mpGraphics->initialize(init_arg);
+        if (!mpGraphics->initialize(init_arg)) { return; }
 
         // ウィンドウの表示
         ShowWindow(mHwnd, SW_SHOWNORMAL);
@@ -174,7 +174,8 @@ void Framework::enterApplicationLoop()
             {
                 PostQuitMessage(0);
             }
-            reinterpret_cast<gfx::DirectX*>(mpGraphics.get())->loop();
+            // @Debug
+            reinterpret_cast<gfx::d3d12::Graphics*>(mpGraphics.get())->loop();
         }
     } while (msg.message != WM_QUIT);
 
