@@ -9,8 +9,9 @@
 #include <wrl.h>
 // bal
 #include <graphics/balViewport.h>
-#include <graphics/d3d12/balGraphicsD3D12.h>
 #include <graphics/d3d12/balCommandListD3D12.h>
+#include <graphics/d3d12/balGraphicsD3D12.h>
+#include <graphics/d3d12/balRenderTargetD3D12.h>
 
 namespace bal::gfx::d3d12 {
 
@@ -77,9 +78,27 @@ void CommandList::setViewport(const Viewport& vp)
 
 // ----------------------------------------------------------------------------
 
-void CommandList::clearColor(void* p_handle, const MathColor& color)
+void CommandList::clearColor(IRenderTargetColor* p_render_target, const MathColor& color)
 {
-    mpCmdList->ClearRenderTargetView(*reinterpret_cast<D3D12_CPU_DESCRIPTOR_HANDLE*>(p_handle), color, 0U, nullptr);
+    RenderTargetColor* p_rtv = reinterpret_cast<RenderTargetColor*>(p_render_target);
+    mpCmdList->ClearRenderTargetView(p_rtv->getHandle(), color, 0U, nullptr);
+}
+
+// ----------------------------------------------------------------------------
+
+void CommandList::clearDepthStencil(IRenderTargetDepth* p_render_target, DepthClearFlag clear_flag, float depth, uint32_t stencil)
+{
+    RenderTargetDepth* p_dsv = reinterpret_cast<RenderTargetDepth*>(p_render_target);
+
+    D3D12_CLEAR_FLAGS flag;
+    switch (clear_flag)
+    {
+        case DepthClearFlag::Depth:           flag = D3D12_CLEAR_FLAG_DEPTH; break;
+        case DepthClearFlag::Stencil:         flag = D3D12_CLEAR_FLAG_STENCIL; break;
+        case DepthClearFlag::DepthAndStencil: flag = D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL; break;
+    }
+
+    mpCmdList->ClearDepthStencilView(p_dsv->getHandle(), flag, depth, stencil, 0, nullptr);
 }
 
 // ----------------------------------------------------------------------------

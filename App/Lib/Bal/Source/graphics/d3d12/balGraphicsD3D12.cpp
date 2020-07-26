@@ -12,6 +12,8 @@
 #include <graphics/d3d12/balCommandListD3D12.h>
 #include <graphics/d3d12/balCommandQueueD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
+#include <graphics/d3d12/balRenderTargetD3D12.h>
+#include <graphics/d3d12/balTextureD3D12.h>
 
 namespace bal::gfx::d3d12 {
 
@@ -130,38 +132,70 @@ bool Graphics::initialize(const InitializeArg& arg)
         }
     }
 
-    // デスクリプターヒープ
-    Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> p_descriptor_heap;
-    UINT descriptor_handle_size;
+    // スワップバッファのテクスチャーをレンダーターゲット化
+    mpSwapChainColorBuffers  = make_unique<Texture[]>(nullptr, arg.mBufferCount);
+    mpSwapChainRenderTargets = make_unique<RenderTargetColor[]>(nullptr, arg.mBufferCount);
     {
-        D3D12_DESCRIPTOR_HEAP_DESC desc = {};
-        desc.NumDescriptors = arg.mBufferCount;
-        desc.Type           = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-        desc.Flags          = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-
-        if (FAILED(mpDevice->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&p_descriptor_heap))))
-        {
-            return false;
-        }
-
-        // サイズを取得
-        descriptor_handle_size = mpDevice->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-    }
-
-    // バッファ
-    std::unique_ptr<Microsoft::WRL::ComPtr<ID3D12Resource1>[]> p_rtv_buffers = make_unique<Microsoft::WRL::ComPtr<ID3D12Resource1>[]>(nullptr, arg.mBufferCount);
-    D3D12_CPU_DESCRIPTOR_HANDLE rtv_handle = p_descriptor_heap->GetCPUDescriptorHandleForHeapStart();
-    {
-        D3D12_CPU_DESCRIPTOR_HANDLE handle_tmp = rtv_handle;
         for (uint32_t i_buffer = 0; i_buffer < arg.mBufferCount; ++i_buffer)
         {
-            if (FAILED(p_swap_chain->GetBuffer(i_buffer, IID_PPV_ARGS(&p_rtv_buffers[i_buffer]))))
+            Microsoft::WRL::ComPtr<ID3D12Resource> p_resource;
+            if (FAILED(p_swap_chain->GetBuffer(i_buffer, IID_PPV_ARGS(&p_resource))))
             {
                 return false;
             }
 
-            mpDevice->CreateRenderTargetView(p_rtv_buffers[i_buffer].Get(), nullptr, handle_tmp);
-            handle_tmp.ptr += descriptor_handle_size;
+            {
+                Texture::InitializeArg init_arg;
+                init_arg.mpGraphics = this;
+                init_arg.mpBuffer   = p_resource.Detach();
+                init_arg.mFormat    = Texture::Format::R8_G8_B8_A8_UNORM;
+                mpSwapChainColorBuffers[i_buffer].initialize(init_arg);
+            }
+            {
+                RenderTargetColor::InitializeArg init_arg;
+                init_arg.mpGraphics = this;
+                init_arg.mpTexture  = &mpSwapChainColorBuffers[i_buffer];
+                mpSwapChainRenderTargets[i_buffer].initialize(init_arg);
+            }
+        }
+    }
+
+    // レンダーバッファを確保
+    {
+        // テクスチャーを確保
+        mpColorBuffer = make_unique<Texture>(nullptr);
+        {
+            Texture::InitializeArg init_arg;
+            init_arg.mpGraphics = this;
+            init_arg.mDimension = Texture::Dimension::Texture2D;
+            init_arg.mFormat    = Texture::Format::R16_G16_B16_A16_FLOAT;
+            init_arg.mSize      = arg.mRenderBufferSize;
+            if (!mpColorBuffer->initialize(init_arg)) { return false; }
+        }
+        mpDepthBuffer = make_unique<Texture>(nullptr);
+        {
+            Texture::InitializeArg init_arg;
+            init_arg.mpGraphics = this;
+            init_arg.mDimension = Texture::Dimension::Texture2D;
+            init_arg.mFormat    = Texture::Format::D32_FLOAT;
+            init_arg.mSize      = arg.mRenderBufferSize;
+            if (!mpDepthBuffer->initialize(init_arg)) { return false; }
+        }
+
+        // レンダーターゲット
+        mpRenderTargetColor = make_unique<RenderTargetColor>(nullptr);
+        {
+            RenderTargetColor::InitializeArg init_arg;
+            init_arg.mpGraphics = this;
+            init_arg.mpTexture  = mpColorBuffer.get();
+            if (!mpRenderTargetColor->initialize(init_arg)) { return false; }
+        }
+        mpRenderTargetDepth = make_unique<RenderTargetDepth>(nullptr);
+        {
+            RenderTargetDepth::InitializeArg init_arg;
+            init_arg.mpGraphics = this;
+            init_arg.mpTexture  = mpDepthBuffer.get();
+            if (!mpRenderTargetDepth->initialize(init_arg)) { return false; }
         }
     }
 
@@ -170,14 +204,6 @@ bool Graphics::initialize(const InitializeArg& arg)
 
     // 必要な COM を保存
     mpSwapChain.reset(p_swap_chain.Detach());
-    mpDescriptorHeap.reset(p_descriptor_heap.Detach());
-    mpRtvBuffers = make_unique<std::unique_ptr<ID3D12Resource, ComDeleter>[]>(nullptr, mBufferCount);
-    for (uint32_t i_buffer = 0; i_buffer < mBufferCount; ++i_buffer)
-    {
-        mpRtvBuffers[i_buffer].reset(p_rtv_buffers[i_buffer].Detach());
-    }
-    mRtvHandle = rtv_handle;
-    mRtvHandleSize = descriptor_handle_size;
 
     return true;
 }
@@ -188,11 +214,8 @@ void Graphics::loop()
 {
     mpCmdList->reset();
 
-    D3D12_CPU_DESCRIPTOR_HANDLE rtv_handle = mRtvHandle;
-    rtv_handle.ptr += mCurrentBufferIndex * mRtvHandleSize;
-
     mpCmdList->resourceBarrier(
-        mpRtvBuffers[mCurrentBufferIndex].get(),
+        mpSwapChainColorBuffers[mCurrentBufferIndex].getTexture(),
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
@@ -203,10 +226,10 @@ void Graphics::loop()
     vp.setDepth(0.f, 1.f);
     mpCmdList->setViewport(vp);
 
-    mpCmdList->clearColor(&rtv_handle, MathColor(1.f, 0.f, 0.f, 1.f));
+    mpCmdList->clearColor(&mpSwapChainRenderTargets[mCurrentBufferIndex], MathColor(1.f, 0.f, 0.f, 1.f));
 
     mpCmdList->resourceBarrier(
-        mpRtvBuffers[mCurrentBufferIndex].get(),
+        mpSwapChainColorBuffers[mCurrentBufferIndex].getTexture(),
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PRESENT
     );
@@ -239,12 +262,19 @@ bool Graphics::destroy()
     // 終了待ち
     waitForPreviousFrame();
 
+    // バッファ破棄
+    mpRenderTargetDepth.reset();
+    mpRenderTargetColor.reset();
+    mpDepthBuffer.reset();
+    mpColorBuffer.reset();
+
+    mpSwapChainRenderTargets.reset();
+    mpSwapChainColorBuffers.reset();
+
     // 破棄
-    mpDescriptorHeap.reset();
     mpCmdList.reset();
     mpCmdQueue.reset();
     mpSwapChain.reset();
-    mpRtvBuffers.reset();
     mpDevice.reset();
 
     return true;

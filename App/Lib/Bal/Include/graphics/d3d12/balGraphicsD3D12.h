@@ -12,8 +12,11 @@
 // bal
 #include <graphics/balIGraphics.h>
 
-namespace bal::gfx { class ICommandQueue; }
-namespace bal::gfx { class ICommandList; }
+namespace bal::gfx::d3d12 { class CommandQueue; }
+namespace bal::gfx::d3d12 { class CommandList; }
+namespace bal::gfx::d3d12 { class RenderTargetColor; }
+namespace bal::gfx::d3d12 { class RenderTargetDepth; }
+namespace bal::gfx::d3d12 { class Texture; }
 
 // ----------------------------------------------------------------------------
 namespace bal::gfx::d3d12 {
@@ -63,12 +66,17 @@ private:
     uint32_t                                                       mBufferCount = 2;
     std::unique_ptr<ID3D12Device6, ComDeleter>                     mpDevice;
     std::unique_ptr<IDXGISwapChain1, ComDeleter>                   mpSwapChain;
-    std::unique_ptr<ID3D12DescriptorHeap, ComDeleter>              mpDescriptorHeap;
-    std::unique_ptr<std::unique_ptr<ID3D12Resource, ComDeleter>[]> mpRtvBuffers;
-    std::unique_ptr<ICommandList>                                  mpCmdList;
-    std::unique_ptr<ICommandQueue>                                 mpCmdQueue;
-    D3D12_CPU_DESCRIPTOR_HANDLE                                    mRtvHandle;
-    UINT                                                           mRtvHandleSize      = 0;
+    std::unique_ptr<CommandList>                                   mpCmdList;
+    std::unique_ptr<CommandQueue>                                  mpCmdQueue;
+
+    std::unique_ptr<Texture[]>                                     mpSwapChainColorBuffers;
+    std::unique_ptr<RenderTargetColor[]>                           mpSwapChainRenderTargets;
+
+    std::unique_ptr<Texture>                                       mpColorBuffer;
+    std::unique_ptr<Texture>                                       mpDepthBuffer;
+    std::unique_ptr<RenderTargetColor>                             mpRenderTargetColor;
+    std::unique_ptr<RenderTargetDepth>                             mpRenderTargetDepth;
+
     UINT                                                           mCurrentBufferIndex = 0;
 };
 

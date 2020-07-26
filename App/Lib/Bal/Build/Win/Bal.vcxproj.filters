@@ -102,6 +102,12 @@
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandQueueD3D12.cpp">
       <Filter>graphics\d3d12</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\d3d12\balTextureD3D12.cpp">
+      <Filter>graphics\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\d3d12\balRenderTargetD3D12.cpp">
+      <Filter>graphics\d3d12</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\memory\balSingleton.h">
@@ -243,6 +249,18 @@
       <Filter>graphics\d3d12</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandQueueD3D12.h">
+      <Filter>graphics\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\balITexture.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\d3d12\balTextureD3D12.h">
+      <Filter>graphics\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\balIRenderTarget.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\d3d12\balRenderTargetD3D12.h">
       <Filter>graphics\d3d12</Filter>
     </ClInclude>
   </ItemGroup>

@@ -10,6 +10,8 @@
 #include <math/balMath.h>
 
 namespace bal::gfx { class IGraphics; }
+namespace bal::gfx { class IRenderTargetColor; }
+namespace bal::gfx { class IRenderTargetDepth; }
 namespace bal::gfx { class Viewport; }
 
 // ----------------------------------------------------------------------------
@@ -21,6 +23,12 @@ public:
     struct InitializeArg
     {
         IGraphics* mpGraphics = nullptr;
+    };
+    enum class DepthClearFlag
+    {
+        Depth,
+        Stencil,
+        DepthAndStencil
     };
 
 public:
@@ -52,10 +60,19 @@ public:
 
     /*!
      * レンダーバッファをクリアします
-     * @param[in] p_handle レンダーバッファのハンドル
-     * @param[in] color    クリアカラー
+     * @param[in] p_render_target レンダーターゲット
+     * @param[in] color           クリアカラー
      */
-    virtual void clearColor(void* p_handle, const MathColor& color) = 0;
+    virtual void clearColor(IRenderTargetColor* p_render_target, const MathColor& color) = 0;
+
+    /*!
+     * デプスバッファをクリアします
+     * @param[in] p_render_target レンダーターゲット
+     * @param[in] clear_flag      クリアフラグ
+     * @param[in] depth           クリアデプス
+     * @param[in] stencil         クリアステンシル
+     */
+    virtual void clearDepthStencil(IRenderTargetDepth* p_render_target, DepthClearFlag clear_flag, float depth, uint32_t stencil) = 0;
 
     /*!
      * リソースのバリアを入れます

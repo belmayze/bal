@@ -36,6 +36,8 @@
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandListD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandQueueD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balGraphicsD3D12.cpp" />
+    <ClCompile Include="..\..\Source\graphics\d3d12\balRenderTargetD3D12.cpp" />
+    <ClCompile Include="..\..\Source\graphics\d3d12\balTextureD3D12.cpp" />
     <ClCompile Include="..\..\Source\heap\balHeapBlock.cpp" />
     <ClCompile Include="..\..\Source\heap\balHeapBlockBase.cpp" />
     <ClCompile Include="..\..\Source\heap\balHeapBlockOS.cpp" />
@@ -96,10 +98,14 @@
     <ClInclude Include="..\..\Include\graphics\balICommandList.h" />
     <ClInclude Include="..\..\Include\graphics\balICommandQueue.h" />
     <ClInclude Include="..\..\Include\graphics\balIGraphics.h" />
+    <ClInclude Include="..\..\Include\graphics\balIRenderTarget.h" />
+    <ClInclude Include="..\..\Include\graphics\balITexture.h" />
     <ClInclude Include="..\..\Include\graphics\balViewport.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandListD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandQueueD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balGraphicsD3D12.h" />
+    <ClInclude Include="..\..\Include\graphics\d3d12\balRenderTargetD3D12.h" />
+    <ClInclude Include="..\..\Include\graphics\d3d12\balTextureD3D12.h" />
     <ClInclude Include="..\..\Include\heap\balHeapBlock.h" />
     <ClInclude Include="..\..\Include\heap\balHeapBlockBase.h" />
     <ClInclude Include="..\..\Include\heap\balHeapBlockOS.h" />
