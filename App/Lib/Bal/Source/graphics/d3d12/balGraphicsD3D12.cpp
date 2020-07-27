@@ -250,7 +250,8 @@ void Graphics::loop()
 
     mpCmdList->setViewport(Viewport(mpSwapChainFrameBuffers[mCurrentBufferIndex]));
     mpCmdList->bindFrameBuffer(mpSwapChainFrameBuffers[mCurrentBufferIndex]);
-    mpCmdList->clear(mpSwapChainFrameBuffers[mCurrentBufferIndex], CommandList::ClearFlag::Color, MathColor(1.f, 0.f, 0.f, 1.f), 1.f, 0);
+
+    // @TODO: 書き出し
 
     mpCmdList->resourceBarrier(
         mpSwapChainColorBuffers[mCurrentBufferIndex].getTexture(),
