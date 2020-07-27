@@ -40,6 +40,7 @@
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandQueueD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balGraphicsD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balRenderTargetD3D12.cpp" />
+    <ClCompile Include="..\..\Source\graphics\d3d12\balShaderD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balTextureD3D12.cpp" />
     <ClCompile Include="..\..\Source\heap\balHeapBlock.cpp" />
     <ClCompile Include="..\..\Source\heap\balHeapBlockBase.cpp" />
@@ -50,6 +51,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\..\Source\heap\balHeapRootBlock.cpp" />
+    <ClCompile Include="..\..\Source\io\balFile.cpp" />
     <ClCompile Include="..\..\Source\io\balLog.cpp">
       <SubType>
       </SubType>
@@ -105,6 +107,7 @@
     <ClInclude Include="..\..\Include\graphics\balICommandQueue.h" />
     <ClInclude Include="..\..\Include\graphics\balIGraphics.h" />
     <ClInclude Include="..\..\Include\graphics\balIRenderTarget.h" />
+    <ClInclude Include="..\..\Include\graphics\balIShader.h" />
     <ClInclude Include="..\..\Include\graphics\balITexture.h" />
     <ClInclude Include="..\..\Include\graphics\balViewport.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandListBundleD3D12.h" />
@@ -112,6 +115,7 @@
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandQueueD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balGraphicsD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balRenderTargetD3D12.h" />
+    <ClInclude Include="..\..\Include\graphics\d3d12\balShaderD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balTextureD3D12.h" />
     <ClInclude Include="..\..\Include\heap\balHeapBlock.h" />
     <ClInclude Include="..\..\Include\heap\balHeapBlockBase.h" />
@@ -122,6 +126,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\..\Include\heap\balHeapRootBlock.h" />
+    <ClInclude Include="..\..\Include\io\balFile.h" />
     <ClInclude Include="..\..\Include\io\balLog.h">
       <SubType>
       </SubType>
