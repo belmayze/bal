@@ -41,6 +41,12 @@ public:
     virtual void setViewport(const Viewport& vp) override;
 
     /*!
+     * フレームバッファを切り替えます
+     * @param[in] frame_buffer フレームバッファ
+     */
+    virtual void bindFrameBuffer(const FrameBuffer& frame_buffer) override;
+
+    /*!
      * レンダーバッファをクリアします
      * @param[in] p_render_target レンダーターゲット
      * @param[in] color           クリアカラー

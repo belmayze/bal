@@ -128,20 +128,40 @@ bool Texture::initialize(const InitializeArg& arg)
     DXGI_FORMAT              format    = ConvertNativeFormat(arg.mFormat);
     D3D12_RESOURCE_DIMENSION dimension = ConvertNativeDimension(arg.mDimension);
 
-    // すでにバッファーが存在していたら、それを使用する
     if (arg.mpBuffer)
     {
+        // すでにバッファーが存在していたら、それを使用する
         ID3D12Resource* p_texture = reinterpret_cast<ID3D12Resource*>(arg.mpBuffer);
         mpTexture.reset(p_texture);
     }
     else
     {
-        // デプスバッファーかどうか
-        bool is_depth = format == DXGI_FORMAT_D16_UNORM || format == DXGI_FORMAT_D24_UNORM_S8_UINT || format == DXGI_FORMAT_D32_FLOAT;
-
         // テクスチャーを確保
         Microsoft::WRL::ComPtr<ID3D12Resource> p_texture;
         {
+            bool is_depth         = format == DXGI_FORMAT_D16_UNORM || format == DXGI_FORMAT_D24_UNORM_S8_UINT || format == DXGI_FORMAT_D32_FLOAT;
+            bool is_render_target = true;
+            // フラグチェック
+            D3D12_RESOURCE_FLAGS  resource_flag       = D3D12_RESOURCE_FLAG_NONE;
+            D3D12_RESOURCE_STATES resource_state_flag = D3D12_RESOURCE_STATE_COMMON;
+            D3D12_HEAP_TYPE       heap_type           = D3D12_HEAP_TYPE_DEFAULT;
+            D3D12_MEMORY_POOL     heap_pool           = D3D12_MEMORY_POOL_UNKNOWN;
+            if (is_render_target)
+            {
+                if (is_depth)
+                {
+                    resource_flag       |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
+                    resource_state_flag |= D3D12_RESOURCE_STATE_DEPTH_WRITE;
+                }
+                else
+                {
+                    resource_flag       |= D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+                }
+                heap_type = D3D12_HEAP_TYPE_CUSTOM;
+                heap_pool = D3D12_MEMORY_POOL_L0;
+            }
+
+            // 列挙
             D3D12_RESOURCE_DESC desc = {};
             desc.Dimension        = dimension;
             desc.Width            = arg.mSize.getWidth();
@@ -150,18 +170,18 @@ bool Texture::initialize(const InitializeArg& arg)
             desc.MipLevels        = arg.mMipNum;
             desc.Format           = format;
             desc.SampleDesc.Count = 1;
-            desc.Flags            = is_depth ? D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL : D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+            desc.Flags            = resource_flag;
 
             D3D12_HEAP_PROPERTIES prop = {};
-            prop.Type                 = D3D12_HEAP_TYPE_CUSTOM;
+            prop.Type                 = heap_type;
             prop.CPUPageProperty      = D3D12_CPU_PAGE_PROPERTY_NOT_AVAILABLE;
-            prop.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+            prop.MemoryPoolPreference = heap_pool;
             prop.CreationNodeMask     = 1;
             prop.VisibleNodeMask      = 1;
 
             if (FAILED(p_device->CreateCommittedResource(
                 &prop, D3D12_HEAP_FLAG_NONE,
-                &desc, is_depth ? D3D12_RESOURCE_STATE_DEPTH_WRITE : D3D12_RESOURCE_STATE_GENERIC_READ,
+                &desc, resource_state_flag,
                 nullptr, IID_PPV_ARGS(&p_texture)
             )))
             {

@@ -45,6 +45,7 @@ bool RenderTargetColor::initialize(const InitializeArg& arg)
     }
 
     // 保持
+    mpTexture = arg.mpTexture;
     mpDescriptorHeap.reset(p_descriptor_heap.Detach());
 
     return true;
@@ -81,6 +82,7 @@ bool RenderTargetDepth::initialize(const InitializeArg& arg)
     }
 
     // 保持
+    mpTexture = arg.mpTexture;
     mpDescriptorHeap.reset(p_descriptor_heap.Detach());
 
     return true;

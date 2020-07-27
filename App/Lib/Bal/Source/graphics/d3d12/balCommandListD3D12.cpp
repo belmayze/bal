@@ -8,6 +8,8 @@
 // windows
 #include <wrl.h>
 // bal
+#include <container/balArray.h>
+#include <graphics/balFrameBuffer.h>
 #include <graphics/balViewport.h>
 #include <graphics/d3d12/balCommandListD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
@@ -74,6 +76,31 @@ void CommandList::setViewport(const Viewport& vp)
     viewport.MinDepth = vp.getMinDepth();
     viewport.MaxDepth = vp.getMaxDepth();
     mpCmdList->RSSetViewports(1, &viewport);
+}
+
+// ----------------------------------------------------------------------------
+
+void CommandList::bindFrameBuffer(const FrameBuffer& frame_buffer)
+{
+    // レンダーターゲット取得
+    const Array<IRenderTargetColor*, 8>& render_target_colors  = frame_buffer.getRenderTargetColors();
+    const IRenderTargetDepth*            p_render_target_depth = frame_buffer.getRenderTargetDepth();
+
+    // 設定されているバッファーをチェック
+    // 配列に連続して入る必要があります。以下の場合は 1 つとしてカウントします（シェーダーの index とずれるため）
+    //（{TargetA, nullptr, TargetB, nullptr, ...}）
+    int num_color = 0;
+    Array<D3D12_CPU_DESCRIPTOR_HANDLE, 8> color_handles;
+    for (const IRenderTargetColor* p_render_target : render_target_colors)
+    {
+        if (!p_render_target) { break; }
+        color_handles[num_color] = reinterpret_cast<const RenderTargetColor*>(p_render_target)->getHandle();
+        ++num_color;
+    }
+    D3D12_CPU_DESCRIPTOR_HANDLE depth_handle;
+    if (p_render_target_depth) { depth_handle = reinterpret_cast<const RenderTargetDepth*>(p_render_target_depth)->getHandle(); }
+
+    mpCmdList->OMSetRenderTargets(num_color, color_handles.data(), FALSE, p_render_target_depth ? &depth_handle : nullptr);
 }
 
 // ----------------------------------------------------------------------------

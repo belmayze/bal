@@ -34,6 +34,13 @@ public:
      * @param[in] arg 初期化構造体
      */
     virtual bool initialize(const InitializeArg& arg) = 0;
+
+public:
+    //! 設定されているテクスチャーを取得
+    const ITexture* getTexture() const { return mpTexture; }
+
+protected:
+    ITexture* mpTexture = nullptr;
 };
 
 class IRenderTargetColor : public IRenderTarget

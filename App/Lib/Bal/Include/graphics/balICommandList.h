@@ -12,6 +12,7 @@
 namespace bal::gfx { class IGraphics; }
 namespace bal::gfx { class IRenderTargetColor; }
 namespace bal::gfx { class IRenderTargetDepth; }
+namespace bal::gfx { class FrameBuffer; }
 namespace bal::gfx { class Viewport; }
 
 // ----------------------------------------------------------------------------
@@ -57,6 +58,12 @@ public:
      * @param[in] vp ビューポート
      */
     virtual void setViewport(const Viewport& vp) = 0;
+
+    /*!
+     * フレームバッファを切り替えます
+     * @param[in] frame_buffer フレームバッファ
+     */
+    virtual void bindFrameBuffer(const FrameBuffer& frame_buffer) = 0;
 
     /*!
      * レンダーバッファをクリアします

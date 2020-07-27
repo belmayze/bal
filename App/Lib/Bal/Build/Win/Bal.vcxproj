@@ -33,6 +33,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\balFrameBuffer.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandListD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandQueueD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balGraphicsD3D12.cpp" />
@@ -95,6 +96,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\balFrameBuffer.h" />
     <ClInclude Include="..\..\Include\graphics\balICommandList.h" />
     <ClInclude Include="..\..\Include\graphics\balICommandQueue.h" />
     <ClInclude Include="..\..\Include\graphics\balIGraphics.h" />

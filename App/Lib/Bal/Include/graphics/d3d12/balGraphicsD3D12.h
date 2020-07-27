@@ -12,6 +12,7 @@
 // bal
 #include <graphics/balIGraphics.h>
 
+namespace bal::gfx { class FrameBuffer; }
 namespace bal::gfx::d3d12 { class CommandQueue; }
 namespace bal::gfx::d3d12 { class CommandList; }
 namespace bal::gfx::d3d12 { class RenderTargetColor; }
@@ -65,17 +66,19 @@ private:
 private:
     uint32_t                                                       mBufferCount = 2;
     std::unique_ptr<ID3D12Device6, ComDeleter>                     mpDevice;
-    std::unique_ptr<IDXGISwapChain1, ComDeleter>                   mpSwapChain;
+    std::unique_ptr<IDXGISwapChain3, ComDeleter>                   mpSwapChain;
     std::unique_ptr<CommandList>                                   mpCmdList;
     std::unique_ptr<CommandQueue>                                  mpCmdQueue;
 
     std::unique_ptr<Texture[]>                                     mpSwapChainColorBuffers;
     std::unique_ptr<RenderTargetColor[]>                           mpSwapChainRenderTargets;
+    std::unique_ptr<FrameBuffer[]>                                 mpSwapChainFrameBuffers;
 
     std::unique_ptr<Texture>                                       mpColorBuffer;
     std::unique_ptr<Texture>                                       mpDepthBuffer;
     std::unique_ptr<RenderTargetColor>                             mpRenderTargetColor;
     std::unique_ptr<RenderTargetDepth>                             mpRenderTargetDepth;
+    std::unique_ptr<FrameBuffer>                                   mpFrameBuffer;
 
     UINT                                                           mCurrentBufferIndex = 0;
 };

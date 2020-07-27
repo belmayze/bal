@@ -108,6 +108,9 @@
     <ClCompile Include="..\..\Source\graphics\d3d12\balRenderTargetD3D12.cpp">
       <Filter>graphics\d3d12</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\balFrameBuffer.cpp">
+      <Filter>graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\memory\balSingleton.h">
@@ -262,6 +265,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\graphics\d3d12\balRenderTargetD3D12.h">
       <Filter>graphics\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\balFrameBuffer.h">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

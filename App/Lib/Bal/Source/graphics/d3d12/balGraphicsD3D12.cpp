@@ -8,6 +8,7 @@
 // windows
 #include <wrl.h>
 // bal
+#include <graphics/balFrameBuffer.h>
 #include <graphics/balViewport.h>
 #include <graphics/d3d12/balCommandListD3D12.h>
 #include <graphics/d3d12/balCommandQueueD3D12.h>
@@ -102,7 +103,7 @@ bool Graphics::initialize(const InitializeArg& arg)
     }
 
     // スワップチェーン
-    Microsoft::WRL::ComPtr<IDXGISwapChain1> p_swap_chain;
+    Microsoft::WRL::ComPtr<IDXGISwapChain3> p_swap_chain;
     {
         DXGI_SWAP_CHAIN_DESC1 desc = {};
         desc.Width              = arg.mRenderBufferSize.getWidth();
@@ -121,12 +122,18 @@ bool Graphics::initialize(const InitializeArg& arg)
         fullscreen_desc.RefreshRate.Denominator = 1;
         fullscreen_desc.Windowed                = TRUE;
 
+        Microsoft::WRL::ComPtr<IDXGISwapChain1> p_tmp_swap_chain;
         if (FAILED(p_factory->CreateSwapChainForHwnd(
             reinterpret_cast<CommandQueue*>(mpCmdQueue.get())->getCommandQueue(),
             arg.mHwnd,
             &desc, &fullscreen_desc,
             nullptr,
-            &p_swap_chain)))
+            &p_tmp_swap_chain)))
+        {
+            return false;
+        }
+
+        if (FAILED(p_tmp_swap_chain->QueryInterface(IID_PPV_ARGS(&p_swap_chain))))
         {
             return false;
         }
@@ -135,6 +142,7 @@ bool Graphics::initialize(const InitializeArg& arg)
     // スワップバッファのテクスチャーをレンダーターゲット化
     mpSwapChainColorBuffers  = make_unique<Texture[]>(nullptr, arg.mBufferCount);
     mpSwapChainRenderTargets = make_unique<RenderTargetColor[]>(nullptr, arg.mBufferCount);
+    mpSwapChainFrameBuffers  = make_unique<FrameBuffer[]>(nullptr, arg.mBufferCount);
     {
         for (uint32_t i_buffer = 0; i_buffer < arg.mBufferCount; ++i_buffer)
         {
@@ -156,6 +164,10 @@ bool Graphics::initialize(const InitializeArg& arg)
                 init_arg.mpGraphics = this;
                 init_arg.mpTexture  = &mpSwapChainColorBuffers[i_buffer];
                 mpSwapChainRenderTargets[i_buffer].initialize(init_arg);
+            }
+            {
+                mpSwapChainFrameBuffers[i_buffer].setRenderTargetColor(0, &mpSwapChainRenderTargets[i_buffer]);
+                mpSwapChainFrameBuffers[i_buffer].setResolution(arg.mRenderBufferSize);
             }
         }
     }
@@ -197,6 +209,14 @@ bool Graphics::initialize(const InitializeArg& arg)
             init_arg.mpTexture  = mpDepthBuffer.get();
             if (!mpRenderTargetDepth->initialize(init_arg)) { return false; }
         }
+
+        // フレームバッファ
+        mpFrameBuffer = make_unique<FrameBuffer>(nullptr);
+        {
+            mpFrameBuffer->setRenderTargetColor(0, mpRenderTargetColor.get());
+            mpFrameBuffer->setRenderTargetDepth(mpRenderTargetDepth.get());
+            mpFrameBuffer->setResolution(arg.mRenderBufferSize);
+        }
     }
 
     // 情報
@@ -225,6 +245,8 @@ void Graphics::loop()
     vp.setSize(MathVector2(640.f, 480.f));
     vp.setDepth(0.f, 1.f);
     mpCmdList->setViewport(vp);
+
+    mpCmdList->bindFrameBuffer(mpSwapChainFrameBuffers[mCurrentBufferIndex]);
 
     mpCmdList->clearColor(&mpSwapChainRenderTargets[mCurrentBufferIndex], MathColor(1.f, 0.f, 0.f, 1.f));
 
@@ -263,11 +285,13 @@ bool Graphics::destroy()
     waitForPreviousFrame();
 
     // バッファ破棄
+    mpFrameBuffer.reset();
     mpRenderTargetDepth.reset();
     mpRenderTargetColor.reset();
     mpDepthBuffer.reset();
     mpColorBuffer.reset();
 
+    mpSwapChainFrameBuffers.reset();
     mpSwapChainRenderTargets.reset();
     mpSwapChainColorBuffers.reset();
 
