@@ -37,6 +37,9 @@
     <Filter Include="graphics\d3d12">
       <UniqueIdentifier>{ef31fcdc-2329-4ea9-9c52-6b687cf41b28}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shader">
+      <UniqueIdentifier>{bfcffa31-a771-48b2-a1ba-780429b939eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\framework\balFramework.cpp">
@@ -284,5 +287,13 @@
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandListDirectD3D12.h">
       <Filter>graphics\d3d12</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\Source\shader\main.ps.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\Source\shader\main.vs.hlsl">
+      <Filter>shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>
