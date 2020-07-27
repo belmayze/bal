@@ -27,7 +27,7 @@ public:
      * コマンドリストを実行します
      * @param[in] p_cmd_list 実行するコマンドリスト
      */
-    virtual void execute(const ICommandList* p_cmd_list) override;
+    virtual void execute(const ICommandListDirect* p_cmd_list) override;
 
     /*!
      * コマンドの実行まで待機します

@@ -10,7 +10,7 @@
 // bal
 #include <graphics/balFrameBuffer.h>
 #include <graphics/balViewport.h>
-#include <graphics/d3d12/balCommandListD3D12.h>
+#include <graphics/d3d12/balCommandListDirectD3D12.h>
 #include <graphics/d3d12/balCommandQueueD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
@@ -92,9 +92,9 @@ bool Graphics::initialize(const InitializeArg& arg)
     }
 
     // コマンドリスト
-    mpCmdList = make_unique<CommandList>(nullptr);
+    mpCmdList = make_unique<CommandListDirect>(nullptr);
     {
-        CommandList::InitializeArg init_arg;
+        CommandListDirect::InitializeArg init_arg;
         init_arg.mpGraphics = this;
         if (!mpCmdList->initialize(init_arg))
         {
@@ -237,7 +237,7 @@ void Graphics::loop()
     // レンダリング用バッファに切り替え
     mpCmdList->setViewport(Viewport(*mpFrameBuffer.get()));
     mpCmdList->bindFrameBuffer(*mpFrameBuffer.get());
-    mpCmdList->clear(*mpFrameBuffer.get(), CommandList::ClearFlag::Color | CommandList::ClearFlag::Depth, MathColor(0.f, 0.f, 0.f, 1.f), 1.f, 0);
+    mpCmdList->clear(*mpFrameBuffer.get(), CommandListDirect::ClearFlag::Color | CommandListDirect::ClearFlag::Depth, MathColor(0.f, 0.f, 0.f, 1.f), 1.f, 0);
 
     // @TODO: レンダリング
 

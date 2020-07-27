@@ -10,11 +10,12 @@
 #include <d3d12.h>
 // bal
 #include <graphics/balICommandList.h>
+#include <graphics/balICommandListDirect.h>
 
 // ----------------------------------------------------------------------------
 namespace bal::gfx::d3d12 {
 
-class CommandList : public ICommandList
+class CommandListDirect : public ICommandListDirect, public ICommandList
 {
 public:
     /*!
@@ -63,6 +64,12 @@ public:
      * @param[in] after_status  遷移後のステータス
      */
     virtual void resourceBarrier(void* p_resource, int before_status, int after_status) override;
+
+    /*!
+     * バンドルを実行します
+     * @param[in] p_cmd_bundle バンドル
+     */
+    virtual void executeBundle(const ICommandListBundle* p_cmd_bundle) override;
 
 public:
     //! コマンドリスト

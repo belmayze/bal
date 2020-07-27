@@ -11,7 +11,8 @@
 #include <container/balArray.h>
 #include <graphics/balFrameBuffer.h>
 #include <graphics/balViewport.h>
-#include <graphics/d3d12/balCommandListD3D12.h>
+#include <graphics/d3d12/balCommandListBundleD3D12.h>
+#include <graphics/d3d12/balCommandListDirectD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
 
@@ -19,7 +20,7 @@ namespace bal::gfx::d3d12 {
 
 // ----------------------------------------------------------------------------
 
-bool CommandList::initialize(const InitializeArg& arg)
+bool CommandListDirect::initialize(const InitializeArg& arg)
 {
     // デバイス
     ID3D12Device6* p_device = reinterpret_cast<Graphics*>(arg.mpGraphics)->getDevice();
@@ -51,7 +52,7 @@ bool CommandList::initialize(const InitializeArg& arg)
 
 // ----------------------------------------------------------------------------
 
-void CommandList::reset()
+void CommandListDirect::reset()
 {
     mpCmdAllocator->Reset();
     mpCmdList->Reset(mpCmdAllocator.get(), nullptr);
@@ -59,14 +60,14 @@ void CommandList::reset()
 
 // ----------------------------------------------------------------------------
 
-void CommandList::close()
+void CommandListDirect::close()
 {
     mpCmdList->Close();
 }
 
 // ----------------------------------------------------------------------------
 
-void CommandList::setViewport(const Viewport& vp)
+void CommandListDirect::setViewport(const Viewport& vp)
 {
     D3D12_VIEWPORT viewport;
     viewport.TopLeftX = vp.getOrigin().getX();
@@ -80,7 +81,7 @@ void CommandList::setViewport(const Viewport& vp)
 
 // ----------------------------------------------------------------------------
 
-void CommandList::bindFrameBuffer(const FrameBuffer& frame_buffer)
+void CommandListDirect::bindFrameBuffer(const FrameBuffer& frame_buffer)
 {
     // レンダーターゲット取得
     const Array<IRenderTargetColor*, 8>& render_target_colors  = frame_buffer.getRenderTargetColors();
@@ -105,7 +106,7 @@ void CommandList::bindFrameBuffer(const FrameBuffer& frame_buffer)
 
 // ----------------------------------------------------------------------------
 
-void CommandList::clear(const FrameBuffer& frame_buffer, uint32_t clear_flag, const MathColor& color, float depth, uint8_t stencil)
+void CommandListDirect::clear(const FrameBuffer& frame_buffer, uint32_t clear_flag, const MathColor& color, float depth, uint8_t stencil)
 {
     // カラー
     if ((clear_flag & ClearFlag::Color) != 0)
@@ -133,7 +134,7 @@ void CommandList::clear(const FrameBuffer& frame_buffer, uint32_t clear_flag, co
 
 // ----------------------------------------------------------------------------
 
-void CommandList::resourceBarrier(void* p_resource, int before_status, int after_status)
+void CommandListDirect::resourceBarrier(void* p_resource, int before_status, int after_status)
 {
     D3D12_RESOURCE_BARRIER desc = {};
     desc.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -142,6 +143,14 @@ void CommandList::resourceBarrier(void* p_resource, int before_status, int after
     desc.Transition.StateBefore = static_cast<D3D12_RESOURCE_STATES>(before_status);
     desc.Transition.StateAfter  = static_cast<D3D12_RESOURCE_STATES>(after_status);
     mpCmdList->ResourceBarrier(1, &desc);
+}
+
+// ----------------------------------------------------------------------------
+
+void CommandListDirect::executeBundle(const ICommandListBundle* p_cmd_bundle)
+{
+    const CommandListBundle* p_bundle = reinterpret_cast<const CommandListBundle*>(p_cmd_bundle);
+    mpCmdList->ExecuteBundle(p_bundle->getCommandList());
 }
 
 // ----------------------------------------------------------------------------
