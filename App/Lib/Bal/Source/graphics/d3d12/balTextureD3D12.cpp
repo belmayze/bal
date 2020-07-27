@@ -146,16 +146,26 @@ bool Texture::initialize(const InitializeArg& arg)
             D3D12_RESOURCE_STATES resource_state_flag = D3D12_RESOURCE_STATE_COMMON;
             D3D12_HEAP_TYPE       heap_type           = D3D12_HEAP_TYPE_DEFAULT;
             D3D12_MEMORY_POOL     heap_pool           = D3D12_MEMORY_POOL_UNKNOWN;
+            D3D12_CLEAR_VALUE     clear_value;
             if (is_render_target)
             {
                 if (is_depth)
                 {
                     resource_flag       |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
                     resource_state_flag |= D3D12_RESOURCE_STATE_DEPTH_WRITE;
+                    clear_value.Format               = format;
+                    clear_value.DepthStencil.Depth   = 1.f;
+                    clear_value.DepthStencil.Stencil = 0;
                 }
                 else
                 {
                     resource_flag       |= D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+                    resource_state_flag |= D3D12_RESOURCE_STATE_RENDER_TARGET;
+                    clear_value.Format   = format;
+                    clear_value.Color[0] = 0.f;
+                    clear_value.Color[1] = 0.f;
+                    clear_value.Color[2] = 0.f;
+                    clear_value.Color[3] = 1.f;
                 }
                 heap_type = D3D12_HEAP_TYPE_CUSTOM;
                 heap_pool = D3D12_MEMORY_POOL_L0;
@@ -182,7 +192,8 @@ bool Texture::initialize(const InitializeArg& arg)
             if (FAILED(p_device->CreateCommittedResource(
                 &prop, D3D12_HEAP_FLAG_NONE,
                 &desc, resource_state_flag,
-                nullptr, IID_PPV_ARGS(&p_texture)
+                is_render_target ? &clear_value : nullptr,
+                IID_PPV_ARGS(&p_texture)
             )))
             {
                 return false;

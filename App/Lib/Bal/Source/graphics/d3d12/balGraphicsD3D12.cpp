@@ -234,21 +234,23 @@ void Graphics::loop()
 {
     mpCmdList->reset();
 
+    // レンダリング用バッファに切り替え
+    mpCmdList->setViewport(Viewport(*mpFrameBuffer.get()));
+    mpCmdList->bindFrameBuffer(*mpFrameBuffer.get());
+    mpCmdList->clear(*mpFrameBuffer.get(), CommandList::ClearFlag::Color | CommandList::ClearFlag::Depth, MathColor(0.f, 0.f, 0.f, 1.f), 1.f, 0);
+
+    // @TODO: レンダリング
+
+    // スワップチェーンのバッファに書き出し
     mpCmdList->resourceBarrier(
         mpSwapChainColorBuffers[mCurrentBufferIndex].getTexture(),
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
 
-    Viewport vp;
-    vp.setOrigin(MathVector2(0.f, 0.f));
-    vp.setSize(MathVector2(640.f, 480.f));
-    vp.setDepth(0.f, 1.f);
-    mpCmdList->setViewport(vp);
-
+    mpCmdList->setViewport(Viewport(mpSwapChainFrameBuffers[mCurrentBufferIndex]));
     mpCmdList->bindFrameBuffer(mpSwapChainFrameBuffers[mCurrentBufferIndex]);
-
-    mpCmdList->clearColor(&mpSwapChainRenderTargets[mCurrentBufferIndex], MathColor(1.f, 0.f, 0.f, 1.f));
+    mpCmdList->clear(mpSwapChainFrameBuffers[mCurrentBufferIndex], CommandList::ClearFlag::Color, MathColor(1.f, 0.f, 0.f, 1.f), 1.f, 0);
 
     mpCmdList->resourceBarrier(
         mpSwapChainColorBuffers[mCurrentBufferIndex].getTexture(),
@@ -256,10 +258,11 @@ void Graphics::loop()
         D3D12_RESOURCE_STATE_PRESENT
     );
 
+    // コマンドリストを閉じて実行
     mpCmdList->close();
-
     mpCmdQueue->execute(mpCmdList.get());
 
+    // 1フレーム前の処理を待機
     waitForPreviousFrame();
 }
 

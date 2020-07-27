@@ -47,20 +47,14 @@ public:
     virtual void bindFrameBuffer(const FrameBuffer& frame_buffer) override;
 
     /*!
-     * レンダーバッファをクリアします
-     * @param[in] p_render_target レンダーターゲット
-     * @param[in] color           クリアカラー
+     * フレームバッファをクリアします
+     * @param[in] frame_buffer フレームバッファ
+     * @param[in] clear_flag   クリアフラグ
+     * @param[in] color        クリアカラー
+     * @param[in] depth        クリアデプス
+     * @param[in] stencil      クリアステンシル
      */
-    virtual void clearColor(IRenderTargetColor* p_render_target, const MathColor& color) override;
-
-    /*!
-     * デプスバッファをクリアします
-     * @param[in] p_render_target レンダーターゲット
-     * @param[in] clear_flag      クリアフラグ
-     * @param[in] depth           クリアデプス
-     * @param[in] stencil         クリアステンシル
-     */
-    virtual void clearDepthStencil(IRenderTargetDepth* p_render_target, DepthClearFlag clear_flag, float depth, uint32_t stencil) override;
+    virtual void clear(const FrameBuffer& frame_buffer, uint32_t clear_flag, const MathColor& color, float depth, uint8_t stencil) override;
 
     /*!
      * リソースのバリアを入れます

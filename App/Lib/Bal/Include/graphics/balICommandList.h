@@ -25,11 +25,11 @@ public:
     {
         IGraphics* mpGraphics = nullptr;
     };
-    enum class DepthClearFlag
+    enum ClearFlag
     {
-        Depth,
-        Stencil,
-        DepthAndStencil
+        Color   = 0x1,
+        Depth   = 0x2,
+        Stencil = 0x4
     };
 
 public:
@@ -64,22 +64,15 @@ public:
      * @param[in] frame_buffer フレームバッファ
      */
     virtual void bindFrameBuffer(const FrameBuffer& frame_buffer) = 0;
-
     /*!
-     * レンダーバッファをクリアします
-     * @param[in] p_render_target レンダーターゲット
-     * @param[in] color           クリアカラー
+     * フレームバッファをクリアします
+     * @param[in] frame_buffer フレームバッファ
+     * @param[in] clear_flag   クリアフラグ
+     * @param[in] color        クリアカラー
+     * @param[in] depth        クリアデプス
+     * @param[in] stencil      クリアステンシル
      */
-    virtual void clearColor(IRenderTargetColor* p_render_target, const MathColor& color) = 0;
-
-    /*!
-     * デプスバッファをクリアします
-     * @param[in] p_render_target レンダーターゲット
-     * @param[in] clear_flag      クリアフラグ
-     * @param[in] depth           クリアデプス
-     * @param[in] stencil         クリアステンシル
-     */
-    virtual void clearDepthStencil(IRenderTargetDepth* p_render_target, DepthClearFlag clear_flag, float depth, uint32_t stencil) = 0;
+    virtual void clear(const FrameBuffer& frame_buffer, uint32_t clear_flag, const MathColor& color, float depth, uint8_t stencil) = 0;
 
     /*!
      * リソースのバリアを入れます

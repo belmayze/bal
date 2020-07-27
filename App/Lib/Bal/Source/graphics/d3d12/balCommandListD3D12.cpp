@@ -105,27 +105,30 @@ void CommandList::bindFrameBuffer(const FrameBuffer& frame_buffer)
 
 // ----------------------------------------------------------------------------
 
-void CommandList::clearColor(IRenderTargetColor* p_render_target, const MathColor& color)
+void CommandList::clear(const FrameBuffer& frame_buffer, uint32_t clear_flag, const MathColor& color, float depth, uint8_t stencil)
 {
-    RenderTargetColor* p_rtv = reinterpret_cast<RenderTargetColor*>(p_render_target);
-    mpCmdList->ClearRenderTargetView(p_rtv->getHandle(), color, 0U, nullptr);
-}
-
-// ----------------------------------------------------------------------------
-
-void CommandList::clearDepthStencil(IRenderTargetDepth* p_render_target, DepthClearFlag clear_flag, float depth, uint32_t stencil)
-{
-    RenderTargetDepth* p_dsv = reinterpret_cast<RenderTargetDepth*>(p_render_target);
-
-    D3D12_CLEAR_FLAGS flag;
-    switch (clear_flag)
+    // カラー
+    if ((clear_flag & ClearFlag::Color) != 0)
     {
-        case DepthClearFlag::Depth:           flag = D3D12_CLEAR_FLAG_DEPTH; break;
-        case DepthClearFlag::Stencil:         flag = D3D12_CLEAR_FLAG_STENCIL; break;
-        case DepthClearFlag::DepthAndStencil: flag = D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL; break;
+        for (const IRenderTargetColor* p_render_target : frame_buffer.getRenderTargetColors())
+        {
+            if (!p_render_target) { break; }
+
+            mpCmdList->ClearRenderTargetView(reinterpret_cast<const RenderTargetColor*>(p_render_target)->getHandle(), color, 0U, nullptr);
+        }
     }
 
-    mpCmdList->ClearDepthStencilView(p_dsv->getHandle(), flag, depth, stencil, 0, nullptr);
+    // デプス
+    if (frame_buffer.getRenderTargetDepth() && (clear_flag & (ClearFlag::Depth | ClearFlag::Stencil)) != 0)
+    {
+        const RenderTargetDepth* p_render_target = reinterpret_cast<const RenderTargetDepth*>(frame_buffer.getRenderTargetDepth());
+
+        D3D12_CLEAR_FLAGS flag = static_cast<D3D12_CLEAR_FLAGS>(0);
+        if ((clear_flag & ClearFlag::Depth) != 0)   { flag |= D3D12_CLEAR_FLAG_DEPTH; }
+        if ((clear_flag & ClearFlag::Stencil) != 0) { flag |= D3D12_CLEAR_FLAG_STENCIL; }
+
+        mpCmdList->ClearDepthStencilView(p_render_target->getHandle(), flag, depth, stencil, 0U, nullptr);
+    }
 }
 
 // ----------------------------------------------------------------------------

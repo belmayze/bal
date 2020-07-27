@@ -9,6 +9,8 @@
 // bal
 #include <math/balMath.h>
 
+namespace bal::gfx { class FrameBuffer; }
+
 // ----------------------------------------------------------------------------
 namespace bal::gfx {
 
@@ -19,6 +21,12 @@ public:
      * コンストラクター
      */
     Viewport() {}
+
+    /*!
+     * フレームバッファを覆うビューポートを初期化します
+     * @param[in] frame_buffer フレームバッファ
+     */
+    Viewport(const FrameBuffer& frame_buffer);
 
     /*! 
      * コンストラクター
