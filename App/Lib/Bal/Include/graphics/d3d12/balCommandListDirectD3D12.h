@@ -59,11 +59,11 @@ public:
 
     /*!
      * リソースのバリアを入れます
-     * @param[in] p_resource    バリア対象のリソース
+     * @param[in] texture       テクスチャー
      * @param[in] before_status 遷移前のステータス
      * @param[in] after_status  遷移後のステータス
      */
-    virtual void resourceBarrier(void* p_resource, int before_status, int after_status) override;
+    virtual void resourceBarrier(const ITexture& texture, int before_status, int after_status) override;
 
     /*!
      * バンドルを実行します
@@ -74,6 +74,15 @@ public:
 public:
     //! コマンドリスト
     ID3D12GraphicsCommandList* getCommandList() const { return mpCmdList.get(); }
+
+private:
+    /*!
+     * リソースのバリアを入れます
+     * @param[in] p_resource    バリア対象のリソース
+     * @param[in] before_status 遷移前のステータス
+     * @param[in] after_status  遷移後のステータス
+     */
+    virtual void resourceBarrier_(ID3D12Resource* p_resource, int before_status, int after_status);
 
 private:
     // Com の deleter

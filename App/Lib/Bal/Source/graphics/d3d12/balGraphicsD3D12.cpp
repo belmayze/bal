@@ -140,7 +140,6 @@ bool Graphics::initialize(const InitializeArg& arg)
     }
 
     // スワップバッファのテクスチャーをレンダーターゲット化
-    mpSwapChainColorBuffers.create(arg.mBufferCount);
     mpSwapChainRenderTargets.create(arg.mBufferCount);
     mpSwapChainFrameBuffers.create(arg.mBufferCount);
     {
@@ -152,20 +151,19 @@ bool Graphics::initialize(const InitializeArg& arg)
                 return false;
             }
 
+            std::unique_ptr<Texture> p_color_buffer = make_unique<Texture>(nullptr);
             {
                 Texture::InitializeArg init_arg;
                 init_arg.mpGraphics = this;
                 init_arg.mpBuffer   = p_resource.Detach();
                 init_arg.mFormat    = Texture::Format::R8_G8_B8_A8_UNORM;
-                mpSwapChainColorBuffers[i_buffer] = make_unique<Texture>(nullptr);
-                mpSwapChainColorBuffers[i_buffer]->initialize(init_arg);
+                p_color_buffer->initialize(init_arg);
             }
             {
                 RenderTargetColor::InitializeArg init_arg;
                 init_arg.mpGraphics = this;
-                init_arg.mpTexture  = mpSwapChainColorBuffers[i_buffer].get();
                 mpSwapChainRenderTargets[i_buffer] = make_unique<RenderTargetColor>(nullptr);
-                mpSwapChainRenderTargets[i_buffer]->initialize(init_arg);
+                mpSwapChainRenderTargets[i_buffer]->initialize(init_arg, std::move(p_color_buffer));
             }
             {
                 mpSwapChainFrameBuffers[i_buffer] = make_unique<FrameBuffer>(nullptr);
@@ -178,23 +176,23 @@ bool Graphics::initialize(const InitializeArg& arg)
     // レンダーバッファを確保
     {
         // テクスチャーを確保
-        mpColorBuffer = make_unique<Texture>(nullptr);
+        std::unique_ptr<Texture> p_color_buffer = make_unique<Texture>(nullptr);
         {
             Texture::InitializeArg init_arg;
             init_arg.mpGraphics = this;
             init_arg.mDimension = Texture::Dimension::Texture2D;
             init_arg.mFormat    = Texture::Format::R16_G16_B16_A16_FLOAT;
             init_arg.mSize      = arg.mRenderBufferSize;
-            if (!mpColorBuffer->initialize(init_arg)) { return false; }
+            if (!p_color_buffer->initialize(init_arg)) { return false; }
         }
-        mpDepthBuffer = make_unique<Texture>(nullptr);
+        std::unique_ptr<Texture> p_depth_buffer = make_unique<Texture>(nullptr);
         {
             Texture::InitializeArg init_arg;
             init_arg.mpGraphics = this;
             init_arg.mDimension = Texture::Dimension::Texture2D;
             init_arg.mFormat    = Texture::Format::D32_FLOAT;
             init_arg.mSize      = arg.mRenderBufferSize;
-            if (!mpDepthBuffer->initialize(init_arg)) { return false; }
+            if (!p_depth_buffer->initialize(init_arg)) { return false; }
         }
 
         // レンダーターゲット
@@ -202,15 +200,13 @@ bool Graphics::initialize(const InitializeArg& arg)
         {
             RenderTargetColor::InitializeArg init_arg;
             init_arg.mpGraphics = this;
-            init_arg.mpTexture  = mpColorBuffer.get();
-            if (!mpRenderTargetColor->initialize(init_arg)) { return false; }
+            if (!mpRenderTargetColor->initialize(init_arg, std::move(p_color_buffer))) { return false; }
         }
         mpRenderTargetDepth = make_unique<RenderTargetDepth>(nullptr);
         {
             RenderTargetDepth::InitializeArg init_arg;
             init_arg.mpGraphics = this;
-            init_arg.mpTexture  = mpDepthBuffer.get();
-            if (!mpRenderTargetDepth->initialize(init_arg)) { return false; }
+            if (!mpRenderTargetDepth->initialize(init_arg, std::move(p_depth_buffer))) { return false; }
         }
 
         // フレームバッファ
@@ -246,7 +242,7 @@ void Graphics::loop()
 
     // スワップチェーンのバッファに書き出し
     mpCmdList->resourceBarrier(
-        mpSwapChainColorBuffers[mCurrentBufferIndex]->getTexture(),
+        *mpSwapChainRenderTargets[mCurrentBufferIndex]->getTexture(),
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
@@ -257,7 +253,7 @@ void Graphics::loop()
     // @TODO: 書き出し
 
     mpCmdList->resourceBarrier(
-        mpSwapChainColorBuffers[mCurrentBufferIndex]->getTexture(),
+        *mpSwapChainRenderTargets[mCurrentBufferIndex]->getTexture(),
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PRESENT
     );
@@ -295,12 +291,9 @@ bool Graphics::destroy()
     mpFrameBuffer.reset();
     mpRenderTargetDepth.reset();
     mpRenderTargetColor.reset();
-    mpDepthBuffer.reset();
-    mpColorBuffer.reset();
 
     mpSwapChainFrameBuffers.destroy();
     mpSwapChainRenderTargets.destroy();
-    mpSwapChainColorBuffers.destroy();
 
     // 破棄
     mpCmdList.reset();

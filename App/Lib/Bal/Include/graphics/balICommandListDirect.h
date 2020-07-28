@@ -12,6 +12,7 @@
 namespace bal::gfx { class ICommandListBundle; }
 namespace bal::gfx { class IRenderTargetColor; }
 namespace bal::gfx { class IRenderTargetDepth; }
+namespace bal::gfx { class ITexture; }
 namespace bal::gfx { class FrameBuffer; }
 namespace bal::gfx { class Viewport; }
 
@@ -52,11 +53,11 @@ public:
 
     /*!
      * リソースのバリアを入れます
-     * @param[in] p_resource    バリア対象のリソース
+     * @param[in] texture       バリアするテクスチャー
      * @param[in] before_status 遷移前のステータス
      * @param[in] after_status  遷移後のステータス
      */
-    virtual void resourceBarrier(void* p_resource, int before_status, int after_status) = 0;
+    virtual void resourceBarrier(const ITexture& texture, int before_status, int after_status) = 0;
 
     /*!
      * バンドルを実行します

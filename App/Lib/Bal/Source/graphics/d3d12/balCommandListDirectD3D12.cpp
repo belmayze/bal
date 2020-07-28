@@ -15,6 +15,7 @@
 #include <graphics/d3d12/balCommandListDirectD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
+#include <graphics/d3d12/balTextureD3D12.h>
 
 namespace bal::gfx::d3d12 {
 
@@ -134,15 +135,10 @@ void CommandListDirect::clear(const FrameBuffer& frame_buffer, uint32_t clear_fl
 
 // ----------------------------------------------------------------------------
 
-void CommandListDirect::resourceBarrier(void* p_resource, int before_status, int after_status)
+void CommandListDirect::resourceBarrier(const ITexture& texture, int before_status, int after_status)
 {
-    D3D12_RESOURCE_BARRIER desc = {};
-    desc.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-    desc.Transition.pResource   = reinterpret_cast<ID3D12Resource*>(p_resource);
-    desc.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-    desc.Transition.StateBefore = static_cast<D3D12_RESOURCE_STATES>(before_status);
-    desc.Transition.StateAfter  = static_cast<D3D12_RESOURCE_STATES>(after_status);
-    mpCmdList->ResourceBarrier(1, &desc);
+    const Texture* p_texture = reinterpret_cast<const Texture*>(&texture);
+    resourceBarrier_(p_texture->getTexture(), before_status, after_status);
 }
 
 // ----------------------------------------------------------------------------
@@ -151,6 +147,19 @@ void CommandListDirect::executeBundle(const ICommandListBundle* p_cmd_bundle)
 {
     const CommandListBundle* p_bundle = reinterpret_cast<const CommandListBundle*>(p_cmd_bundle);
     mpCmdList->ExecuteBundle(p_bundle->getCommandList());
+}
+
+// ----------------------------------------------------------------------------
+
+void CommandListDirect::resourceBarrier_(ID3D12Resource* p_resource, int before_status, int after_status)
+{
+    D3D12_RESOURCE_BARRIER desc = {};
+    desc.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+    desc.Transition.pResource   = p_resource;
+    desc.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+    desc.Transition.StateBefore = static_cast<D3D12_RESOURCE_STATES>(before_status);
+    desc.Transition.StateAfter  = static_cast<D3D12_RESOURCE_STATES>(after_status);
+    mpCmdList->ResourceBarrier(1, &desc);
 }
 
 // ----------------------------------------------------------------------------

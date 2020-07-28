@@ -21,26 +21,29 @@ public:
     //! 初期化構造体
     struct InitializeArg
     {
-        IGraphics*                  mpGraphics = nullptr;
-        ITexture* mpTexture;
+        IGraphics* mpGraphics = nullptr;
     };
 
 public:
+    //! コンストラクター
+    IRenderTarget();
+
     //! デストラクター
-    virtual ~IRenderTarget() {}
+    virtual ~IRenderTarget();
 
     /*!
      * 初期化の処理を記述します
-     * @param[in] arg 初期化構造体
+     * @param[in] arg     初期化構造体
+     * @param[in] texture テクスチャー
      */
-    virtual bool initialize(const InitializeArg& arg) = 0;
+    virtual bool initialize(const InitializeArg& arg, std::unique_ptr<ITexture>&& texture) = 0;
 
 public:
     //! 設定されているテクスチャーを取得
-    const ITexture* getTexture() const { return mpTexture; }
+    const ITexture* getTexture() const { return mpTexture.get(); }
 
 protected:
-    ITexture* mpTexture = nullptr;
+    std::unique_ptr<ITexture> mpTexture;
 };
 
 class IRenderTargetColor : public IRenderTarget
@@ -48,9 +51,10 @@ class IRenderTargetColor : public IRenderTarget
 public:
     /*!
      * 初期化の処理を記述します
-     * @param[in] arg 初期化構造体
+     * @param[in] arg     初期化構造体
+     * @param[in] texture テクスチャー
      */
-    virtual bool initialize(const InitializeArg& arg) = 0;
+    virtual bool initialize(const InitializeArg& arg, std::unique_ptr<ITexture>&& texture) = 0;
 };
 
 class IRenderTargetDepth : public IRenderTarget
@@ -58,9 +62,10 @@ class IRenderTargetDepth : public IRenderTarget
 public:
     /*!
      * 初期化の処理を記述します
-     * @param[in] arg 初期化構造体
+     * @param[in] arg     初期化構造体
+     * @param[in] texture テクスチャー
      */
-    virtual bool initialize(const InitializeArg& arg) = 0;
+    virtual bool initialize(const InitializeArg& arg, std::unique_ptr<ITexture>&& texture) = 0;
 };
 
 }

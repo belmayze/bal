@@ -19,9 +19,10 @@ class RenderTargetColor : public IRenderTargetColor
 public:
     /*!
      * 初期化の処理を記述します
-     * @param[in] arg 初期化構造体
+     * @param[in] arg     初期化構造体
+     * @param[in] texture テクスチャー
      */
-    virtual bool initialize(const InitializeArg& arg) override;
+    virtual bool initialize(const InitializeArg& arg, std::unique_ptr<ITexture>&& texture) override;
 
 public:
     //! ヒープハンドル
@@ -43,9 +44,10 @@ class RenderTargetDepth : public IRenderTargetDepth
 public:
     /*!
      * 初期化の処理を記述します
-     * @param[in] arg 初期化構造体
+     * @param[in] arg     初期化構造体
+     * @param[in] texture テクスチャー
      */
-    virtual bool initialize(const InitializeArg& arg) override;
+    virtual bool initialize(const InitializeArg& arg, std::unique_ptr<ITexture>&& texture) override;
 
 public:
     //! ヒープハンドル

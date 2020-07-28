@@ -16,13 +16,13 @@ namespace bal::gfx::d3d12 {
 
 // ----------------------------------------------------------------------------
 
-bool RenderTargetColor::initialize(const InitializeArg& arg)
+bool RenderTargetColor::initialize(const InitializeArg& arg, std::unique_ptr<ITexture>&& texture)
 {
     // デバイス
     ID3D12Device6* p_device = reinterpret_cast<Graphics*>(arg.mpGraphics)->getDevice();
 
     // テクスチャー
-    Texture* p_texture = reinterpret_cast<Texture*>(arg.mpTexture);
+    Texture* p_texture = reinterpret_cast<Texture*>(texture.get());
 
     // デスクリプターヒープ
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> p_descriptor_heap;
@@ -45,7 +45,7 @@ bool RenderTargetColor::initialize(const InitializeArg& arg)
     }
 
     // 保持
-    mpTexture = arg.mpTexture;
+    mpTexture = std::move(texture);
     mpDescriptorHeap.reset(p_descriptor_heap.Detach());
 
     return true;
@@ -53,13 +53,13 @@ bool RenderTargetColor::initialize(const InitializeArg& arg)
 
 // ----------------------------------------------------------------------------
 
-bool RenderTargetDepth::initialize(const InitializeArg& arg)
+bool RenderTargetDepth::initialize(const InitializeArg& arg, std::unique_ptr<ITexture>&& texture)
 {
     // デバイス
     ID3D12Device6* p_device = reinterpret_cast<Graphics*>(arg.mpGraphics)->getDevice();
 
     // テクスチャー
-    Texture* p_texture = reinterpret_cast<Texture*>(arg.mpTexture);
+    Texture* p_texture = reinterpret_cast<Texture*>(texture.get());
 
     // デスクリプターヒープ
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> p_descriptor_heap;
@@ -82,7 +82,7 @@ bool RenderTargetDepth::initialize(const InitializeArg& arg)
     }
 
     // 保持
-    mpTexture = arg.mpTexture;
+    mpTexture = std::move(texture);
     mpDescriptorHeap.reset(p_descriptor_heap.Detach());
 
     return true;

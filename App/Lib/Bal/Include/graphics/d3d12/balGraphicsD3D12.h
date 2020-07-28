@@ -71,12 +71,9 @@ private:
     std::unique_ptr<CommandListDirect>                             mpCmdList;
     std::unique_ptr<CommandQueue>                                  mpCmdQueue;
 
-    DynamicArray<std::unique_ptr<Texture>>                         mpSwapChainColorBuffers;
-    DynamicArray < std::unique_ptr<RenderTargetColor>>             mpSwapChainRenderTargets;
-    DynamicArray < std::unique_ptr<FrameBuffer>>                   mpSwapChainFrameBuffers;
+    DynamicArray<std::unique_ptr<RenderTargetColor>>               mpSwapChainRenderTargets;
+    DynamicArray<std::unique_ptr<FrameBuffer>>                     mpSwapChainFrameBuffers;
 
-    std::unique_ptr<Texture>                                       mpColorBuffer;
-    std::unique_ptr<Texture>                                       mpDepthBuffer;
     std::unique_ptr<RenderTargetColor>                             mpRenderTargetColor;
     std::unique_ptr<RenderTargetDepth>                             mpRenderTargetDepth;
     std::unique_ptr<FrameBuffer>                                   mpFrameBuffer;

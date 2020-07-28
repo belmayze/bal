@@ -34,6 +34,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\..\Source\graphics\balFrameBuffer.cpp" />
+    <ClCompile Include="..\..\Source\graphics\balIRenderTarget.cpp" />
     <ClCompile Include="..\..\Source\graphics\balViewport.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandListBundleD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandListDirectD3D12.cpp" />
