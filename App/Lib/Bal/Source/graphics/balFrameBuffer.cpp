@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balFrameBufferD3D12.cpp
+ * @file   balFrameBuffer.cpp
  * @brief  
  * @author belmayze
  *

@@ -302,6 +302,9 @@
     <ClInclude Include="..\..\Include\graphics\d3d12\balShaderD3D12.h">
       <Filter>graphics\d3d12</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\container\balDynamicArray.h">
+      <Filter>container</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\..\Source\shader\main.ps.hlsl">

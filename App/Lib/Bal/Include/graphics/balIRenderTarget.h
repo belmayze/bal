@@ -21,8 +21,8 @@ public:
     //! 初期化構造体
     struct InitializeArg
     {
-        IGraphics* mpGraphics = nullptr;
-        ITexture*  mpTexture  = nullptr;
+        IGraphics*                  mpGraphics = nullptr;
+        ITexture* mpTexture;
     };
 
 public:

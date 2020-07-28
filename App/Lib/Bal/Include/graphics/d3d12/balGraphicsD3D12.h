@@ -10,6 +10,7 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 // bal
+#include <container/balDynamicArray.h>
 #include <graphics/balIGraphics.h>
 
 namespace bal::gfx { class FrameBuffer; }
@@ -70,9 +71,9 @@ private:
     std::unique_ptr<CommandListDirect>                             mpCmdList;
     std::unique_ptr<CommandQueue>                                  mpCmdQueue;
 
-    std::unique_ptr<Texture[]>                                     mpSwapChainColorBuffers;
-    std::unique_ptr<RenderTargetColor[]>                           mpSwapChainRenderTargets;
-    std::unique_ptr<FrameBuffer[]>                                 mpSwapChainFrameBuffers;
+    DynamicArray<std::unique_ptr<Texture>>                         mpSwapChainColorBuffers;
+    DynamicArray < std::unique_ptr<RenderTargetColor>>             mpSwapChainRenderTargets;
+    DynamicArray < std::unique_ptr<FrameBuffer>>                   mpSwapChainFrameBuffers;
 
     std::unique_ptr<Texture>                                       mpColorBuffer;
     std::unique_ptr<Texture>                                       mpDepthBuffer;

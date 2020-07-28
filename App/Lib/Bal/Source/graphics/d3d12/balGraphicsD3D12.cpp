@@ -140,9 +140,9 @@ bool Graphics::initialize(const InitializeArg& arg)
     }
 
     // スワップバッファのテクスチャーをレンダーターゲット化
-    mpSwapChainColorBuffers  = make_unique<Texture[]>(nullptr, arg.mBufferCount);
-    mpSwapChainRenderTargets = make_unique<RenderTargetColor[]>(nullptr, arg.mBufferCount);
-    mpSwapChainFrameBuffers  = make_unique<FrameBuffer[]>(nullptr, arg.mBufferCount);
+    mpSwapChainColorBuffers.create(arg.mBufferCount);
+    mpSwapChainRenderTargets.create(arg.mBufferCount);
+    mpSwapChainFrameBuffers.create(arg.mBufferCount);
     {
         for (uint32_t i_buffer = 0; i_buffer < arg.mBufferCount; ++i_buffer)
         {
@@ -157,17 +157,20 @@ bool Graphics::initialize(const InitializeArg& arg)
                 init_arg.mpGraphics = this;
                 init_arg.mpBuffer   = p_resource.Detach();
                 init_arg.mFormat    = Texture::Format::R8_G8_B8_A8_UNORM;
-                mpSwapChainColorBuffers[i_buffer].initialize(init_arg);
+                mpSwapChainColorBuffers[i_buffer] = make_unique<Texture>(nullptr);
+                mpSwapChainColorBuffers[i_buffer]->initialize(init_arg);
             }
             {
                 RenderTargetColor::InitializeArg init_arg;
                 init_arg.mpGraphics = this;
-                init_arg.mpTexture  = &mpSwapChainColorBuffers[i_buffer];
-                mpSwapChainRenderTargets[i_buffer].initialize(init_arg);
+                init_arg.mpTexture  = mpSwapChainColorBuffers[i_buffer].get();
+                mpSwapChainRenderTargets[i_buffer] = make_unique<RenderTargetColor>(nullptr);
+                mpSwapChainRenderTargets[i_buffer]->initialize(init_arg);
             }
             {
-                mpSwapChainFrameBuffers[i_buffer].setRenderTargetColor(0, &mpSwapChainRenderTargets[i_buffer]);
-                mpSwapChainFrameBuffers[i_buffer].setResolution(arg.mRenderBufferSize);
+                mpSwapChainFrameBuffers[i_buffer] = make_unique<FrameBuffer>(nullptr);
+                mpSwapChainFrameBuffers[i_buffer]->setRenderTargetColor(0, mpSwapChainRenderTargets[i_buffer].get());
+                mpSwapChainFrameBuffers[i_buffer]->setResolution(arg.mRenderBufferSize);
             }
         }
     }
@@ -243,18 +246,18 @@ void Graphics::loop()
 
     // スワップチェーンのバッファに書き出し
     mpCmdList->resourceBarrier(
-        mpSwapChainColorBuffers[mCurrentBufferIndex].getTexture(),
+        mpSwapChainColorBuffers[mCurrentBufferIndex]->getTexture(),
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
 
-    mpCmdList->setViewport(Viewport(mpSwapChainFrameBuffers[mCurrentBufferIndex]));
-    mpCmdList->bindFrameBuffer(mpSwapChainFrameBuffers[mCurrentBufferIndex]);
+    mpCmdList->setViewport(Viewport(*mpSwapChainFrameBuffers[mCurrentBufferIndex]));
+    mpCmdList->bindFrameBuffer(*mpSwapChainFrameBuffers[mCurrentBufferIndex]);
 
     // @TODO: 書き出し
 
     mpCmdList->resourceBarrier(
-        mpSwapChainColorBuffers[mCurrentBufferIndex].getTexture(),
+        mpSwapChainColorBuffers[mCurrentBufferIndex]->getTexture(),
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PRESENT
     );
@@ -295,9 +298,9 @@ bool Graphics::destroy()
     mpDepthBuffer.reset();
     mpColorBuffer.reset();
 
-    mpSwapChainFrameBuffers.reset();
-    mpSwapChainRenderTargets.reset();
-    mpSwapChainColorBuffers.reset();
+    mpSwapChainFrameBuffers.destroy();
+    mpSwapChainRenderTargets.destroy();
+    mpSwapChainColorBuffers.destroy();
 
     // 破棄
     mpCmdList.reset();

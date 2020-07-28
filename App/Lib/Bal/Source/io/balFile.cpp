@@ -36,6 +36,8 @@ bool File::loadFromFile(const StringPtr& path)
     // 保持
     mpBuffer    = std::move(buffer);
     mBufferSize = end_pos;
+
+    return true;
 }
 
 // ----------------------------------------------------------------------------
