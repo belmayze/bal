@@ -73,7 +73,7 @@ public:
 
 public:
     //! コマンドリスト
-    ID3D12GraphicsCommandList* getCommandList() const { return mpCmdList.get(); }
+    ID3D12CommandList* getCommandList() const { return mpCmdList.get(); }
 
 private:
     /*!

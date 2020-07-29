@@ -8,11 +8,13 @@
 // windows
 #include <wrl.h>
 // bal
+#include <io/balFile.h>
 #include <graphics/balFrameBuffer.h>
 #include <graphics/balViewport.h>
 #include <graphics/d3d12/balCommandListDirectD3D12.h>
 #include <graphics/d3d12/balCommandQueueD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
+#include <graphics/d3d12/balPipelineD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
 #include <graphics/d3d12/balTextureD3D12.h>
 
@@ -218,6 +220,24 @@ bool Graphics::initialize(const InitializeArg& arg)
         }
     }
 
+    // パイプラインを仮初期化
+    mpPipeline = make_unique<Pipeline>(nullptr);
+    {
+        // ファイル読み込み
+        std::unique_ptr<File> p_vertex_shader = make_unique<File>(nullptr);
+        if (!p_vertex_shader->loadFromFile("main.vs.cso")) { return false; }
+
+        std::unique_ptr<File> p_pixel_shader = make_unique<File>(nullptr);
+        if (!p_pixel_shader->loadFromFile("main.ps.cso")) { return false; }
+
+        // パイプライン初期化
+        Pipeline::InitializeArg init_arg;
+        init_arg.mpGraphics = this;
+        init_arg.mpVSFile   = p_vertex_shader.get();
+        init_arg.mpPSFile   = p_pixel_shader.get();
+        if (!mpPipeline->initialize(init_arg)) { return false; }
+    }
+
     // 情報
     mBufferCount = arg.mBufferCount;
 
@@ -249,6 +269,7 @@ void Graphics::loop()
 
     mpCmdList->setViewport(Viewport(*mpSwapChainFrameBuffers[mCurrentBufferIndex]));
     mpCmdList->bindFrameBuffer(*mpSwapChainFrameBuffers[mCurrentBufferIndex]);
+    //mpCmdList->clear(*mpSwapChainFrameBuffers[mCurrentBufferIndex], CommandListDirect::ClearFlag::Color, MathColor(1.f, 0.f, 0.f, 1.f), 1.f, 0);
 
     // @TODO: 書き出し
 
@@ -288,6 +309,8 @@ bool Graphics::destroy()
     waitForPreviousFrame();
 
     // バッファ破棄
+    mpPipeline.reset();
+
     mpFrameBuffer.reset();
     mpRenderTargetDepth.reset();
     mpRenderTargetColor.reset();

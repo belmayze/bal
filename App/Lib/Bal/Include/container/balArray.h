@@ -13,6 +13,12 @@
 namespace bal {
 
 template <typename T, size_t N>
-using Array = std::array<T, N>;
+class Array : public std::array<T, N>
+{
+};
+
+// 推論補助
+template <typename T, typename... U>
+Array(T, U...) -> Array<T, 1 + sizeof...(U)>;
 
 }

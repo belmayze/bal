@@ -16,6 +16,7 @@
 namespace bal::gfx { class FrameBuffer; }
 namespace bal::gfx::d3d12 { class CommandQueue; }
 namespace bal::gfx::d3d12 { class CommandListDirect; }
+namespace bal::gfx::d3d12 { class Pipeline; }
 namespace bal::gfx::d3d12 { class RenderTargetColor; }
 namespace bal::gfx::d3d12 { class RenderTargetDepth; }
 namespace bal::gfx::d3d12 { class Texture; }
@@ -77,6 +78,8 @@ private:
     std::unique_ptr<RenderTargetColor>                             mpRenderTargetColor;
     std::unique_ptr<RenderTargetDepth>                             mpRenderTargetDepth;
     std::unique_ptr<FrameBuffer>                                   mpFrameBuffer;
+
+    std::unique_ptr<Pipeline>                                      mpPipeline;
 
     UINT                                                           mCurrentBufferIndex = 0;
 };

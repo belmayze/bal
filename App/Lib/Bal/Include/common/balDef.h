@@ -58,6 +58,7 @@
 
 // プラットフォーム別の必須 include
 #if BAL_PLATFORM_IS_WIN
+#   define NOMINMAX
 #   include <Windows.h>
 #endif
 // 使っていい C++ の include

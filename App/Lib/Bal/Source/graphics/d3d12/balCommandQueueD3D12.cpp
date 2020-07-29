@@ -8,6 +8,7 @@
 // windows
 #include <wrl.h>
 // bal
+#include <container/balArray.h>
 #include <graphics/d3d12/balCommandListDirectD3D12.h>
 #include <graphics/d3d12/balCommandQueueD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
@@ -63,8 +64,8 @@ bool CommandQueue::initialize(const InitializeArg& arg)
 
 void CommandQueue::execute(const ICommandListDirect* p_cmd_list)
 {
-    ID3D12CommandList* cmd_lists[] = {reinterpret_cast<const CommandListDirect*>(p_cmd_list)->getCommandList()};
-    mpCmdQueue->ExecuteCommandLists(1, cmd_lists);
+    Array cmd_lists = {reinterpret_cast<const CommandListDirect*>(p_cmd_list)->getCommandList()};
+    mpCmdQueue->ExecuteCommandLists(1, cmd_lists.data());
 }
 
 // ----------------------------------------------------------------------------

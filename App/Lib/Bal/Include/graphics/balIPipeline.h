@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balIShader.h
+ * @file   balIPipeline.h
  * @brief  
  * @author belmayze
  *
@@ -15,7 +15,7 @@ namespace bal::gfx { class IGraphics; }
 // ----------------------------------------------------------------------------
 namespace bal::gfx {
 
-class IShader
+class IPipeline
 {
 public:
     //! 初期化構造体
@@ -24,7 +24,6 @@ public:
         IGraphics*  mpGraphics = nullptr;
         const File* mpVSFile   = nullptr;
         const File* mpPSFile   = nullptr;
-        const File* mpCSFile   = nullptr;
     };
 
 public:

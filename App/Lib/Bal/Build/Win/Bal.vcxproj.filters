@@ -123,11 +123,11 @@
     <ClCompile Include="..\..\Source\io\balFile.cpp">
       <Filter>io</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\graphics\d3d12\balShaderD3D12.cpp">
-      <Filter>graphics\d3d12</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\graphics\balIRenderTarget.cpp">
       <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\d3d12\balPipelineD3D12.cpp">
+      <Filter>graphics\d3d12</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -296,17 +296,17 @@
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandListDirectD3D12.h">
       <Filter>graphics\d3d12</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\graphics\balIShader.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\io\balFile.h">
       <Filter>io</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\graphics\d3d12\balShaderD3D12.h">
-      <Filter>graphics\d3d12</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\container\balDynamicArray.h">
       <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\balIPipeline.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\d3d12\balPipelineD3D12.h">
+      <Filter>graphics\d3d12</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

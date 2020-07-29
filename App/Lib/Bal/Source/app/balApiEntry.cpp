@@ -6,7 +6,6 @@
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 // windows
-#include <Windows.h>
 #include <tchar.h>
 #include <io.h>
 #include <fcntl.h>

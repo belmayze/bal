@@ -9,12 +9,12 @@
 // d3d12
 #include <d3d12.h>
 // bal
-#include <graphics/balIShader.h>
+#include <graphics/balIPipeline.h>
 
 // ----------------------------------------------------------------------------
 namespace bal::gfx::d3d12 {
 
-class Shader : public IShader
+class Pipeline : public IPipeline
 {
 public:
     /*!
@@ -32,6 +32,7 @@ private:
 
 private:
     std::unique_ptr<ID3D12RootSignature, ComDeleter> mpRootSignature;
+    std::unique_ptr<ID3D12PipelineState, ComDeleter> mpPipelineState;
 };
 
 }
