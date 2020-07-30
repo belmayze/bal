@@ -5,8 +5,6 @@
  *
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
-// windows
-#include <wrl.h>
 // bal
 #include <container/balArray.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>

@@ -60,10 +60,13 @@
 #if BAL_PLATFORM_IS_WIN
 #   define NOMINMAX
 #   include <Windows.h>
+#   include <d3d12.h>
+#   include <dxgi1_6.h>
+#   include <tchar.h>
+#   include <wrl.h>
 #endif
 // 使っていい C++ の include
 #include <cstdint>
-#include <array>
 // bal
 #include <io/balLog.h>
 #include <memory/balUniquePtr.h>

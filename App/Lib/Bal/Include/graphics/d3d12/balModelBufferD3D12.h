@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balShaderD3D12.h
+ * @file   balIModelBuffer.h
  * @brief  
  * @author belmayze
  *
@@ -7,12 +7,12 @@
  */
 #pragma once
 // bal
-#include <graphics/balIPipeline.h>
+#include <graphics/balIModelBuffer.h>
 
 // ----------------------------------------------------------------------------
 namespace bal::gfx::d3d12 {
 
-class Pipeline : public IPipeline
+class ModelBuffer : public IModelBuffer
 {
 public:
     /*!
@@ -29,8 +29,10 @@ private:
     };
 
 private:
-    std::unique_ptr<ID3D12RootSignature, ComDeleter> mpRootSignature;
-    std::unique_ptr<ID3D12PipelineState, ComDeleter> mpPipelineState;
+    D3D12_VERTEX_BUFFER_VIEW                    mVertexBufferView;
+    D3D12_INDEX_BUFFER_VIEW                     mIndexBufferView;
+    std::unique_ptr<ID3D12Resource, ComDeleter> mpVertexBuffer;
+    std::unique_ptr<ID3D12Resource, ComDeleter> mpIndexBuffer;
 };
 
 }

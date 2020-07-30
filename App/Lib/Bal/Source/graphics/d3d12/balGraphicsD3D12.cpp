@@ -5,8 +5,6 @@
  *
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
-// windows
-#include <wrl.h>
 // bal
 #include <io/balFile.h>
 #include <graphics/balFrameBuffer.h>
@@ -14,6 +12,7 @@
 #include <graphics/d3d12/balCommandListDirectD3D12.h>
 #include <graphics/d3d12/balCommandQueueD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
+#include <graphics/d3d12/balModelBufferD3D12.h>
 #include <graphics/d3d12/balPipelineD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
 #include <graphics/d3d12/balTextureD3D12.h>
@@ -238,6 +237,28 @@ bool Graphics::initialize(const InitializeArg& arg)
         if (!mpPipeline->initialize(init_arg)) { return false; }
     }
 
+    // 頂点、インデックスバッファを仮初期化
+    mpModelBuffer = make_unique<ModelBuffer>(nullptr);
+    {
+        // とりあえず position, texcoord
+        float vertices[] = {
+             0.f,  1.f, 0.f,  0.5f, 1.f,
+            -1.f, -1.f, 0.f,  0.f,  0.f,
+             1.f, -1.f, 0.f,  1.f,  0.f
+        };
+        uint16_t indices[] = {0, 1, 2};
+
+        ModelBuffer::InitializeArg init_arg;
+        init_arg.mpGraphics         = this;
+        init_arg.mpVertexBuffer     = reinterpret_cast<const uint8_t*>(vertices);
+        init_arg.mVertexBufferSize  = sizeof(vertices);
+        init_arg.mVertexStride      = sizeof(float) * 5;
+        init_arg.mpIndexBuffer      = reinterpret_cast<const uint8_t*>(indices);
+        init_arg.mIndexBufferSize   = sizeof(indices);
+        init_arg.mIndexBufferFormat = ModelBuffer::IndexBufferFormat::Uint16;
+        if (!mpModelBuffer->initialize(init_arg)) { return false; }
+    }
+
     // 情報
     mBufferCount = arg.mBufferCount;
 
@@ -309,6 +330,7 @@ bool Graphics::destroy()
     waitForPreviousFrame();
 
     // バッファ破棄
+    mpModelBuffer.reset();
     mpPipeline.reset();
 
     mpFrameBuffer.reset();

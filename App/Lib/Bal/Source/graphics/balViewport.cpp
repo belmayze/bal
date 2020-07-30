@@ -5,8 +5,6 @@
  *
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
-// windows
-#include <wrl.h>
 // bal
 #include <graphics/balFrameBuffer.h>
 #include <graphics/balViewport.h>

@@ -6,8 +6,6 @@
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 #pragma once
-// d3d12
-#include <d3d12.h>
 // bal
 #include <graphics/balICommandList.h>
 #include <graphics/balICommandListBundle.h>

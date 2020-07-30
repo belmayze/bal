@@ -40,6 +40,7 @@
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandListDirectD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandQueueD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balGraphicsD3D12.cpp" />
+    <ClCompile Include="..\..\Source\graphics\d3d12\balModelBufferD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balPipelineD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balRenderTargetD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balTextureD3D12.cpp" />
@@ -108,6 +109,7 @@
     <ClInclude Include="..\..\Include\graphics\balICommandListDirect.h" />
     <ClInclude Include="..\..\Include\graphics\balICommandQueue.h" />
     <ClInclude Include="..\..\Include\graphics\balIGraphics.h" />
+    <ClInclude Include="..\..\Include\graphics\balIModelBuffer.h" />
     <ClInclude Include="..\..\Include\graphics\balIPipeline.h" />
     <ClInclude Include="..\..\Include\graphics\balIRenderTarget.h" />
     <ClInclude Include="..\..\Include\graphics\balITexture.h" />
@@ -116,6 +118,7 @@
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandListDirectD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandQueueD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balGraphicsD3D12.h" />
+    <ClInclude Include="..\..\Include\graphics\d3d12\balModelBufferD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balPipelineD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balRenderTargetD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balTextureD3D12.h" />

@@ -6,9 +6,6 @@
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 #pragma once
-// d3d12
-#include <d3d12.h>
-#include <dxgi1_6.h>
 // bal
 #include <container/balDynamicArray.h>
 #include <graphics/balIGraphics.h>
@@ -16,6 +13,7 @@
 namespace bal::gfx { class FrameBuffer; }
 namespace bal::gfx::d3d12 { class CommandQueue; }
 namespace bal::gfx::d3d12 { class CommandListDirect; }
+namespace bal::gfx::d3d12 { class ModelBuffer; }
 namespace bal::gfx::d3d12 { class Pipeline; }
 namespace bal::gfx::d3d12 { class RenderTargetColor; }
 namespace bal::gfx::d3d12 { class RenderTargetDepth; }
@@ -66,22 +64,23 @@ private:
     };
 
 private:
-    uint32_t                                                       mBufferCount = 2;
-    std::unique_ptr<ID3D12Device6, ComDeleter>                     mpDevice;
-    std::unique_ptr<IDXGISwapChain3, ComDeleter>                   mpSwapChain;
-    std::unique_ptr<CommandListDirect>                             mpCmdList;
-    std::unique_ptr<CommandQueue>                                  mpCmdQueue;
+    uint32_t                                         mBufferCount = 2;
+    std::unique_ptr<ID3D12Device6, ComDeleter>       mpDevice;
+    std::unique_ptr<IDXGISwapChain3, ComDeleter>     mpSwapChain;
+    std::unique_ptr<CommandListDirect>               mpCmdList;
+    std::unique_ptr<CommandQueue>                    mpCmdQueue;
 
-    DynamicArray<std::unique_ptr<RenderTargetColor>>               mpSwapChainRenderTargets;
-    DynamicArray<std::unique_ptr<FrameBuffer>>                     mpSwapChainFrameBuffers;
+    DynamicArray<std::unique_ptr<RenderTargetColor>> mpSwapChainRenderTargets;
+    DynamicArray<std::unique_ptr<FrameBuffer>>       mpSwapChainFrameBuffers;
 
-    std::unique_ptr<RenderTargetColor>                             mpRenderTargetColor;
-    std::unique_ptr<RenderTargetDepth>                             mpRenderTargetDepth;
-    std::unique_ptr<FrameBuffer>                                   mpFrameBuffer;
+    std::unique_ptr<RenderTargetColor>               mpRenderTargetColor;
+    std::unique_ptr<RenderTargetDepth>               mpRenderTargetDepth;
+    std::unique_ptr<FrameBuffer>                     mpFrameBuffer;
 
-    std::unique_ptr<Pipeline>                                      mpPipeline;
+    std::unique_ptr<Pipeline>                        mpPipeline;
+    std::unique_ptr<ModelBuffer>                     mpModelBuffer;
 
-    UINT                                                           mCurrentBufferIndex = 0;
+    UINT                                             mCurrentBufferIndex = 0;
 };
 
 }

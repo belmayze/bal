@@ -6,6 +6,8 @@
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 #pragma once
+// bal
+#include <container/balArray.h>
 
 // ----------------------------------------------------------------------------
 namespace bal {
@@ -32,8 +34,8 @@ public:
 private:
     static constexpr int cMaxFinalizerNum = 256;
 
-    static int                                       mIndex;
-    static std::array<DestroyFunc, cMaxFinalizerNum> mFunctions;
+    static int                                  mIndex;
+    static Array<DestroyFunc, cMaxFinalizerNum> mFunctions;
 };
 
 }

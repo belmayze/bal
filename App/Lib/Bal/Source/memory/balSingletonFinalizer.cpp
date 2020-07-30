@@ -13,7 +13,7 @@ namespace bal {
 // ----------------------------------------------------------------------------
 
 int SingletonFinalizer::mIndex = 0;
-std::array<SingletonFinalizer::DestroyFunc, SingletonFinalizer::cMaxFinalizerNum> SingletonFinalizer::mFunctions;
+Array<SingletonFinalizer::DestroyFunc, SingletonFinalizer::cMaxFinalizerNum> SingletonFinalizer::mFunctions;
 
 // ----------------------------------------------------------------------------
 

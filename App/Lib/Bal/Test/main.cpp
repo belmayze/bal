@@ -5,8 +5,6 @@
  *
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
-// Windows
-#include <tchar.h>
 // bal
 #include <app/balApplicationBase.h>
 #include <framework/balFramework.h>
