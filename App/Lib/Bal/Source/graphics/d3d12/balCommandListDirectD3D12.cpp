@@ -12,6 +12,8 @@
 #include <graphics/d3d12/balCommandListBundleD3D12.h>
 #include <graphics/d3d12/balCommandListDirectD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
+#include <graphics/d3d12/balModelBufferD3D12.h>
+#include <graphics/d3d12/balPipelineD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
 #include <graphics/d3d12/balTextureD3D12.h>
 
@@ -62,6 +64,28 @@ void CommandListDirect::reset()
 void CommandListDirect::close()
 {
     mpCmdList->Close();
+}
+
+// ----------------------------------------------------------------------------
+
+void CommandListDirect::bindPipeline(const IPipeline& pipeline)
+{
+    const Pipeline* p_pipeline = reinterpret_cast<const Pipeline*>(&pipeline);
+    mpCmdList->SetGraphicsRootSignature(p_pipeline->getRootSignature());
+    mpCmdList->SetPipelineState(p_pipeline->getPipelineState());
+}
+
+// ----------------------------------------------------------------------------
+
+void CommandListDirect::drawModel(const IModelBuffer& model_buffer)
+{
+    const ModelBuffer* p_model_buffer = reinterpret_cast<const ModelBuffer*>(&model_buffer);
+    D3D12_PRIMITIVE_TOPOLOGY topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+    mpCmdList->IASetPrimitiveTopology(topology);
+    mpCmdList->IASetVertexBuffers(0, 1, p_model_buffer->getVertexBufferView());
+    mpCmdList->IASetIndexBuffer(p_model_buffer->getIndexBufferView());
+    mpCmdList->DrawIndexedInstanced(p_model_buffer->getIndexCount(), 1, 0, 0, 0);
 }
 
 // ----------------------------------------------------------------------------

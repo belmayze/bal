@@ -255,6 +255,7 @@ bool Graphics::initialize(const InitializeArg& arg)
         init_arg.mVertexStride      = sizeof(float) * 5;
         init_arg.mpIndexBuffer      = reinterpret_cast<const uint8_t*>(indices);
         init_arg.mIndexBufferSize   = sizeof(indices);
+        init_arg.mIndexCount        = 3;
         init_arg.mIndexBufferFormat = ModelBuffer::IndexBufferFormat::Uint16;
         if (!mpModelBuffer->initialize(init_arg)) { return false; }
     }
@@ -290,7 +291,11 @@ void Graphics::loop()
 
     mpCmdList->setViewport(Viewport(*mpSwapChainFrameBuffers[mCurrentBufferIndex]));
     mpCmdList->bindFrameBuffer(*mpSwapChainFrameBuffers[mCurrentBufferIndex]);
-    //mpCmdList->clear(*mpSwapChainFrameBuffers[mCurrentBufferIndex], CommandListDirect::ClearFlag::Color, MathColor(1.f, 0.f, 0.f, 1.f), 1.f, 0);
+    mpCmdList->clear(*mpSwapChainFrameBuffers[mCurrentBufferIndex], CommandListDirect::ClearFlag::Color, MathColor(1.f, 0.f, 0.f, 1.f), 1.f, 0);
+
+    // @TODO: 仮レンダリング
+    mpCmdList->bindPipeline(*mpPipeline);
+    mpCmdList->drawModel(*mpModelBuffer);
 
     // @TODO: 書き出し
 

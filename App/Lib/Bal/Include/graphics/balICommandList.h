@@ -8,6 +8,8 @@
 #pragma once
 
 namespace bal::gfx { class IGraphics; }
+namespace bal::gfx { class IModelBuffer; }
+namespace bal::gfx { class IPipeline; }
 
 // ----------------------------------------------------------------------------
 namespace bal::gfx {
@@ -41,6 +43,17 @@ public:
     virtual void close() = 0;
 
 public:
+    /*!
+     * パイプラインの設定
+     * @param[in] pipeline パイプライン
+     */
+    virtual void bindPipeline(const IPipeline& pipeline) = 0;
+
+    /*!
+     * モデルを描画します
+     * @param[in] model_buffer モデルバッファ
+     */
+    virtual void drawModel(const IModelBuffer& model_buffer) = 0;
 };
 
 }

@@ -21,6 +21,11 @@ public:
         Uint16,
         Uint32
     };
+    //! プリミティブ形状
+    enum class PrimitiveTopology
+    {
+        Triangles
+    };
     //! 初期化構造体
     struct InitializeArg
     {
@@ -30,7 +35,9 @@ public:
         size_t            mVertexStride      = 0;
         const uint8_t*    mpIndexBuffer      = nullptr;
         size_t            mIndexBufferSize   = 0;
+        uint32_t          mIndexCount        = 0;
         IndexBufferFormat mIndexBufferFormat = IndexBufferFormat::Uint16;
+        PrimitiveTopology mPrimitiveTopology = PrimitiveTopology::Triangles;
     };
 
 public:

@@ -28,6 +28,12 @@ private:
         void operator()(IUnknown* ptr) { ptr->Release(); }
     };
 
+public:
+    //! ルートシグネチャ
+    inline ID3D12RootSignature* getRootSignature() const { return mpRootSignature.get(); }
+    //! パイプラインステート
+    inline ID3D12PipelineState* getPipelineState() const { return mpPipelineState.get(); }
+
 private:
     std::unique_ptr<ID3D12RootSignature, ComDeleter> mpRootSignature;
     std::unique_ptr<ID3D12PipelineState, ComDeleter> mpPipelineState;

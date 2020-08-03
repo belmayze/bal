@@ -103,6 +103,8 @@ bool ModelBuffer::initialize(const InitializeArg& arg)
     // 保持
     mpVertexBuffer.reset(p_vertex_buffer.Detach());
     mpIndexBuffer.reset(p_index_buffer.Detach());
+    mIndexCount        = arg.mIndexCount;
+    mPrimitiveTopology = arg.mPrimitiveTopology;
 
     return true;
 }
