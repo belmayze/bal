@@ -44,8 +44,8 @@ bool Pipeline::initialize(const InitializeArg& arg)
         // ルートシグネチャ
         D3D12_VERSIONED_ROOT_SIGNATURE_DESC desc = {};
         desc.Version                = D3D_ROOT_SIGNATURE_VERSION_1_1;
-        desc.Desc_1_1.NumParameters = 1;
-        desc.Desc_1_1.pParameters   = &param;
+        //desc.Desc_1_1.NumParameters = 1;
+        //desc.Desc_1_1.pParameters   = &param;
         desc.Desc_1_1.Flags         = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
         // 設定をシリアライズして生成
@@ -67,21 +67,25 @@ bool Pipeline::initialize(const InitializeArg& arg)
         // レイアウト
         Array element_descs =
         {
-            D3D12_INPUT_ELEMENT_DESC{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-            D3D12_INPUT_ELEMENT_DESC{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    1, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
+            D3D12_INPUT_ELEMENT_DESC{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,  0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
+            D3D12_INPUT_ELEMENT_DESC{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
         };
 
         // ラスタライザー
         D3D12_RASTERIZER_DESC rasterizer_desc = {};
         rasterizer_desc.FillMode              = D3D12_FILL_MODE_SOLID;
         rasterizer_desc.CullMode              = D3D12_CULL_MODE_BACK;
-        rasterizer_desc.FrontCounterClockwise = false;
+        rasterizer_desc.FrontCounterClockwise = true;
         rasterizer_desc.DepthClipEnable       = true;
 
         // ブレンダー
         D3D12_BLEND_DESC blend_desc = {};
         blend_desc.RenderTarget[0].BlendEnable           = false;
         blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
+        // デプス
+        D3D12_DEPTH_STENCIL_DESC depth_stencil_desc = {};
+        depth_stencil_desc.DepthEnable = false;
 
         // パイプライン
         D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};
@@ -100,6 +104,7 @@ bool Pipeline::initialize(const InitializeArg& arg)
         }
         desc.RasterizerState                = rasterizer_desc;
         desc.BlendState                     = blend_desc;
+        desc.DepthStencilState              = depth_stencil_desc;
         desc.SampleMask                     = std::numeric_limits<std::uint32_t>::max();
         desc.PrimitiveTopologyType          = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         desc.NumRenderTargets               = 1;

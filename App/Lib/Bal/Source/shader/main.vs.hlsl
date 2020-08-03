@@ -8,18 +8,18 @@
 struct VS_INPUT
 {
     float3 Position : POSITION;
-    float2 Texcoord : TEXCOORD;
+    float2 Texcoord : TEXCOORD0;
 };
 
-struct PS_INPUT
+struct VS_OUTPUT
 {
     float4 Position : SV_POSITION;
-    float2 Texcoord : TEXCOORD;
+    float2 Texcoord : TEXCOORD0;
 };
 
-PS_INPUT main(VS_INPUT input)
+VS_OUTPUT main(VS_INPUT input)
 {
-    PS_INPUT output;
+    VS_OUTPUT output;
 
     output.Position = float4(input.Position, 1.0);
     output.Texcoord = input.Texcoord;

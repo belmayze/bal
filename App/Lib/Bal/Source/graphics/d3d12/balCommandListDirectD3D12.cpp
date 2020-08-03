@@ -84,8 +84,9 @@ void CommandListDirect::drawModel(const IModelBuffer& model_buffer)
 
     mpCmdList->IASetPrimitiveTopology(topology);
     mpCmdList->IASetVertexBuffers(0, 1, p_model_buffer->getVertexBufferView());
-    mpCmdList->IASetIndexBuffer(p_model_buffer->getIndexBufferView());
-    mpCmdList->DrawIndexedInstanced(p_model_buffer->getIndexCount(), 1, 0, 0, 0);
+    //mpCmdList->IASetIndexBuffer(p_model_buffer->getIndexBufferView());
+    //mpCmdList->DrawIndexedInstanced(p_model_buffer->getIndexCount(), 1, 0, 0, 0);
+    mpCmdList->DrawInstanced(3, 1, 0, 0);
 }
 
 // ----------------------------------------------------------------------------
@@ -100,6 +101,13 @@ void CommandListDirect::setViewport(const Viewport& vp)
     viewport.MinDepth = vp.getMinDepth();
     viewport.MaxDepth = vp.getMaxDepth();
     mpCmdList->RSSetViewports(1, &viewport);
+
+    D3D12_RECT rect = {};
+    rect.left   = static_cast<int32_t>(vp.getOrigin().getX());
+    rect.top    = static_cast<int32_t>(vp.getOrigin().getY());
+    rect.right  = static_cast<int32_t>(vp.getSize().getX());
+    rect.bottom = static_cast<int32_t>(vp.getSize().getY());
+    mpCmdList->RSSetScissorRects(1, &rect);
 }
 
 // ----------------------------------------------------------------------------
