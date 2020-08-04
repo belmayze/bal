@@ -352,7 +352,7 @@ void Graphics::loop()
 void Graphics::waitForPreviousFrame()
 {
     // 画面の反映
-    mpSwapChain->Present(0, 0);
+    mpSwapChain->Present(1, 0);
 
     // コマンドキューの終了待ち
     mpCmdQueue->waitExecuted();
