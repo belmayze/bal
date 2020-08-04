@@ -8,9 +8,12 @@
 #pragma once
 // bal
 #include <math/balMath.h>
+#include <graphics/balFrameBuffer.h>
+#include <graphics/balITexture.h>
 
 namespace bal { class File; }
 namespace bal::gfx { class IGraphics; }
+namespace bal::gfx { class IInputLayout; }
 
 // ----------------------------------------------------------------------------
 namespace bal::gfx {
@@ -21,9 +24,10 @@ public:
     //! 初期化構造体
     struct InitializeArg
     {
-        IGraphics*  mpGraphics = nullptr;
-        const File* mpVSFile   = nullptr;
-        const File* mpPSFile   = nullptr;
+        IGraphics*          mpGraphics    = nullptr;
+        const IInputLayout* mpInputLayout = nullptr;
+        const File*         mpVSFile      = nullptr;
+        const File*         mpPSFile      = nullptr;
     };
 
 public:

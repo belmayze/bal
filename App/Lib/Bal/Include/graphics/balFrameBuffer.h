@@ -20,6 +20,9 @@ namespace bal::gfx {
 class FrameBuffer
 {
 public:
+    static constexpr uint32_t cColorRenderTargetMax = 8;
+
+public:
     //! コンストラクター
     FrameBuffer();
 
@@ -48,14 +51,14 @@ public:
     //! 解像度
     inline const MathSize& getResolution() const { return mResolution; }
     //! レンダーターゲット
-    inline const Array<IRenderTargetColor*, 8>& getRenderTargetColors() const { return mpRenderTargetColors; }
+    inline const Array<IRenderTargetColor*, cColorRenderTargetMax>& getRenderTargetColors() const { return mpRenderTargetColors; }
     //! レンダーターゲット
     inline const IRenderTargetDepth* getRenderTargetDepth() const { return mpRenderTargetDepth; }
 
 private:
-    Array<IRenderTargetColor*, 8> mpRenderTargetColors;
-    IRenderTargetDepth*           mpRenderTargetDepth = nullptr;
-    MathSize                      mResolution;
+    Array<IRenderTargetColor*, cColorRenderTargetMax> mpRenderTargetColors;
+    IRenderTargetDepth*                               mpRenderTargetDepth = nullptr;
+    MathSize                                          mResolution;
 };
 
 }

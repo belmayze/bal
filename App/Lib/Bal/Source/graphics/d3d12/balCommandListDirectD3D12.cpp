@@ -84,9 +84,8 @@ void CommandListDirect::drawModel(const IModelBuffer& model_buffer)
 
     mpCmdList->IASetPrimitiveTopology(topology);
     mpCmdList->IASetVertexBuffers(0, 1, p_model_buffer->getVertexBufferView());
-    //mpCmdList->IASetIndexBuffer(p_model_buffer->getIndexBufferView());
-    //mpCmdList->DrawIndexedInstanced(p_model_buffer->getIndexCount(), 1, 0, 0, 0);
-    mpCmdList->DrawInstanced(3, 1, 0, 0);
+    mpCmdList->IASetIndexBuffer(p_model_buffer->getIndexBufferView());
+    mpCmdList->DrawIndexedInstanced(p_model_buffer->getIndexCount(), 1, 0, 0, 0);
 }
 
 // ----------------------------------------------------------------------------

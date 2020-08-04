@@ -8,6 +8,7 @@
 // bal
 #include <container/balArray.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
+#include <graphics/d3d12/balInputLayoutD3D12.h>
 #include <graphics/d3d12/balPipelineD3D12.h>
 #include <io/balFile.h>
 
@@ -19,6 +20,9 @@ bool Pipeline::initialize(const InitializeArg& arg)
 {
     // デバイス
     ID3D12Device6* p_device = reinterpret_cast<Graphics*>(arg.mpGraphics)->getDevice();
+
+    // レイアウト
+    const InputLayout* p_input_layout = reinterpret_cast<const InputLayout*>(arg.mpInputLayout);
 
     // @TODO: いろいろ固定してあるので、変更する
 
@@ -64,13 +68,6 @@ bool Pipeline::initialize(const InitializeArg& arg)
     // パイプラインを生成
     Microsoft::WRL::ComPtr<ID3D12PipelineState> p_pipeline_state;
     {
-        // レイアウト
-        Array element_descs =
-        {
-            D3D12_INPUT_ELEMENT_DESC{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,  0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-            D3D12_INPUT_ELEMENT_DESC{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0}
-        };
-
         // ラスタライザー
         D3D12_RASTERIZER_DESC rasterizer_desc = {};
         rasterizer_desc.FillMode              = D3D12_FILL_MODE_SOLID;
@@ -89,8 +86,8 @@ bool Pipeline::initialize(const InitializeArg& arg)
 
         // パイプライン
         D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};
-        desc.InputLayout.NumElements        = static_cast<uint32_t>(element_descs.size());
-        desc.InputLayout.pInputElementDescs = element_descs.data();
+        desc.InputLayout.NumElements        = p_input_layout->getNumInputElementDesc();
+        desc.InputLayout.pInputElementDescs = p_input_layout->getInputElementDescs();
         desc.pRootSignature                 = p_root_signature.Get();
         if (arg.mpVSFile)
         {

@@ -12,6 +12,7 @@
 #include <graphics/d3d12/balCommandListDirectD3D12.h>
 #include <graphics/d3d12/balCommandQueueD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
+#include <graphics/d3d12/balInputLayoutD3D12.h>
 #include <graphics/d3d12/balModelBufferD3D12.h>
 #include <graphics/d3d12/balPipelineD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
@@ -222,6 +223,20 @@ bool Graphics::initialize(const InitializeArg& arg)
     // パイプラインを仮初期化
     mpPipeline = make_unique<Pipeline>(nullptr);
     {
+        // 頂点レイアウト
+        std::unique_ptr<InputLayout> p_input_layout = make_unique<InputLayout>(nullptr);
+        {
+            std::unique_ptr<InputLayout::InputLayoutDesc[]> descs = make_unique<InputLayout::InputLayoutDesc[]>(nullptr, 2);
+            descs[0] = { .mName = "POSITION", .mSemanticIndex = 0, .mType = InputLayout::Type::Vec3, .mOffset =  0 };
+            descs[1] = { .mName = "TEXCOORD", .mSemanticIndex = 0, .mType = InputLayout::Type::Vec2, .mOffset = 12 };
+
+            InputLayout::InitializeArg init_arg;
+            init_arg.mpGraphics      = this;
+            init_arg.mNumInputLayout = 2;
+            init_arg.mpInputLayouts  = descs.get();
+            if (!p_input_layout->initialize(init_arg)) { return false; }
+        }
+
         // ファイル読み込み
         std::unique_ptr<File> p_vertex_shader = make_unique<File>(nullptr);
         if (!p_vertex_shader->loadFromFile("main.vs.cso")) { return false; }
@@ -231,9 +246,10 @@ bool Graphics::initialize(const InitializeArg& arg)
 
         // パイプライン初期化
         Pipeline::InitializeArg init_arg;
-        init_arg.mpGraphics = this;
-        init_arg.mpVSFile   = p_vertex_shader.get();
-        init_arg.mpPSFile   = p_pixel_shader.get();
+        init_arg.mpGraphics    = this;
+        init_arg.mpInputLayout = p_input_layout.get();
+        init_arg.mpVSFile      = p_vertex_shader.get();
+        init_arg.mpPSFile      = p_pixel_shader.get();
         if (!mpPipeline->initialize(init_arg)) { return false; }
     }
 
