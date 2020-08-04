@@ -9,110 +9,6 @@
 #include <graphics/d3d12/balTextureD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 
-namespace
-{
-
-constexpr DXGI_FORMAT ConvertNativeFormat(bal::gfx::d3d12::Texture::Format format)
-{
-    switch (format)
-    {
-        // Color R
-        case bal::gfx::d3d12::Texture::Format::R8_UNORM:
-            return DXGI_FORMAT_R8_UNORM;
-        case bal::gfx::d3d12::Texture::Format::R8_SNORM:
-            return DXGI_FORMAT_R8_SNORM;
-        case bal::gfx::d3d12::Texture::Format::R16_FLOAT:
-            return DXGI_FORMAT_R16_FLOAT;
-        case bal::gfx::d3d12::Texture::Format::R32_FLOAT:
-            return DXGI_FORMAT_R32_FLOAT;
-
-        // Color RG
-        case bal::gfx::d3d12::Texture::Format::R8_G8_UNORM:
-            return DXGI_FORMAT_R8G8_UNORM;
-        case bal::gfx::d3d12::Texture::Format::R8_G8_SNORM:
-            return DXGI_FORMAT_R8G8_SNORM;
-        case bal::gfx::d3d12::Texture::Format::R16_G16_FLOAT:
-            return DXGI_FORMAT_R16G16_FLOAT;
-        case bal::gfx::d3d12::Texture::Format::R32_G32_FLOAT:
-            return DXGI_FORMAT_R32_FLOAT;
-
-        // Color RGB
-        case bal::gfx::d3d12::Texture::Format::R5_G6_B5_UNORM:
-            return DXGI_FORMAT_B5G6R5_UNORM;
-        case bal::gfx::d3d12::Texture::Format::R11_G11_B10_FLOAT:
-            return DXGI_FORMAT_R11G11B10_FLOAT;
-        case bal::gfx::d3d12::Texture::Format::R32_G32_B32_FLOAT:
-            return DXGI_FORMAT_R32G32B32_FLOAT;
-
-        // Color RGBA
-        case bal::gfx::d3d12::Texture::Format::R5_G5_B5_A1_UNORM:
-            return DXGI_FORMAT_B5G5R5A1_UNORM;
-        case bal::gfx::d3d12::Texture::Format::R8_G8_B8_A8_UNORM:
-            return DXGI_FORMAT_R8G8B8A8_UNORM;
-        case bal::gfx::d3d12::Texture::Format::R8_G8_B8_A8_SNORM:
-            return DXGI_FORMAT_R8G8B8A8_SNORM;
-        case bal::gfx::d3d12::Texture::Format::R8_G8_B8_A8_SRGB:
-            return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-        case bal::gfx::d3d12::Texture::Format::R10_G10_B10_A2_UNORM:
-            return DXGI_FORMAT_R10G10B10A2_UNORM;
-        case bal::gfx::d3d12::Texture::Format::R16_G16_B16_A16_FLOAT:
-            return DXGI_FORMAT_R16G16B16A16_FLOAT;
-        case bal::gfx::d3d12::Texture::Format::R32_G32_B32_A32_FLOAT:
-            return DXGI_FORMAT_R32G32B32A32_FLOAT;
-
-        // Depth
-        case bal::gfx::d3d12::Texture::Format::D16_UNORM:
-            return DXGI_FORMAT_D16_UNORM;
-        case bal::gfx::d3d12::Texture::Format::D24_UNORM_S8_UINT:
-            return DXGI_FORMAT_D24_UNORM_S8_UINT;
-        case bal::gfx::d3d12::Texture::Format::D32_FLOAT:
-            return DXGI_FORMAT_D32_FLOAT;
-
-        // Compress
-        case bal::gfx::d3d12::Texture::Format::BC1_UNORM:
-            return DXGI_FORMAT_BC1_UNORM;
-        case bal::gfx::d3d12::Texture::Format::BC1_SRGB:
-            return DXGI_FORMAT_BC1_UNORM_SRGB;
-        case bal::gfx::d3d12::Texture::Format::BC2_UNORM:
-            return DXGI_FORMAT_BC2_UNORM;
-        case bal::gfx::d3d12::Texture::Format::BC3_UNORM:
-            return DXGI_FORMAT_BC3_UNORM;
-        case bal::gfx::d3d12::Texture::Format::BC3_SRGB:
-            return DXGI_FORMAT_BC3_UNORM_SRGB;
-        case bal::gfx::d3d12::Texture::Format::BC4_UNORM:
-            return DXGI_FORMAT_BC4_UNORM;
-        case bal::gfx::d3d12::Texture::Format::BC4_SNORM:
-            return DXGI_FORMAT_BC4_SNORM;
-        case bal::gfx::d3d12::Texture::Format::BC5_UNORM:
-            return DXGI_FORMAT_BC5_UNORM;
-        case bal::gfx::d3d12::Texture::Format::BC5_SNORM:
-            return DXGI_FORMAT_BC5_SNORM;
-        case bal::gfx::d3d12::Texture::Format::BC6H_UF16:
-            return DXGI_FORMAT_BC6H_UF16;
-        case bal::gfx::d3d12::Texture::Format::BC6H_SF16:
-            return DXGI_FORMAT_BC6H_SF16;
-        case bal::gfx::d3d12::Texture::Format::BC7_UNORM:
-            return DXGI_FORMAT_BC7_UNORM;
-        case bal::gfx::d3d12::Texture::Format::BC7_SRGB:
-            return DXGI_FORMAT_BC7_UNORM_SRGB;
-    }
-}
-
-constexpr D3D12_RESOURCE_DIMENSION ConvertNativeDimension(bal::gfx::d3d12::Texture::Dimension dimension)
-{
-    switch (dimension)
-    {
-        case bal::gfx::d3d12::Texture::Dimension::Texture1D:
-            return D3D12_RESOURCE_DIMENSION_TEXTURE1D;
-        case bal::gfx::d3d12::Texture::Dimension::Texture2D:
-            return D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-        case bal::gfx::d3d12::Texture::Dimension::Texture3D:
-            return D3D12_RESOURCE_DIMENSION_TEXTURE3D;
-    }
-}
-
-}
-
 namespace bal::gfx::d3d12 {
 
 // ----------------------------------------------------------------------------
@@ -123,8 +19,8 @@ bool Texture::initialize(const InitializeArg& arg)
     ID3D12Device6* p_device = reinterpret_cast<Graphics*>(arg.mpGraphics)->getDevice();
 
     // 種類
-    DXGI_FORMAT              format    = ConvertNativeFormat(arg.mFormat);
-    D3D12_RESOURCE_DIMENSION dimension = ConvertNativeDimension(arg.mDimension);
+    DXGI_FORMAT              format    = ConvertFormat(arg.mFormat);
+    D3D12_RESOURCE_DIMENSION dimension = ConvertDimension(arg.mDimension);
 
     if (arg.mpBuffer)
     {
@@ -204,6 +100,76 @@ bool Texture::initialize(const InitializeArg& arg)
     mFormat = format;
 
     return true;
+}
+
+// ----------------------------------------------------------------------------
+
+DXGI_FORMAT Texture::ConvertFormat(Format format)
+{
+    switch (format)
+    {
+        // Color R
+        case Format::R8_UNORM:  return DXGI_FORMAT_R8_UNORM;
+        case Format::R8_SNORM:  return DXGI_FORMAT_R8_SNORM;
+        case Format::R16_FLOAT: return DXGI_FORMAT_R16_FLOAT;
+        case Format::R32_FLOAT: return DXGI_FORMAT_R32_FLOAT;
+
+            // Color RG
+        case Format::R8_G8_UNORM:   return DXGI_FORMAT_R8G8_UNORM;
+        case Format::R8_G8_SNORM:   return DXGI_FORMAT_R8G8_SNORM;
+        case Format::R16_G16_FLOAT: return DXGI_FORMAT_R16G16_FLOAT;
+        case Format::R32_G32_FLOAT: return DXGI_FORMAT_R32_FLOAT;
+
+            // Color RGB
+        case Format::R5_G6_B5_UNORM:    return DXGI_FORMAT_B5G6R5_UNORM;
+        case Format::R11_G11_B10_FLOAT: return DXGI_FORMAT_R11G11B10_FLOAT;
+        case Format::R32_G32_B32_FLOAT: return DXGI_FORMAT_R32G32B32_FLOAT;
+
+            // Color RGBA
+        case Format::R5_G5_B5_A1_UNORM:     return DXGI_FORMAT_B5G5R5A1_UNORM;
+        case Format::R8_G8_B8_A8_UNORM:     return DXGI_FORMAT_R8G8B8A8_UNORM;
+        case Format::R8_G8_B8_A8_SNORM:     return DXGI_FORMAT_R8G8B8A8_SNORM;
+        case Format::R8_G8_B8_A8_SRGB:      return DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+        case Format::R10_G10_B10_A2_UNORM:  return DXGI_FORMAT_R10G10B10A2_UNORM;
+        case Format::R16_G16_B16_A16_FLOAT: return DXGI_FORMAT_R16G16B16A16_FLOAT;
+        case Format::R32_G32_B32_A32_FLOAT: return DXGI_FORMAT_R32G32B32A32_FLOAT;
+
+            // Depth
+        case Format::D16_UNORM:         return DXGI_FORMAT_D16_UNORM;
+        case Format::D24_UNORM_S8_UINT: return DXGI_FORMAT_D24_UNORM_S8_UINT;
+        case Format::D32_FLOAT:         return DXGI_FORMAT_D32_FLOAT;
+
+            // Compress
+        case Format::BC1_UNORM: return DXGI_FORMAT_BC1_UNORM;
+        case Format::BC1_SRGB:  return DXGI_FORMAT_BC1_UNORM_SRGB;
+        case Format::BC2_UNORM: return DXGI_FORMAT_BC2_UNORM;
+        case Format::BC3_UNORM: return DXGI_FORMAT_BC3_UNORM;
+        case Format::BC3_SRGB:  return DXGI_FORMAT_BC3_UNORM_SRGB;
+        case Format::BC4_UNORM: return DXGI_FORMAT_BC4_UNORM;
+        case Format::BC4_SNORM: return DXGI_FORMAT_BC4_SNORM;
+        case Format::BC5_UNORM: return DXGI_FORMAT_BC5_UNORM;
+        case Format::BC5_SNORM: return DXGI_FORMAT_BC5_SNORM;
+        case Format::BC6H_UF16: return DXGI_FORMAT_BC6H_UF16;
+        case Format::BC6H_SF16: return DXGI_FORMAT_BC6H_SF16;
+        case Format::BC7_UNORM: return DXGI_FORMAT_BC7_UNORM;
+        case Format::BC7_SRGB:  return DXGI_FORMAT_BC7_UNORM_SRGB;
+    }
+
+    return DXGI_FORMAT_UNKNOWN;
+}
+
+// ----------------------------------------------------------------------------
+
+D3D12_RESOURCE_DIMENSION Texture::ConvertDimension(Dimension dimension)
+{
+    switch (dimension)
+    {
+        case bal::gfx::ITexture::Dimension::Texture1D: return D3D12_RESOURCE_DIMENSION_TEXTURE1D;
+        case bal::gfx::ITexture::Dimension::Texture2D: return D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+        case bal::gfx::ITexture::Dimension::Texture3D: return D3D12_RESOURCE_DIMENSION_TEXTURE3D;
+    }
+
+    return D3D12_RESOURCE_DIMENSION_UNKNOWN;
 }
 
 // ----------------------------------------------------------------------------

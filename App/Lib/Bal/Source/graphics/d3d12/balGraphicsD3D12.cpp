@@ -246,10 +246,12 @@ bool Graphics::initialize(const InitializeArg& arg)
 
         // パイプライン初期化
         Pipeline::InitializeArg init_arg;
-        init_arg.mpGraphics    = this;
-        init_arg.mpInputLayout = p_input_layout.get();
-        init_arg.mpVSFile      = p_vertex_shader.get();
-        init_arg.mpPSFile      = p_pixel_shader.get();
+        init_arg.mpGraphics        = this;
+        init_arg.mNumOutput        = 1;
+        init_arg.mOutputFormats[0] = Texture::Format::R8_G8_B8_A8_UNORM;
+        init_arg.mpInputLayout     = p_input_layout.get();
+        init_arg.mpVSFile          = p_vertex_shader.get();
+        init_arg.mpPSFile          = p_pixel_shader.get();
         if (!mpPipeline->initialize(init_arg)) { return false; }
     }
 

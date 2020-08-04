@@ -43,25 +43,25 @@ bool InputLayout::initialize(const InitializeArg& arg)
 
 // ----------------------------------------------------------------------------
 
-DXGI_FORMAT InputLayout::convertFormat_(IInputLayout::Type type) const
+DXGI_FORMAT InputLayout::convertFormat_(Type type) const
 {
     switch (type)
     {
-        case bal::gfx::IInputLayout::Type::Int:   return DXGI_FORMAT_R32_SINT;
-        case bal::gfx::IInputLayout::Type::IVec2: return DXGI_FORMAT_R32G32_SINT;
-        case bal::gfx::IInputLayout::Type::IVec3: return DXGI_FORMAT_R32G32B32_SINT;
-        case bal::gfx::IInputLayout::Type::IVec4: return DXGI_FORMAT_R32G32B32A32_SINT;
-        case bal::gfx::IInputLayout::Type::UInt:  return DXGI_FORMAT_R32_UINT;
-        case bal::gfx::IInputLayout::Type::UVec2: return DXGI_FORMAT_R32G32_UINT;
-        case bal::gfx::IInputLayout::Type::UVec3: return DXGI_FORMAT_R32G32B32_UINT;
-        case bal::gfx::IInputLayout::Type::UVec4: return DXGI_FORMAT_R32G32B32A32_UINT;
-        case bal::gfx::IInputLayout::Type::Float: return DXGI_FORMAT_R32_FLOAT;
-        case bal::gfx::IInputLayout::Type::Vec2:  return DXGI_FORMAT_R32G32_FLOAT;
-        case bal::gfx::IInputLayout::Type::Vec3:  return DXGI_FORMAT_R32G32B32_FLOAT;
-        case bal::gfx::IInputLayout::Type::Vec4:  return DXGI_FORMAT_R32G32B32A32_FLOAT;
+        case Type::Int:   return DXGI_FORMAT_R32_SINT;
+        case Type::IVec2: return DXGI_FORMAT_R32G32_SINT;
+        case Type::IVec3: return DXGI_FORMAT_R32G32B32_SINT;
+        case Type::IVec4: return DXGI_FORMAT_R32G32B32A32_SINT;
+        case Type::UInt:  return DXGI_FORMAT_R32_UINT;
+        case Type::UVec2: return DXGI_FORMAT_R32G32_UINT;
+        case Type::UVec3: return DXGI_FORMAT_R32G32B32_UINT;
+        case Type::UVec4: return DXGI_FORMAT_R32G32B32A32_UINT;
+        case Type::Float: return DXGI_FORMAT_R32_FLOAT;
+        case Type::Vec2:  return DXGI_FORMAT_R32G32_FLOAT;
+        case Type::Vec3:  return DXGI_FORMAT_R32G32B32_FLOAT;
+        case Type::Vec4:  return DXGI_FORMAT_R32G32B32A32_FLOAT;
     }
 
-    return DXGI_FORMAT_R32_FLOAT;
+    return DXGI_FORMAT_UNKNOWN;
 }
 
 // ----------------------------------------------------------------------------

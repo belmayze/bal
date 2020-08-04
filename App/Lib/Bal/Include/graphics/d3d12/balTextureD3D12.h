@@ -28,6 +28,13 @@ public:
     //! フォーマット
     DXGI_FORMAT getFormat() const { return mFormat; }
 
+public:
+    //! フォーマットを変換します
+    static DXGI_FORMAT ConvertFormat(Format format);
+
+    //! 次元を変換します
+    static D3D12_RESOURCE_DIMENSION ConvertDimension(Dimension dimension);
+
 private:
     // Com の deleter
     struct ComDeleter

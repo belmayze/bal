@@ -10,6 +10,7 @@
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <graphics/d3d12/balInputLayoutD3D12.h>
 #include <graphics/d3d12/balPipelineD3D12.h>
+#include <graphics/d3d12/balTextureD3D12.h>
 #include <io/balFile.h>
 
 namespace bal::gfx::d3d12 {
@@ -104,8 +105,11 @@ bool Pipeline::initialize(const InitializeArg& arg)
         desc.DepthStencilState              = depth_stencil_desc;
         desc.SampleMask                     = std::numeric_limits<std::uint32_t>::max();
         desc.PrimitiveTopologyType          = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-        desc.NumRenderTargets               = 1;
-        desc.RTVFormats[0]                  = DXGI_FORMAT_R8G8B8A8_UNORM;
+        desc.NumRenderTargets               = arg.mNumOutput;
+        for (uint32_t i_output = 0; i_output < arg.mNumOutput; ++i_output)
+        {
+            desc.RTVFormats[i_output] = Texture::ConvertFormat(arg.mOutputFormats[i_output]);
+        }
         desc.SampleDesc.Count               = 1;
 
         if (FAILED(p_device->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(&p_pipeline_state))))

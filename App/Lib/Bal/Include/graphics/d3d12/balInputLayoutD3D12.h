@@ -33,7 +33,7 @@ private:
 
 private:
     //! フォーマットを変換します
-    DXGI_FORMAT convertFormat_(IInputLayout::Type type) const;
+    DXGI_FORMAT convertFormat_(Type type) const;
 };
 
 }

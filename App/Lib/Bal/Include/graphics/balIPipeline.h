@@ -24,10 +24,12 @@ public:
     //! 初期化構造体
     struct InitializeArg
     {
-        IGraphics*          mpGraphics    = nullptr;
-        const IInputLayout* mpInputLayout = nullptr;
-        const File*         mpVSFile      = nullptr;
-        const File*         mpPSFile      = nullptr;
+        IGraphics*                                                  mpGraphics    = nullptr;
+        uint32_t                                                    mNumOutput    = 0;
+        Array<ITexture::Format, FrameBuffer::cColorRenderTargetMax> mOutputFormats;
+        const IInputLayout*                                         mpInputLayout = nullptr;
+        const File*                                                 mpVSFile      = nullptr;
+        const File*                                                 mpPSFile      = nullptr;
     };
 
 public:
