@@ -56,10 +56,18 @@ public:
     void enterApplicationLoop();
 
 private:
+    /*!
+     * グラフィックスのアプリケーションループ
+     */
+    void applicationLoop_();
+
+private:
     std::unique_ptr<heap::RootBlock, heap::RootBlock::Deleter> mpRootHeap; //!< ルートヒープ
 
     ApplicationBase*                mpApplication = nullptr;
     std::unique_ptr<gfx::IGraphics> mpGraphics;
+    float                           mFrameRate          = 0.f;
+    float                           mFrameRatePerMinute = 0.f;
 
     HWND mHwnd;                //!< ウィンドウハンドル
     bool mInitialized = false; //!< 初期化完了フラグ

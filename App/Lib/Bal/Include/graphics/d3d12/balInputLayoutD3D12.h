@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balIInputLayout.h
+ * @file   balInputLayoutD3D12.h
  * @brief  
  * @author belmayze
  *

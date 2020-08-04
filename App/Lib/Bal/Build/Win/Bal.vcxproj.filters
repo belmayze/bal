@@ -135,6 +135,9 @@
     <ClCompile Include="..\..\Source\graphics\d3d12\balInputLayoutD3D12.cpp">
       <Filter>graphics\d3d12</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\time\balStopwatch.cpp">
+      <Filter>time</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\memory\balSingleton.h">
@@ -325,6 +328,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\graphics\d3d12\balInputLayoutD3D12.h">
       <Filter>graphics\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\time\balStopwatch.h">
+      <Filter>time</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

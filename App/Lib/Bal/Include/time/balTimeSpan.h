@@ -16,6 +16,9 @@ class TimeSpan
 {
 public:
     //! コンストラクター
+    TimeSpan() {}
+
+    //! コンストラクター
     TimeSpan(std::chrono::microseconds microseconds) :mMicroseconds(microseconds) {}
 
     /*!

@@ -5,6 +5,10 @@
  *
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
+// std
+#include <functional>
+#include <mutex>
+#include <thread>
 // Windows
 #include <tchar.h>
 // bal
@@ -14,6 +18,7 @@
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <heap/balHeapManager.h>
 #include <memory/balSingletonFinalizer.h>
+#include <time/balStopwatch.h>
 
 // ----------------------------------------------------------------------------
 
@@ -160,6 +165,9 @@ void Framework::enterApplicationLoop()
         return;
     }
 
+    // ループ用スレッド
+    std::thread loop_thread(std::bind(&Framework::applicationLoop_, this));
+
     // ウィンドウメッセージ確認
     MSG msg;
     do
@@ -170,21 +178,68 @@ void Framework::enterApplicationLoop()
         }
         else
         {
-            if (!mpApplication->onLoop())
-            {
-                PostQuitMessage(0);
-            }
-            // @Debug
-            reinterpret_cast<gfx::d3d12::Graphics*>(mpGraphics.get())->loop();
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
     } while (msg.message != WM_QUIT);
 
     // 終了処理
     ShowWindow(mHwnd, SW_HIDE);
+    mEnableLoop = false;
+
+    // スレッド終了待ち
+    loop_thread.join();
 
     // @TODO: グラフィックスの終了処理
     mpGraphics->destroy();
     mpGraphics.reset();
+}
+
+// ----------------------------------------------------------------------------
+
+void Framework::applicationLoop_()
+{
+    int frame_count = 0;
+    Stopwatch sw_for_frame, sw_for_second;
+    sw_for_frame.start();
+    sw_for_second.start();
+
+    // ループ処理開始
+    while (mEnableLoop)
+    {
+        if (!mpApplication->onLoop())
+        {
+            PostQuitMessage(0);
+            return;
+        }
+        // @Debug
+        reinterpret_cast<gfx::d3d12::Graphics*>(mpGraphics.get())->loop();
+
+        // フレームレート計算
+        {
+            // 毎フレーム
+            {
+                sw_for_frame.stop();
+                TimeSpan diff = sw_for_frame.getDiff();
+                sw_for_frame.start();
+
+                mFrameRate = 1.f / (static_cast<float>(diff.getMicroseconds()) * 0.000001f);
+            }
+            // 毎秒
+            {
+                frame_count++;
+                sw_for_second.lap();
+                TimeSpan diff = sw_for_second.getDiff();
+                if (diff.getSeconds() >= 1)
+                {
+                    sw_for_second.start();
+
+                    mFrameRatePerMinute = static_cast<float>(frame_count) / (static_cast<float>(diff.getMicroseconds()) * 0.000001f);
+                    frame_count         = 0;
+                    Log::Print("FrameRate: %.2f\n", mFrameRatePerMinute);
+                }
+            }
+        }
+    }
 }
 
 // ----------------------------------------------------------------------------

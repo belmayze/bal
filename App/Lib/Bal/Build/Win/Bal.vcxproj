@@ -71,6 +71,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\..\Source\time\balDateTime.cpp" />
+    <ClCompile Include="..\..\Source\time\balStopwatch.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\app\balApiEntry.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="..\..\Include\memory\balSingletonFinalizer.h" />
     <ClInclude Include="..\..\Include\memory\balUniquePtr.h" />
     <ClInclude Include="..\..\Include\time\balDateTime.h" />
+    <ClInclude Include="..\..\Include\time\balStopwatch.h" />
     <ClInclude Include="..\..\Include\time\balTimeSpan.h" />
   </ItemGroup>
   <ItemGroup>

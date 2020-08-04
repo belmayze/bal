@@ -105,6 +105,8 @@ bool Pipeline::initialize(const InitializeArg& arg)
         desc.DepthStencilState              = depth_stencil_desc;
         desc.SampleMask                     = std::numeric_limits<std::uint32_t>::max();
         desc.PrimitiveTopologyType          = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+        // 出力フォーマット
         desc.NumRenderTargets               = arg.mNumOutput;
         for (uint32_t i_output = 0; i_output < arg.mNumOutput; ++i_output)
         {
