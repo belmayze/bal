@@ -9,6 +9,7 @@
 #include <io/balFile.h>
 #include <graphics/balFrameBuffer.h>
 #include <graphics/balViewport.h>
+#include <graphics/d3d12/balCommandListBundleD3D12.h>
 #include <graphics/d3d12/balCommandListDirectD3D12.h>
 #include <graphics/d3d12/balCommandQueueD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
@@ -278,6 +279,20 @@ bool Graphics::initialize(const InitializeArg& arg)
         if (!mpModelBuffer->initialize(init_arg)) { return false; }
     }
 
+    // バンドル
+    mpCmdBundle = make_unique<CommandListBundle>(nullptr);
+    {
+        CommandListBundle::InitializeArg init_arg;
+        init_arg.mpGraphics = this;
+        if (!mpCmdBundle->initialize(init_arg)) { return false; }
+
+        // コマンドの記録
+        mpCmdBundle->reset();
+        mpCmdBundle->bindPipeline(*mpPipeline);
+        mpCmdBundle->drawModel(*mpModelBuffer);
+        mpCmdBundle->close();
+    }
+
     // 情報
     mBufferCount = arg.mBufferCount;
 
@@ -312,8 +327,9 @@ void Graphics::loop()
     mpCmdList->clear(*mpSwapChainFrameBuffers[mCurrentBufferIndex], CommandListDirect::ClearFlag::Color, MathColor(1.f, 0.f, 0.f, 1.f), 1.f, 0);
 
     // @TODO: 仮レンダリング
-    mpCmdList->bindPipeline(*mpPipeline);
-    mpCmdList->drawModel(*mpModelBuffer);
+    //mpCmdList->bindPipeline(*mpPipeline);
+    //mpCmdList->drawModel(*mpModelBuffer);
+    mpCmdList->executeBundle(*mpCmdBundle);
 
     // @TODO: 書き出し
 
@@ -336,7 +352,7 @@ void Graphics::loop()
 void Graphics::waitForPreviousFrame()
 {
     // 画面の反映
-    mpSwapChain->Present(1, 0);
+    mpSwapChain->Present(0, 0);
 
     // コマンドキューの終了待ち
     mpCmdQueue->waitExecuted();
@@ -353,6 +369,7 @@ bool Graphics::destroy()
     waitForPreviousFrame();
 
     // バッファ破棄
+    mpCmdBundle.reset();
     mpModelBuffer.reset();
     mpPipeline.reset();
 

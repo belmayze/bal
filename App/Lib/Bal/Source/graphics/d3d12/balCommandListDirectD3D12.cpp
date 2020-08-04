@@ -172,9 +172,9 @@ void CommandListDirect::resourceBarrier(const ITexture& texture, int before_stat
 
 // ----------------------------------------------------------------------------
 
-void CommandListDirect::executeBundle(const ICommandListBundle* p_cmd_bundle)
+void CommandListDirect::executeBundle(const ICommandListBundle& cmd_bundle)
 {
-    const CommandListBundle* p_bundle = reinterpret_cast<const CommandListBundle*>(p_cmd_bundle);
+    const CommandListBundle* p_bundle = reinterpret_cast<const CommandListBundle*>(&cmd_bundle);
     mpCmdList->ExecuteBundle(p_bundle->getCommandList());
 }
 

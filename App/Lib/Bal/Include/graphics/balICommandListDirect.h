@@ -10,6 +10,7 @@
 #include <math/balMath.h>
 
 namespace bal::gfx { class ICommandListBundle; }
+namespace bal::gfx { class IGraphics; }
 namespace bal::gfx { class IRenderTargetColor; }
 namespace bal::gfx { class IRenderTargetDepth; }
 namespace bal::gfx { class ITexture; }
@@ -28,8 +29,19 @@ public:
         Depth   = 0x2,
         Stencil = 0x4
     };
+    // 初期化
+    struct InitializeArg
+    {
+        IGraphics* mpGraphics = nullptr;
+    };
 
 public:
+    /*!
+     * 初期化の処理を記述します
+     * @param[in] arg 初期化構造体
+     */
+    virtual bool initialize(const InitializeArg& arg) = 0;
+
     /*!
      * ビューポートを変更します
      * @param[in] vp ビューポート
@@ -61,9 +73,9 @@ public:
 
     /*!
      * バンドルを実行します
-     * @param[in] p_cmd_bundle バンドル
+     * @param[in] cmd_bundle バンドル
      */
-    virtual void executeBundle(const ICommandListBundle* p_cmd_bundle) = 0;
+    virtual void executeBundle(const ICommandListBundle& cmd_bundle) = 0;
 };
 
 }

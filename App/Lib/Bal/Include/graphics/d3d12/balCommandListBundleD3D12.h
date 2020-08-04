@@ -33,6 +33,19 @@ public:
     virtual void close() override;
 
 public:
+    /*!
+     * パイプラインの設定
+     * @param[in] pipeline パイプライン
+     */
+    virtual void bindPipeline(const IPipeline& pipeline) override;
+
+    /*!
+     * モデルを描画します
+     * @param[in] model_buffer モデルバッファ
+     */
+    virtual void drawModel(const IModelBuffer& model_buffer) override;
+
+public:
     //! コマンドリスト
     ID3D12GraphicsCommandList* getCommandList() const { return mpCmdList.get(); }
 

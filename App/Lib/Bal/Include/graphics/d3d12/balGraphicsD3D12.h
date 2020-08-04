@@ -12,6 +12,7 @@
 
 namespace bal::gfx { class FrameBuffer; }
 namespace bal::gfx::d3d12 { class CommandQueue; }
+namespace bal::gfx::d3d12 { class CommandListBundle; }
 namespace bal::gfx::d3d12 { class CommandListDirect; }
 namespace bal::gfx::d3d12 { class ModelBuffer; }
 namespace bal::gfx::d3d12 { class Pipeline; }
@@ -77,6 +78,7 @@ private:
     std::unique_ptr<RenderTargetDepth>               mpRenderTargetDepth;
     std::unique_ptr<FrameBuffer>                     mpFrameBuffer;
 
+    std::unique_ptr<CommandListBundle>               mpCmdBundle;
     std::unique_ptr<Pipeline>                        mpPipeline;
     std::unique_ptr<ModelBuffer>                     mpModelBuffer;
 

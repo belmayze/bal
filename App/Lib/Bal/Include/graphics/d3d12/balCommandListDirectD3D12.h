@@ -78,9 +78,9 @@ public:
 
     /*!
      * バンドルを実行します
-     * @param[in] p_cmd_bundle バンドル
+     * @param[in] cmd_bundle バンドル
      */
-    virtual void executeBundle(const ICommandListBundle* p_cmd_bundle) override;
+    virtual void executeBundle(const ICommandListBundle& cmd_bundle) override;
 
 public:
     //! コマンドリスト
