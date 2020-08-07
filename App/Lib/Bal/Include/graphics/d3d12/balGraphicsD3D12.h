@@ -63,7 +63,7 @@ private:
     uint32_t                                         mBufferCount = 2;
     std::unique_ptr<ID3D12Device6, ComDeleter>       mpDevice;
     std::unique_ptr<IDXGISwapChain3, ComDeleter>     mpSwapChain;
-    std::unique_ptr<CommandListDirect>               mpCmdList;
+    std::unique_ptr<CommandListDirect[]>             mpCmdLists;
     std::unique_ptr<CommandQueue>                    mpCmdQueue;
 
     DynamicArray<std::unique_ptr<RenderTargetColor>> mpSwapChainRenderTargets;

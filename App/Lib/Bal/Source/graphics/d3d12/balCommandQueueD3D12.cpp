@@ -40,45 +40,72 @@ bool CommandQueue::initialize(const InitializeArg& arg)
         }
     }
 
-    // フェンスとイベントハンドル
-    HANDLE event_handle = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-    Microsoft::WRL::ComPtr<ID3D12Fence> p_fence;
+    // フェンス
+    std::unique_ptr<std::unique_ptr<ID3D12Fence, ComDeleter>[]> p_fences = make_unique<std::unique_ptr<ID3D12Fence, ComDeleter>[]>(nullptr, arg.mBufferCount);
+    for (uint32_t i_buffer = 0; i_buffer < arg.mBufferCount; ++i_buffer)
     {
-        if (FAILED(p_device->CreateFence(mSignalValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&p_fence))))
+        Microsoft::WRL::ComPtr<ID3D12Fence> p_fence;
         {
-            return false;
+            if (FAILED(p_device->CreateFence(1, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&p_fence))))
+            {
+                return false;
+            }
         }
+        p_fences[i_buffer].reset(p_fence.Detach());
     }
 
     // 保持
     mpCmdQueue.reset(p_cmd_queue.Detach());
-    mpFence.reset(p_fence.Detach());
-    mEventHandle = event_handle;
+    mpFences = std::move(p_fences);
+    mFenceNum = arg.mBufferCount;
 
     return true;
 }
 
 // ----------------------------------------------------------------------------
 
-void CommandQueue::execute(const ICommandListDirect* p_cmd_list)
+void CommandQueue::execute(const ICommandListDirect& cmd_list, uint32_t buffer_index)
 {
-    Array cmd_lists = {reinterpret_cast<const CommandListDirect*>(p_cmd_list)->getCommandList()};
+    Array cmd_lists = {reinterpret_cast<const CommandListDirect*>(&cmd_list)->getCommandList()};
     mpCmdQueue->ExecuteCommandLists(1, cmd_lists.data());
+
+    // コマンドの実行が終わったらフェンスが 1 になるようにしておく
+    mpFences[buffer_index]->Signal(0);
+    mpCmdQueue->Signal(mpFences[buffer_index].get(), 1);
 }
 
 // ----------------------------------------------------------------------------
 
-void CommandQueue::waitExecuted()
+void CommandQueue::waitExecuted(uint32_t buffer_index)
 {
-    mpFence->Signal(mSignalValue);
-    mpCmdQueue->Signal(mpFence.get(), mSignalValue + 1);
-    mSignalValue++;
-
-    if (mpFence->GetCompletedValue() < mSignalValue)
+    // フェンスが 1 になってない場合は待機する
+    if (mpFences[buffer_index]->GetCompletedValue() < 1)
     {
-        mpFence->SetEventOnCompletion(mSignalValue, mEventHandle);
-        WaitForSingleObject(mEventHandle, INFINITE);
+        HANDLE handle = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+        mpFences[buffer_index]->SetEventOnCompletion(1, handle);
+        WaitForSingleObject(handle, INFINITE);
+        CloseHandle(handle);
     }
+}
+
+// ----------------------------------------------------------------------------
+
+void CommandQueue::waitExecutedAll()
+{
+    // すべてのフェンスが終了しているかチェック
+    for (uint32_t i_fence = 0; i_fence < mFenceNum; ++i_fence)
+    {
+        waitExecuted(i_fence);
+    }
+
+    // キューがすべて無くなったか、最終チェックのフェンスを入れて終わり
+    mpFences[0]->Signal(0);
+    mpCmdQueue->Signal(mpFences[0].get(), 1);
+
+    HANDLE handle = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+    mpFences[0]->SetEventOnCompletion(1, handle);
+    WaitForSingleObject(handle, INFINITE);
+    CloseHandle(handle);
 }
 
 // ----------------------------------------------------------------------------

@@ -41,7 +41,7 @@ public:
             bal::Framework::InitializeArg init_arg;
             init_arg.mTitle             = "Test";
             init_arg.mHeapSize          = 100 * 1024 * 1024;
-            init_arg.mRenderSize        = bal::MathSize(640, 480);
+            init_arg.mRenderSize        = bal::MathSize(1280, 720);
             init_arg.mRenderBufferCount = 3;
             init_arg.mpApplication      = this;
             framework.initialize(api_entry, init_arg);

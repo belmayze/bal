@@ -26,8 +26,9 @@ public:
     // 初期化構造体
     struct InitializeArg
     {
-        IGraphics* mpGraphics = nullptr;
-        Type       mType      = Type::Graphics;
+        IGraphics* mpGraphics   = nullptr;
+        Type       mType        = Type::Graphics;
+        uint32_t   mBufferCount = 1;
     };
 
 public:
@@ -42,14 +43,21 @@ public:
 
     /*!
      * コマンドリストを実行します
-     * @param[in] p_cmd_list 実行するコマンドリスト
+     * @param[in] cmd_list     実行するコマンドリスト
+     * @param[in] buffer_index バッファー番号
      */
-    virtual void execute(const ICommandListDirect* p_cmd_list) = 0;
+    virtual void execute(const ICommandListDirect& cmd_list, uint32_t buffer_index) = 0;
 
     /*!
      * コマンドの実行まで待機します
+     * @param[in] buffer_index バッファー番号
      */
-    virtual void waitExecuted() = 0;
+    virtual void waitExecuted(uint32_t buffer_index) = 0;
+
+    /*!
+     * すべてのコマンド実行を待機します
+     */
+    virtual void waitExecutedAll() = 0;
 };
 
 }

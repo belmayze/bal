@@ -5,6 +5,7 @@
  *
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
+#include <thread>
 // bal
 #include <io/balFile.h>
 #include <graphics/balFrameBuffer.h>
@@ -86,8 +87,9 @@ bool Graphics::initialize(const InitializeArg& arg)
     mpCmdQueue = make_unique<CommandQueue>(nullptr);
     {
         CommandQueue::InitializeArg init_arg;
-        init_arg.mpGraphics = this;
-        init_arg.mType      = CommandQueue::Type::Graphics;
+        init_arg.mpGraphics   = this;
+        init_arg.mType        = CommandQueue::Type::Graphics;
+        init_arg.mBufferCount = arg.mBufferCount;
         if (!mpCmdQueue->initialize(init_arg))
         {
             return false;
@@ -95,11 +97,12 @@ bool Graphics::initialize(const InitializeArg& arg)
     }
 
     // コマンドリスト
-    mpCmdList = make_unique<CommandListDirect>(nullptr);
+    mpCmdLists = make_unique<CommandListDirect[]>(nullptr, arg.mBufferCount);
+    for (uint32_t i_buffer = 0; i_buffer < arg.mBufferCount; ++i_buffer)
     {
         CommandListDirect::InitializeArg init_arg;
         init_arg.mpGraphics = this;
-        if (!mpCmdList->initialize(init_arg))
+        if (!mpCmdLists[i_buffer].initialize(init_arg))
         {
             return false;
         }
@@ -306,48 +309,48 @@ bool Graphics::initialize(const InitializeArg& arg)
 
 void Graphics::loop()
 {
-    mpCmdList->reset();
+    mpCmdQueue->waitExecuted(mCurrentBufferIndex);
+    mpCmdLists[mCurrentBufferIndex].reset();
 
     // レンダリング用バッファに切り替え
-    mpCmdList->setViewport(Viewport(*mpFrameBuffer.get()));
-    mpCmdList->bindFrameBuffer(*mpFrameBuffer.get());
-    mpCmdList->clear(*mpFrameBuffer.get(), CommandListDirect::ClearFlag::Color | CommandListDirect::ClearFlag::Depth, MathColor(0.f, 0.f, 0.f, 1.f), 1.f, 0);
+    mpCmdLists[mCurrentBufferIndex].setViewport(Viewport(*mpFrameBuffer.get()));
+    mpCmdLists[mCurrentBufferIndex].bindFrameBuffer(*mpFrameBuffer.get());
+    mpCmdLists[mCurrentBufferIndex].clear(*mpFrameBuffer.get(), CommandListDirect::ClearFlag::Color | CommandListDirect::ClearFlag::Depth, MathColor(0.f, 0.f, 0.f, 1.f), 1.f, 0);
 
     // @TODO: レンダリング
 
     // スワップチェーンのバッファに書き出し
-    mpCmdList->resourceBarrier(
+    mpCmdLists[mCurrentBufferIndex].resourceBarrier(
         *mpSwapChainRenderTargets[mCurrentBufferIndex]->getTexture(),
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
 
-    mpCmdList->setViewport(Viewport(*mpSwapChainFrameBuffers[mCurrentBufferIndex]));
-    mpCmdList->bindFrameBuffer(*mpSwapChainFrameBuffers[mCurrentBufferIndex]);
-    mpCmdList->clear(*mpSwapChainFrameBuffers[mCurrentBufferIndex], CommandListDirect::ClearFlag::Color, MathColor(1.f, 0.f, 0.f, 1.f), 1.f, 0);
+    mpCmdLists[mCurrentBufferIndex].setViewport(Viewport(*mpSwapChainFrameBuffers[mCurrentBufferIndex]));
+    mpCmdLists[mCurrentBufferIndex].bindFrameBuffer(*mpSwapChainFrameBuffers[mCurrentBufferIndex]);
+    mpCmdLists[mCurrentBufferIndex].clear(*mpSwapChainFrameBuffers[mCurrentBufferIndex], CommandListDirect::ClearFlag::Color, MathColor(1.f, 0.f, 0.f, 1.f), 1.f, 0);
 
     // @TODO: 仮レンダリング
-    //mpCmdList->bindPipeline(*mpPipeline);
-    //mpCmdList->drawModel(*mpModelBuffer);
-    mpCmdList->executeBundle(*mpCmdBundle);
+    //mpCmdLists[mCurrentBufferIndex].bindPipeline(*mpPipeline);
+    //mpCmdLists[mCurrentBufferIndex].drawModel(*mpModelBuffer);
+    mpCmdLists[mCurrentBufferIndex].executeBundle(*mpCmdBundle);
 
     // @TODO: 書き出し
 
-    mpCmdList->resourceBarrier(
+    mpCmdLists[mCurrentBufferIndex].resourceBarrier(
         *mpSwapChainRenderTargets[mCurrentBufferIndex]->getTexture(),
         D3D12_RESOURCE_STATE_RENDER_TARGET,
         D3D12_RESOURCE_STATE_PRESENT
     );
 
     // コマンドリストを閉じて実行
-    mpCmdList->close();
-    mpCmdQueue->execute(mpCmdList.get());
+    mpCmdLists[mCurrentBufferIndex].close();
+    mpCmdQueue->execute(mpCmdLists[mCurrentBufferIndex], mCurrentBufferIndex);
 
     // 画面の反映
     mpSwapChain->Present(0, 0);
 
     // 実行待ち
-    mpCmdQueue->waitExecuted();
     if (++mCurrentBufferIndex > (mBufferCount - 1)) { mCurrentBufferIndex = 0; }
 }
 
@@ -356,7 +359,7 @@ void Graphics::loop()
 bool Graphics::destroy()
 {
     // 終了待ち
-    mpCmdQueue->waitExecuted();
+    mpCmdQueue->waitExecutedAll();
 
     // バッファ破棄
     mpCmdBundle.reset();
@@ -371,7 +374,7 @@ bool Graphics::destroy()
     mpSwapChainRenderTargets.destroy();
 
     // 破棄
-    mpCmdList.reset();
+    mpCmdLists.reset();
     mpCmdQueue.reset();
     mpSwapChain.reset();
     mpDevice.reset();
