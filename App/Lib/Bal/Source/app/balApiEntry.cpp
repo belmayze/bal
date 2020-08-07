@@ -66,3 +66,13 @@ int APIENTRY WinMain(
     // ブート
     return api_entry.boot(bal::gpApplication);
 }
+
+int main(int argc, char* argv[])
+{
+    // オプションの解析
+    bal::ApiEntry api_entry;
+    api_entry.setupOptions(argc, argv);
+
+    // ブート
+    return api_entry.boot(bal::gpApplication);
+}

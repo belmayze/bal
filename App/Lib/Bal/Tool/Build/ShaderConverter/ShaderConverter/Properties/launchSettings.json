@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ShaderConverter": {
+      "commandName": "Project",
+      "commandLineArgs": "-i $(ProjectDir)sample.xml"
+    }
+  }
+}
