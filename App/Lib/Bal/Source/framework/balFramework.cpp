@@ -16,7 +16,6 @@
 #include <app/balApplicationBase.h>
 #include <framework/balFramework.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
-#include <heap/balHeapManager.h>
 #include <memory/balSingletonFinalizer.h>
 #include <time/balStopwatch.h>
 
@@ -56,20 +55,19 @@ Framework::~Framework()
 
 void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg)
 {
-    // ルートヒープを確保
-    mpRootHeap = heap::RootBlock::Create(arg.mHeapSize);
-    heap::Manager::GetInstance(mpRootHeap.get()).setCurrentHeap(mpRootHeap.get());
-
     // アプリケーション保持
     mpApplication = arg.mpApplication;
     if (!mpApplication) { return; }
+
+    // ヒープ取得
+    mpRootHeap = api_entry.getRootHeap();
 
     // アプリケーションモードであれば、アプリケーションウィンドウを用意する
     if (api_entry.getBootMode() == ApiEntry::BootMode::Application)
     {
         // ウィンドウ名を取得
         size_t app_name_len = arg.mTitle.length();
-        std::unique_ptr<TCHAR[]> app_name = make_unique<TCHAR[]>(mpRootHeap.get(), app_name_len + 1);
+        std::unique_ptr<TCHAR[]> app_name = make_unique<TCHAR[]>(mpRootHeap, app_name_len + 1);
         {
             size_t ret;
 #           ifdef UNICODE
@@ -81,7 +79,7 @@ void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg)
 
         // カレントディレクトリの変更
         {
-            std::unique_ptr<TCHAR[]> dir_path = make_unique<TCHAR[]>(mpRootHeap.get(), MAX_PATH);
+            std::unique_ptr<TCHAR[]> dir_path = make_unique<TCHAR[]>(mpRootHeap, MAX_PATH);
             GetModuleFileName(nullptr, dir_path.get(), MAX_PATH);
             TCHAR* p_dir = _tcsrchr(dir_path.get(), _T('\\'));
             if (p_dir)
@@ -161,7 +159,6 @@ void Framework::enterApplicationLoop()
     // コンソールモードの時はループは不要
     if (!mEnableLoop)
     {
-        mpApplication->onLoop();
         return;
     }
 

@@ -8,6 +8,7 @@
 #pragma once
 // bal
 #include <container/balStringBase.h>
+#include <container/balStringBuffer.h>
 
 // ----------------------------------------------------------------------------
 namespace bal {
@@ -47,6 +48,18 @@ public:
      * 空文字かチェック
      */
     virtual bool empty() const override { return *mpStr == '\0'; }
+
+public:
+    /*!
+     * 一致しているかをチェック
+     * @param[in] str 対象文字列
+     */
+    bool isEquals(const StringPtr& str) const;
+
+    /*!
+     * 特定の文字で分割します
+     */
+    std::unique_ptr<StringBuffer[]> split(const char* p) const;
 
 private:
     const char* mpStr = "";

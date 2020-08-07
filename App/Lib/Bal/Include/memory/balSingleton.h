@@ -10,7 +10,7 @@
 #include <memory/balSingletonFinalizer.h>
 #include <memory/balUniquePtr.h>
 
-namespace bal { class Framework; }
+namespace bal { class ApiEntry; }
 
 // ----------------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ namespace bal {
 template <typename T>
 class Singleton
 {
-    friend Framework; // シングルトンを指定したヒープで唯一作れるクラス
+    friend ApiEntry; // シングルトンを指定したヒープで唯一作れるクラス
 
 public:
     /*!

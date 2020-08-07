@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderConverter", "ShaderConverter\ShaderConverter.csproj", "{D1C38DA5-9049-4965-84A9-C6FD3CBD7FEF}"
+	ProjectSection(ProjectDependencies) = postProject
+		{014E215F-996B-424B-B2EA-B6C66466D189} = {014E215F-996B-424B-B2EA-B6C66466D189}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShaderArchiver", "ShaderArchiver\ShaderArchiver.vcxproj", "{014E215F-996B-424B-B2EA-B6C66466D189}"
 	ProjectSection(ProjectDependencies) = postProject

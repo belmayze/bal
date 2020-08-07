@@ -28,10 +28,9 @@ public:
     /*!
      * bal のブートセットアップ関数です
      * balMain() の前に呼ばれ、起動のセットアップを行います
-     * @param[in]     api_entry 起動したときのオプション設定などが入っているクラスです
-     * @param[in,out] p_arg     ブートの設定を格納する
+     * @param[in,out] p_arg ブートの設定を格納する
      */
-    virtual void setupBoot(const bal::ApiEntry& api_entry, bal::ApiEntry::BootArg* p_arg) = 0;
+    virtual void setupBoot(bal::ApiEntry::BootArg* p_arg) = 0;
 
     /*!
      * bal のエントリーポイントです
@@ -41,10 +40,10 @@ public:
 
     /*!
      * アプリケーションモードの時、ループ処理が行われる関数です
-     * @note Console モードの場合は 1 回しか呼ばれません
+     * @note Console モードの場合は使用しません
      * @return false を返せばループが終了します
      */
-    virtual bool onLoop() = 0;
+    virtual bool onLoop() { return false; };
 };
 
 // 実態

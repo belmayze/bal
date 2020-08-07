@@ -53,7 +53,7 @@ public:
     String<N>& assign(const StringBase& str);
 
 private:
-    char        mStr[N];
+    char   mStr[N];
     size_t mSize = 0;
 };
 

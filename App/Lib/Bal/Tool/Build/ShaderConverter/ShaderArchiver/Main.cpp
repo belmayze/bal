@@ -7,6 +7,8 @@
  */
 // bal
 #include <app/balApplicationBase.h>
+#include <framework/balFramework.h>
+#include <io/balFile.h>
 
 class Main : public bal::ApplicationBase
 {
@@ -14,10 +16,9 @@ public:
     /*!
      * bal のブートセットアップ関数です
      * balMain() の前に呼ばれ、起動のセットアップを行います
-     * @param[in]     api_entry 起動したときのオプション設定などが入っているクラスです
-     * @param[in,out] p_arg     ブートの設定を格納する
+     * @param[in,out] p_arg ブートの設定を格納する
      */
-    virtual void setupBoot(const bal::ApiEntry& api_entry, bal::ApiEntry::BootArg* p_arg)
+    virtual void setupBoot(bal::ApiEntry::BootArg* p_arg)
     {
         p_arg->mBootMode = bal::ApiEntry::BootMode::Console;
     }
@@ -28,16 +29,44 @@ public:
      */
     virtual int main(const bal::ApiEntry& api_entry)
     {
-        return 0;
+        bal::Framework framework;
+        {
+            bal::Framework::InitializeArg init_arg;
+            init_arg.mpApplication      = this;
+            framework.initialize(api_entry, init_arg);
+        }
+
+        framework.enterApplicationLoop();
+
+        // オプション検索
+        bool success = false;
+        for (uint32_t i_option = 0; i_option < api_entry.getNumOption(); ++i_option)
+        {
+            if (api_entry.getOptions()[i_option].first.isEquals("-archive-list"))
+            {
+                success = archive_(api_entry.getOptions()[i_option].second.c_str());
+                break;
+            }
+        }
+
+        return success ? 0 : 1;
     }
 
+private:
     /*!
-     * アプリケーションモードの時、ループ処理が行われる関数です
-     * @note Console モードの場合は 1 回しか呼ばれません
-     * @return false を返せばループが終了します
+     * アーカイブ処理を行います
+     * @param[in] filepath アーカイブ対象が含まれているテキストファイル
      */
-    virtual bool onLoop()
+    bool archive_(bal::StringPtr filepath)
     {
+        // テキストファイル読み込み
+        bal::File arg_file;
+        if (!arg_file.loadFromFile(filepath))
+        {
+            return false;
+        }
+        bal::StringPtr arg_txt(reinterpret_cast<const char*>(arg_file.getBuffer()));
+
         return true;
     }
 };

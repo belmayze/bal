@@ -26,7 +26,6 @@ public:
     struct InitializeArg
     {
         StringPtr        mTitle             = "";      //!< タイトル名
-        size_t           mHeapSize          = 0;       //!< アプリケーションが使用する全体メモリー量
         MathSize         mRenderSize;                  //!< レンダリングサイズ
         uint32_t         mRenderBufferCount = 2;       //!< レンダリングバッファー数
         ApplicationBase* mpApplication      = nullptr; //!< アプリケーション
@@ -62,7 +61,7 @@ private:
     void applicationLoop_();
 
 private:
-    std::unique_ptr<heap::RootBlock, heap::RootBlock::Deleter> mpRootHeap; //!< ルートヒープ
+    heap::RootBlock*                mpRootHeap = nullptr; //!< ルートヒープ
 
     ApplicationBase*                mpApplication = nullptr;
     std::unique_ptr<gfx::IGraphics> mpGraphics;

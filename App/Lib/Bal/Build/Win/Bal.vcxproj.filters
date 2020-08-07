@@ -138,6 +138,9 @@
     <ClCompile Include="..\..\Source\time\balStopwatch.cpp">
       <Filter>time</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\container\balStringBuffer.cpp">
+      <Filter>container</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\memory\balSingleton.h">
@@ -331,6 +334,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\time\balStopwatch.h">
       <Filter>time</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\container\balStringBuffer.h">
+      <Filter>container</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -10,14 +10,14 @@
 #include <container/balStringPtr.h>
 #include <heap/balHeapBlockBase.h>
 
-namespace bal { class Framework; }
+namespace bal { class ApiEntry; }
 
 // ----------------------------------------------------------------------------
 namespace bal::heap {
 
 class RootBlock : public BlockBase
 {
-    friend Framework; // ルートヒープが唯一作れるクラス
+    friend ApiEntry; // ルートヒープが唯一作れるクラス
 
 public:
     // ヒープ破棄関数

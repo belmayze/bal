@@ -21,13 +21,13 @@ public:
     /*!
      * bal のブートセットアップ関数です
      * balMain() の前に呼ばれ、起動のセットアップを行います
-     * @param[in]     api_entry 起動したときのオプション設定などが入っているクラスです
-     * @param[in,out] p_arg     ブートの設定を格納する
+     * @param[in,out] p_arg ブートの設定を格納する
      */
-    virtual void setupBoot(const bal::ApiEntry& api_entry, bal::ApiEntry::BootArg* p_arg)
+    virtual void setupBoot(bal::ApiEntry::BootArg* p_arg)
     {
         p_arg->mBootMode = bal::ApiEntry::BootMode::Application;
         //p_arg->mBootMode = bal::ApiEntry::BootMode::Console;
+        p_arg->mRootHeapSize = 100 * 1024 * 1024;
     }
 
     /*!
@@ -40,7 +40,6 @@ public:
         {
             bal::Framework::InitializeArg init_arg;
             init_arg.mTitle             = "Test";
-            init_arg.mHeapSize          = 100 * 1024 * 1024;
             init_arg.mRenderSize        = bal::MathSize(1280, 720);
             init_arg.mRenderBufferCount = 3;
             init_arg.mpApplication      = this;
