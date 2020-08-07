@@ -343,21 +343,11 @@ void Graphics::loop()
     mpCmdList->close();
     mpCmdQueue->execute(mpCmdList.get());
 
-    // 1フレーム前の処理を待機
-    waitForPreviousFrame();
-}
-
-// ----------------------------------------------------------------------------
-
-void Graphics::waitForPreviousFrame()
-{
     // 画面の反映
-    mpSwapChain->Present(1, 0);
+    mpSwapChain->Present(0, 0);
 
-    // コマンドキューの終了待ち
+    // 実行待ち
     mpCmdQueue->waitExecuted();
-
-    // バッファーを進める
     if (++mCurrentBufferIndex > (mBufferCount - 1)) { mCurrentBufferIndex = 0; }
 }
 
@@ -366,7 +356,7 @@ void Graphics::waitForPreviousFrame()
 bool Graphics::destroy()
 {
     // 終了待ち
-    waitForPreviousFrame();
+    mpCmdQueue->waitExecuted();
 
     // バッファ破棄
     mpCmdBundle.reset();

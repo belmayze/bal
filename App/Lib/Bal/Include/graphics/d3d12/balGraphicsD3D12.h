@@ -42,11 +42,6 @@ public:
     void loop();
 
     /*!
-     * 画面の反映を待機します
-     */
-    void waitForPreviousFrame();
-
-    /*!
      * 破棄の処理を記述します
      */
     virtual bool destroy() override;
