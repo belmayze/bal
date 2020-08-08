@@ -31,4 +31,13 @@ StringBuffer::StringBuffer(const char* str, size_t length)
 
 // ----------------------------------------------------------------------------
 
+StringBuffer& StringBuffer::operator = (StringBuffer&& rhs)
+{
+    mSize = rhs.mSize;
+    mpStr = std::move(rhs.mpStr);
+    return *this;
+}
+
+// ----------------------------------------------------------------------------
+
 }

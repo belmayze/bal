@@ -65,7 +65,14 @@ private:
         {
             return false;
         }
-        bal::StringPtr arg_txt(reinterpret_cast<const char*>(arg_file.getBuffer()));
+        bal::StringPtr arg_txt(reinterpret_cast<const char*>(arg_file.getBuffer()), static_cast<int32_t>(arg_file.getBufferSize()));
+        auto [lines, num_line] = arg_txt.getLines();
+
+        for (uint32_t i_line = 0; i_line < num_line; ++i_line)
+        {
+            // @TODO: オプション解析
+
+        }
 
         return true;
     }

@@ -19,6 +19,9 @@ namespace bal {
 class StringBuffer : public StringBase
 {
 public:
+    /*! デフォルトコンストラクター */
+    StringBuffer() {}
+
     /*! ポインターからコピー */
     StringBuffer(const char* str);
 
@@ -47,6 +50,10 @@ public:
      * 空文字かチェック
      */
     virtual bool empty() const override { return (!mpStr || mpStr[0] == '\0'); }
+
+public:
+    //! コピー
+    StringBuffer& operator = (StringBuffer&& rhs);
 
 private:
     std::unique_ptr<uint8_t[]> mpStr;

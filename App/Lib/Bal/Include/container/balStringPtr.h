@@ -24,7 +24,7 @@ public:
     constexpr StringPtr() :StringPtr("") { }
 
     /*! ポインターから初期化 */
-    constexpr StringPtr(const char* p) :mpStr(p) { BAL_ASSERT(mpStr != nullptr); calcSize_(); }
+    constexpr StringPtr(const char* p, int32_t length = -1) : mpStr(p) { BAL_ASSERT(mpStr != nullptr); if (length < 0) { calcSize_(); } else { mSize = static_cast<size_t>(length); } }
 
     /*! デストラクター */
     virtual ~StringPtr() {}
@@ -57,9 +57,14 @@ public:
     bool isEquals(const StringPtr& str) const;
 
     /*!
+     * 文字列を行で分割します
+     */
+    std::pair<std::unique_ptr<StringBuffer[]>, uint32_t> getLines() const;
+
+    /*!
      * 特定の文字で分割します
      */
-    std::unique_ptr<StringBuffer[]> split(const char* p) const;
+    std::unique_ptr<StringBuffer[]> split(char word) const;
 
 private:
     const char* mpStr = "";
