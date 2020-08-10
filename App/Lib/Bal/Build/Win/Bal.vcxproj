@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\Source\app\balApiEntry.cpp" />
     <ClCompile Include="..\..\Source\app\balApplicationBase.cpp" />
+    <ClCompile Include="..\..\Source\app\balOptionParser.cpp" />
     <ClCompile Include="..\..\Source\container\balString.cpp">
       <SubType>
       </SubType>
@@ -34,6 +35,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\archiver\balShaderArchiver.cpp" />
     <ClCompile Include="..\..\Source\graphics\balFrameBuffer.cpp" />
     <ClCompile Include="..\..\Source\graphics\balIRenderTarget.cpp" />
     <ClCompile Include="..\..\Source\graphics\balViewport.cpp" />
@@ -77,6 +79,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\Include\app\balApiEntry.h" />
     <ClInclude Include="..\..\Include\app\balApplicationBase.h" />
+    <ClInclude Include="..\..\Include\app\balOptionParser.h" />
     <ClInclude Include="..\..\Include\common\balDef.h">
       <SubType>
       </SubType>
@@ -107,6 +110,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\archiver\balShaderArchiver.h" />
     <ClInclude Include="..\..\Include\graphics\balFrameBuffer.h" />
     <ClInclude Include="..\..\Include\graphics\balICommandList.h" />
     <ClInclude Include="..\..\Include\graphics\balICommandListBundle.h" />

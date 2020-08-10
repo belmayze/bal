@@ -37,7 +37,7 @@ public:
     /*!
      * 空文字かチェック
      */
-    virtual bool empty() const = 0;
+    virtual bool isEmpty() const = 0;
 
 };
 

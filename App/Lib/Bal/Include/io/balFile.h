@@ -31,6 +31,18 @@ public:
      */
     const size_t getBufferSize() const { return mBufferSize; }
 
+    /*!
+     * ファイルを書き出します
+     * @param[in] path        書き出しパス
+     * @param[in] p_buffer    バッファ
+     * @param[in] buffer_size 書き出しファイルサイズ
+     */
+    static bool WriteToFile(const StringPtr& path, uint8_t* p_buffer, size_t buffer_size);
+
+public:
+    // move
+    File& operator=(File&& rhs);
+
 private:
     std::unique_ptr<uint8_t[]> mpBuffer;
     size_t                     mBufferSize = 0;

@@ -14,6 +14,7 @@
 
 namespace bal { class ApplicationBase; }
 namespace bal { class Framework; }
+namespace bal { class OptionParser; }
 
 namespace bal
 {
@@ -47,7 +48,7 @@ public:
      * @param[in] argc          オプションの数
      * @param[in] argv          オプションのリスト
      */
-    int boot(ApplicationBase* p_application, bool enable_window, int argc, char* argv[]);
+    int boot(ApplicationBase* p_application, bool enable_window, int argc, const char* argv[]);
 
 public:
     //! 起動モードを取得します
@@ -55,24 +56,16 @@ public:
     //! ルートヒープを取得
     heap::RootBlock* getRootHeap() const { return mpRootHeap.get(); }
     //! オプションの個数を取得します
-    uint32_t getNumOption() const { return mNumOption; }
+    uint32_t getNumOption() const;
     //! オプションを取得します
-    const std::pair<StringPtr, StringPtr>* getOptions() const { return mpOptions.get(); }
+    const std::pair<StringPtr, StringPtr>* getOptions() const;
 
 private:
-    std::unique_ptr<std::pair<StringPtr, StringPtr>[]>         mpOptions;      //!< 起動オプション
-    uint32_t                                                   mNumOption = 0; //!< オプションの数
+    std::unique_ptr<OptionParser>                              mpOptionParser; //!< オプションパーサー
     std::unique_ptr<heap::RootBlock, heap::RootBlock::Deleter> mpRootHeap;     //!< ルートヒープ
     BootArg                                                    mBootArg;       //!< 起動引数
 
 private:
-    /*!
-     * 起動オプションを解析します
-     * @param[in] argc オプションの数
-     * @param[in] argv オプションのリスト
-     */
-    void setupOptions_(int argc, char* argv[]);
-
     /*!
      * ルートヒープより先に開放すべき処理
      */

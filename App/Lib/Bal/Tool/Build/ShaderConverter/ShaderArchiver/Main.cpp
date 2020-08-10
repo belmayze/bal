@@ -7,8 +7,14 @@
  */
 // bal
 #include <app/balApplicationBase.h>
+#include <app/balOptionParser.h>
 #include <framework/balFramework.h>
 #include <io/balFile.h>
+// app
+#include "Archiver.h"
+
+namespace app
+{
 
 class Main : public bal::ApplicationBase
 {
@@ -32,22 +38,29 @@ public:
         bal::Framework framework;
         {
             bal::Framework::InitializeArg init_arg;
-            init_arg.mpApplication      = this;
+            init_arg.mpApplication = this;
             framework.initialize(api_entry, init_arg);
         }
 
         framework.enterApplicationLoop();
 
         // オプション検索
-        bool success = false;
+        bal::StringPtr input_filepath;
+        bal::StringPtr output_filepath;
+
         for (uint32_t i_option = 0; i_option < api_entry.getNumOption(); ++i_option)
         {
             if (api_entry.getOptions()[i_option].first.isEquals("-archive-list"))
             {
-                success = archive_(api_entry.getOptions()[i_option].second.c_str());
-                break;
+                input_filepath = api_entry.getOptions()[i_option].second;
+            }
+            else if (api_entry.getOptions()[i_option].first.isEquals("-output"))
+            {
+                output_filepath = api_entry.getOptions()[i_option].second;
             }
         }
+
+        bool success = archive_(input_filepath, output_filepath);
 
         return success ? 0 : 1;
     }
@@ -55,9 +68,10 @@ public:
 private:
     /*!
      * アーカイブ処理を行います
-     * @param[in] filepath アーカイブ対象が含まれているテキストファイル
+     * @param[in] filepath        アーカイブ対象が含まれているテキストファイル
+     * @param[in] output_filepath 出力先のファイルパス
      */
-    bool archive_(bal::StringPtr filepath)
+    bool archive_(const bal::StringPtr& filepath, const bal::StringPtr& output_filepath)
     {
         // テキストファイル読み込み
         bal::File arg_file;
@@ -66,16 +80,64 @@ private:
             return false;
         }
         bal::StringPtr arg_txt(reinterpret_cast<const char*>(arg_file.getBuffer()), static_cast<int32_t>(arg_file.getBufferSize()));
-        auto [lines, num_line] = arg_txt.getLines();
+        auto [num_line, lines] = arg_txt.getLines();
+
+        // アーカイバーの初期化
+        Archiver archiver;
+        {
+            Archiver::InitializeArg init_arg;
+            init_arg.mNumShader = num_line;
+            archiver.initialize(init_arg);
+        }
 
         for (uint32_t i_line = 0; i_line < num_line; ++i_line)
         {
-            // @TODO: オプション解析
+            // オプション解析
+            auto [argc, ptr] = lines[i_line].getArgv();
+            std::unique_ptr<const char* []> argv = bal::make_unique<const char* []>(nullptr, argc);
+            for (uint32_t i_arg = 0; i_arg < argc; ++i_arg)
+            {
+                argv[i_arg] = ptr[i_arg].c_str();
+            }
 
+            bal::OptionParser parser;
+            parser.parse(argc, argv.get());
+
+            // オプションをもとに実行
+            // <-vs> 頂点シェーダー
+            // <-ps> ピクセルシェーダー
+            // <>    シェーダー名
+            Archiver::ShaderArg shader_arg;
+            shader_arg.mShaderIndex = i_line;
+
+            for (uint32_t i_option = 0; i_option < parser.getNumOption(); ++i_option)
+            {
+                const std::pair<bal::StringPtr, bal::StringPtr>& option = parser.getOptions()[i_option];
+
+                if (option.first.isEquals("-vs"))
+                {
+                    shader_arg.mVsFilepath = option.second;
+                }
+                else if (option.first.isEquals("-ps"))
+                {
+                    shader_arg.mPsFilepath = option.second;
+                }
+                else if (option.first.isEmpty())
+                {
+                    shader_arg.mShaderName = option.second;
+                }
+            }
+
+            archiver.setShader(shader_arg);
         }
+
+        // アーカイブを行い出力する
+        archiver.archive(output_filepath);
 
         return true;
     }
 };
 
 Main gMain;
+
+}

@@ -24,7 +24,7 @@ bool StringPtr::isEquals(const StringPtr& str) const
 
 // ----------------------------------------------------------------------------
 
-std::pair<std::unique_ptr<StringBuffer[]>, uint32_t> StringPtr::getLines() const
+std::pair<uint32_t, std::unique_ptr<StringBuffer[]>> StringPtr::getLines() const
 {
     uint32_t num_split = 0;
     std::unique_ptr<std::pair<size_t, size_t>[]> positions = make_unique<std::pair<size_t, size_t>[]>(nullptr, mSize);
@@ -68,7 +68,7 @@ std::pair<std::unique_ptr<StringBuffer[]>, uint32_t> StringPtr::getLines() const
         buffer[i_split] = StringBuffer(mpStr + positions[i_split].first, positions[i_split].second - positions[i_split].first);
     }
 
-    return {std::move(buffer), num_split};
+    return { num_split, std::move(buffer) };
 }
 
 // ----------------------------------------------------------------------------

@@ -10,6 +10,8 @@
 #include <container/balStringBase.h>
 #include <memory/balUniquePtr.h>
 
+namespace bal { class StringPtr; }
+
 // ----------------------------------------------------------------------------
 namespace bal {
 
@@ -49,7 +51,24 @@ public:
     /*!
      * 空文字かチェック
      */
-    virtual bool empty() const override { return (!mpStr || mpStr[0] == '\0'); }
+    virtual bool isEmpty() const override { return (!mpStr || mpStr[0] == '\0'); }
+
+public:
+    /*!
+     * 一致しているかをチェック
+     * @param[in] str 対象文字列
+     */
+    bool isEquals(const StringPtr& str) const;
+
+    /*!
+     * 文字列を行で分割します
+     */
+    std::pair<uint32_t, std::unique_ptr<StringBuffer[]>> getLines() const;
+
+    /*!
+     * 文字列を argc argv 形式に分割します
+     */
+    std::pair<uint32_t, std::unique_ptr<StringBuffer[]>> getArgv() const;
 
 public:
     //! コピー

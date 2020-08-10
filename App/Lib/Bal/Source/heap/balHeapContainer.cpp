@@ -58,7 +58,7 @@ Container* Container::split(uint32_t size)
 
     ForwardTag* p_forward_tag = reinterpret_cast<ForwardTag*>(this);
     // 分割できるかチェック（データ容量とタグ、分割先のタグの合計以上であれば分割できる）
-    if (size < (p_forward_tag->mAllocSize + cAllTagSize * 2))
+    if (size < (p_forward_tag->mAllocSize - cAllTagSize * 2))
     {
         // 分割した容量計算
         uint32_t next_size = p_forward_tag->mAllocSize - size - cAllTagSize;

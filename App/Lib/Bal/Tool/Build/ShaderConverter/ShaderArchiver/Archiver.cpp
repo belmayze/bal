@@ -1,0 +1,138 @@
+﻿/*!
+ * @file   balApiEntry.cpp
+ * @brief  
+ * @author belmayze
+ *
+ * Copyright (c) 2020 belmayze. All rights reserved.
+ */
+// app
+#include "Archiver.h"
+
+namespace app
+{
+
+// ----------------------------------------------------------------------------
+
+void Archiver::initialize(const InitializeArg& arg)
+{
+    mHeader.mNumPrograms = arg.mNumShader;
+    mTags                = bal::make_unique<bal::gfx::ShaderArchiver::Tag[]>(nullptr, mHeader.mNumPrograms);
+    mShaders             = bal::make_unique<ShaderContainer[]>(nullptr, mHeader.mNumPrograms);
+}
+
+// ----------------------------------------------------------------------------
+
+void Archiver::setShader(const ShaderArg& arg)
+{
+    ShaderContainer& container = mShaders[arg.mShaderIndex];
+    bal::gfx::ShaderArchiver::Tag& tag = mTags[arg.mShaderIndex];
+
+    // プログラム名
+    container.mProgramName = bal::StringBuffer(arg.mShaderName.c_str(), arg.mShaderName.size());
+    tag.mNameSize = static_cast<uint32_t>(container.mProgramName.size() + 1);
+
+    // ファイル読み込み
+    if (!arg.mVsFilepath.isEmpty())
+    {
+        container.mVertexShader.loadFromFile(arg.mVsFilepath);
+        tag.mVsSize = static_cast<uint32_t>(container.mVertexShader.getBufferSize());
+    }
+    if (!arg.mPsFilepath.isEmpty())
+    {
+        container.mPixelShader.loadFromFile(arg.mPsFilepath);
+        tag.mPsSize = static_cast<uint32_t>(container.mPixelShader.getBufferSize());
+    }
+}
+
+// ----------------------------------------------------------------------------
+
+void Archiver::archive(const bal::StringPtr& output_path)
+{
+    // ファイルサイズを計算
+    size_t memory_size = sizeof(bal::gfx::ShaderArchiver::Header)
+                       + sizeof(bal::gfx::ShaderArchiver::Tag) * mHeader.mNumPrograms;
+    for (int i_program = 0; i_program < mHeader.mNumPrograms; ++i_program)
+    {
+        // オフセット計算しつつ、メモリーサイズも求める
+        bal::gfx::ShaderArchiver::Tag& tag = mTags[i_program];
+        tag.mOffset = static_cast<uint32_t>(memory_size);
+        memory_size += tag.mNameSize
+                    +  tag.mVsSize
+                    +  tag.mGsSize
+                    +  tag.mPsSize
+                    +  tag.mCsSize
+                    +  tag.mDsSize
+                    +  tag.mHsSize
+                    +  tag.mAsSize
+                    +  tag.mMsSize;
+    }
+
+    // ファイルバッファを確保
+    std::unique_ptr<uint8_t[]> buffer = bal::make_unique<uint8_t[]>(nullptr, memory_size);
+
+    // ヘッダー書き出し
+    uint8_t* ptr = buffer.get();
+    std::memcpy(ptr, &mHeader, sizeof(bal::gfx::ShaderArchiver::Header));
+    ptr += sizeof(bal::gfx::ShaderArchiver::Header);
+    std::memcpy(ptr, mTags.get(), sizeof(bal::gfx::ShaderArchiver::Tag) * mHeader.mNumPrograms);
+    ptr += sizeof(bal::gfx::ShaderArchiver::Tag) * mHeader.mNumPrograms;
+
+    // シェーダー書き出し
+    for (int i_program = 0; i_program < mHeader.mNumPrograms; ++i_program)
+    {
+        const ShaderContainer& container = mShaders[i_program];
+        const bal::gfx::ShaderArchiver::Tag& tag = mTags[i_program];
+        
+        // 名前
+        std::memcpy(ptr, container.mProgramName.c_str(), tag.mNameSize);
+        ptr += tag.mNameSize;
+
+        if (tag.mVsSize > 0)
+        {
+            std::memcpy(ptr, container.mVertexShader.getBuffer(), container.mVertexShader.getBufferSize());
+            ptr += container.mVertexShader.getBufferSize();
+        }
+        if (tag.mGsSize > 0)
+        {
+            std::memcpy(ptr, container.mGeometryShader.getBuffer(), container.mGeometryShader.getBufferSize());
+            ptr += container.mGeometryShader.getBufferSize();
+        }
+        if (tag.mPsSize > 0)
+        {
+            std::memcpy(ptr, container.mPixelShader.getBuffer(), container.mPixelShader.getBufferSize());
+            ptr += container.mPixelShader.getBufferSize();
+        }
+        if (tag.mCsSize > 0)
+        {
+            std::memcpy(ptr, container.mComputeShader.getBuffer(), container.mComputeShader.getBufferSize());
+            ptr += container.mComputeShader.getBufferSize();
+        }
+        if (tag.mDsSize > 0)
+        {
+            std::memcpy(ptr, container.mDomainShader.getBuffer(), container.mDomainShader.getBufferSize());
+            ptr += container.mDomainShader.getBufferSize();
+        }
+        if (tag.mHsSize > 0)
+        {
+            std::memcpy(ptr, container.mHullShader.getBuffer(), container.mHullShader.getBufferSize());
+            ptr += container.mHullShader.getBufferSize();
+        }
+        if (tag.mAsSize > 0)
+        {
+            std::memcpy(ptr, container.mAmplificationShader.getBuffer(), container.mAmplificationShader.getBufferSize());
+            ptr += container.mAmplificationShader.getBufferSize();
+        }
+        if (tag.mMsSize > 0)
+        {
+            std::memcpy(ptr, container.mMeshShader.getBuffer(), container.mMeshShader.getBufferSize());
+            ptr += container.mMeshShader.getBufferSize();
+        }
+    }
+
+    // ファイル書き出し
+    bal::File::WriteToFile(output_path, buffer.get(), memory_size);
+}
+
+// ----------------------------------------------------------------------------
+
+}

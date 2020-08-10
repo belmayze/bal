@@ -47,7 +47,7 @@ public:
     /*!
      * 空文字かチェック
      */
-    virtual bool empty() const override { return *mpStr == '\0'; }
+    virtual bool isEmpty() const override { return *mpStr == '\0'; }
 
 public:
     /*!
@@ -59,7 +59,7 @@ public:
     /*!
      * 文字列を行で分割します
      */
-    std::pair<std::unique_ptr<StringBuffer[]>, uint32_t> getLines() const;
+    std::pair<uint32_t, std::unique_ptr<StringBuffer[]>> getLines() const;
 
     /*!
      * 特定の文字で分割します

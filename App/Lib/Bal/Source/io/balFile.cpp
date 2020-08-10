@@ -42,4 +42,30 @@ bool File::loadFromFile(const StringPtr& path)
 
 // ----------------------------------------------------------------------------
 
+bool File::WriteToFile(const StringPtr& path, uint8_t* p_buffer, size_t buffer_size)
+{
+    // ファイルをバイナリとして読み込み
+    std::ofstream stream(path.c_str(), std::ios::binary);
+    if (!stream) { return false; }
+
+    // ファイルを書き出し
+    stream.write(reinterpret_cast<const char*>(p_buffer), buffer_size);
+
+    // ファイルを閉じる
+    stream.close();
+
+    return true;
+}
+
+// ----------------------------------------------------------------------------
+
+File& File::operator=(File&& rhs)
+{
+    mpBuffer    = std::move(rhs.mpBuffer);
+    mBufferSize = rhs.mBufferSize;
+    return *this;
+}
+
+// ----------------------------------------------------------------------------
+
 }
