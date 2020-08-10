@@ -28,8 +28,14 @@ public:
     {
         uint32_t       mShaderIndex = 0;
         bal::StringPtr mShaderName;
-        bal::StringPtr mVsFilepath;
-        bal::StringPtr mPsFilepath;
+        bal::StringPtr mVertexShaderFilepath;
+        bal::StringPtr mGeometryShaderFilepath;
+        bal::StringPtr mPixelShaderFilepath;
+        bal::StringPtr mComputeShaderFilepath;
+        bal::StringPtr mDomainShaderFilepath;
+        bal::StringPtr mHullShaderFilepath;
+        bal::StringPtr mAmplificationShaderFilepath;
+        bal::StringPtr mMeshShaderFilepath;
     };
 
 public:

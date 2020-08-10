@@ -32,15 +32,45 @@ void Archiver::setShader(const ShaderArg& arg)
     tag.mNameSize = static_cast<uint32_t>(container.mProgramName.size() + 1);
 
     // ファイル読み込み
-    if (!arg.mVsFilepath.isEmpty())
+    if (!arg.mVertexShaderFilepath.isEmpty())
     {
-        container.mVertexShader.loadFromFile(arg.mVsFilepath);
-        tag.mVsSize = static_cast<uint32_t>(container.mVertexShader.getBufferSize());
+        container.mVertexShader.loadFromFile(arg.mVertexShaderFilepath);
+        tag.mVertexShaderSize = static_cast<uint32_t>(container.mVertexShader.getBufferSize());
     }
-    if (!arg.mPsFilepath.isEmpty())
+    if (!arg.mGeometryShaderFilepath.isEmpty())
     {
-        container.mPixelShader.loadFromFile(arg.mPsFilepath);
-        tag.mPsSize = static_cast<uint32_t>(container.mPixelShader.getBufferSize());
+        container.mGeometryShader.loadFromFile(arg.mGeometryShaderFilepath);
+        tag.mGeometryShaderSize = static_cast<uint32_t>(container.mGeometryShader.getBufferSize());
+    }
+    if (!arg.mPixelShaderFilepath.isEmpty())
+    {
+        container.mPixelShader.loadFromFile(arg.mPixelShaderFilepath);
+        tag.mPixelShaderSize = static_cast<uint32_t>(container.mPixelShader.getBufferSize());
+    }
+    if (!arg.mComputeShaderFilepath.isEmpty())
+    {
+        container.mComputeShader.loadFromFile(arg.mComputeShaderFilepath);
+        tag.mComputeShaderSize = static_cast<uint32_t>(container.mComputeShader.getBufferSize());
+    }
+    if (!arg.mDomainShaderFilepath.isEmpty())
+    {
+        container.mDomainShader.loadFromFile(arg.mDomainShaderFilepath);
+        tag.mDomainShaderSize = static_cast<uint32_t>(container.mDomainShader.getBufferSize());
+    }
+    if (!arg.mHullShaderFilepath.isEmpty())
+    {
+        container.mHullShader.loadFromFile(arg.mHullShaderFilepath);
+        tag.mHullShaderSize = static_cast<uint32_t>(container.mHullShader.getBufferSize());
+    }
+    if (!arg.mAmplificationShaderFilepath.isEmpty())
+    {
+        container.mAmplificationShader.loadFromFile(arg.mAmplificationShaderFilepath);
+        tag.mAmplificationShaderSize = static_cast<uint32_t>(container.mAmplificationShader.getBufferSize());
+    }
+    if (!arg.mMeshShaderFilepath.isEmpty())
+    {
+        container.mMeshShader.loadFromFile(arg.mMeshShaderFilepath);
+        tag.mMeshShaderSize = static_cast<uint32_t>(container.mMeshShader.getBufferSize());
     }
 }
 
@@ -57,14 +87,14 @@ void Archiver::archive(const bal::StringPtr& output_path)
         bal::gfx::ShaderArchiver::Tag& tag = mTags[i_program];
         tag.mOffset = static_cast<uint32_t>(memory_size);
         memory_size += tag.mNameSize
-                    +  tag.mVsSize
-                    +  tag.mGsSize
-                    +  tag.mPsSize
-                    +  tag.mCsSize
-                    +  tag.mDsSize
-                    +  tag.mHsSize
-                    +  tag.mAsSize
-                    +  tag.mMsSize;
+                    +  tag.mVertexShaderSize
+                    +  tag.mGeometryShaderSize
+                    +  tag.mPixelShaderSize
+                    +  tag.mComputeShaderSize
+                    +  tag.mDomainShaderSize
+                    +  tag.mHullShaderSize
+                    +  tag.mAmplificationShaderSize
+                    +  tag.mMeshShaderSize;
     }
 
     // ファイルバッファを確保
@@ -87,42 +117,42 @@ void Archiver::archive(const bal::StringPtr& output_path)
         std::memcpy(ptr, container.mProgramName.c_str(), tag.mNameSize);
         ptr += tag.mNameSize;
 
-        if (tag.mVsSize > 0)
+        if (tag.mVertexShaderSize > 0)
         {
             std::memcpy(ptr, container.mVertexShader.getBuffer(), container.mVertexShader.getBufferSize());
             ptr += container.mVertexShader.getBufferSize();
         }
-        if (tag.mGsSize > 0)
+        if (tag.mGeometryShaderSize > 0)
         {
             std::memcpy(ptr, container.mGeometryShader.getBuffer(), container.mGeometryShader.getBufferSize());
             ptr += container.mGeometryShader.getBufferSize();
         }
-        if (tag.mPsSize > 0)
+        if (tag.mPixelShaderSize > 0)
         {
             std::memcpy(ptr, container.mPixelShader.getBuffer(), container.mPixelShader.getBufferSize());
             ptr += container.mPixelShader.getBufferSize();
         }
-        if (tag.mCsSize > 0)
+        if (tag.mComputeShaderSize > 0)
         {
             std::memcpy(ptr, container.mComputeShader.getBuffer(), container.mComputeShader.getBufferSize());
             ptr += container.mComputeShader.getBufferSize();
         }
-        if (tag.mDsSize > 0)
+        if (tag.mDomainShaderSize > 0)
         {
             std::memcpy(ptr, container.mDomainShader.getBuffer(), container.mDomainShader.getBufferSize());
             ptr += container.mDomainShader.getBufferSize();
         }
-        if (tag.mHsSize > 0)
+        if (tag.mHullShaderSize > 0)
         {
             std::memcpy(ptr, container.mHullShader.getBuffer(), container.mHullShader.getBufferSize());
             ptr += container.mHullShader.getBufferSize();
         }
-        if (tag.mAsSize > 0)
+        if (tag.mAmplificationShaderSize > 0)
         {
             std::memcpy(ptr, container.mAmplificationShader.getBuffer(), container.mAmplificationShader.getBufferSize());
             ptr += container.mAmplificationShader.getBufferSize();
         }
-        if (tag.mMsSize > 0)
+        if (tag.mMeshShaderSize > 0)
         {
             std::memcpy(ptr, container.mMeshShader.getBuffer(), container.mMeshShader.getBufferSize());
             ptr += container.mMeshShader.getBufferSize();

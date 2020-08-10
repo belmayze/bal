@@ -40,16 +40,16 @@ public:
     //! タグ
     struct Tag
     {
-        uint32_t mOffset   = 0;
-        uint32_t mNameSize = 0;
-        uint32_t mVsSize   = 0; //! Vertex Shader
-        uint32_t mGsSize   = 0; //! Geometry Shader
-        uint32_t mPsSize   = 0; //! Pixel Shader
-        uint32_t mCsSize   = 0; //! Compute Shader
-        uint32_t mDsSize   = 0; //! Domain Shader
-        uint32_t mHsSize   = 0; //! Hull Shader 
-        uint32_t mAsSize   = 0; //! Amplification Shader
-        uint32_t mMsSize   = 0; //! Mesh Shader
+        uint32_t mOffset                  = 0;
+        uint32_t mNameSize                = 0;
+        uint32_t mVertexShaderSize        = 0;
+        uint32_t mGeometryShaderSize      = 0;
+        uint32_t mPixelShaderSize         = 0;
+        uint32_t mComputeShaderSize       = 0;
+        uint32_t mDomainShaderSize        = 0;
+        uint32_t mHullShaderSize          = 0;
+        uint32_t mAmplificationShaderSize = 0;
+        uint32_t mMeshShaderSize          = 0;
     };
     //! シェーダーのデータ
     struct ShaderData

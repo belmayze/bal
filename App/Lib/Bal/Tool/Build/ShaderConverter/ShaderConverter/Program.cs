@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Serialization;
@@ -218,6 +219,23 @@ namespace ShaderConverter
 
                         archive_args += $" -vs {output_path}";
                     }
+                    if (program.GeometryShader != null)
+                    {
+                        string input_path = $"{working_path}\\{program.GeometryShader.SourceFilePath}";
+                        string output_path = $"{working_path}\\{program.GeometryShader.SourceFilePath}.cso";
+                        string profile_name = $"gs_{shader_container.Settings.Compile.Profile}";
+
+                        process.StartInfo.Arguments = $"{input_path} /T {profile_name} /E main /Fo {output_path}";
+
+                        process.Start();
+                        process.BeginOutputReadLine();
+                        process.BeginErrorReadLine();
+                        process.WaitForExit();
+                        process.CancelOutputRead();
+                        process.CancelErrorRead();
+
+                        archive_args += $" -gs {output_path}";
+                    }
                     if (program.PixelShader != null)
                     {
                         string input_path = $"{working_path}\\{program.PixelShader.SourceFilePath}";
@@ -235,13 +253,119 @@ namespace ShaderConverter
 
                         archive_args += $" -ps {output_path}";
                     }
+                    if (program.ComputeShader != null)
+                    {
+                        string input_path = $"{working_path}\\{program.ComputeShader.SourceFilePath}";
+                        string output_path = $"{working_path}\\{program.ComputeShader.SourceFilePath}.cso";
+                        string profile_name = $"cs_{shader_container.Settings.Compile.Profile}";
 
+                        process.StartInfo.Arguments = $"{input_path} /T {profile_name} /E main /Fo {output_path}";
+
+                        process.Start();
+                        process.BeginOutputReadLine();
+                        process.BeginErrorReadLine();
+                        process.WaitForExit();
+                        process.CancelOutputRead();
+                        process.CancelErrorRead();
+
+                        archive_args += $" -cs {output_path}";
+                    }
+                    if (program.DomainShader != null)
+                    {
+                        string input_path = $"{working_path}\\{program.DomainShader.SourceFilePath}";
+                        string output_path = $"{working_path}\\{program.DomainShader.SourceFilePath}.cso";
+                        string profile_name = $"ds_{shader_container.Settings.Compile.Profile}";
+
+                        process.StartInfo.Arguments = $"{input_path} /T {profile_name} /E main /Fo {output_path}";
+
+                        process.Start();
+                        process.BeginOutputReadLine();
+                        process.BeginErrorReadLine();
+                        process.WaitForExit();
+                        process.CancelOutputRead();
+                        process.CancelErrorRead();
+
+                        archive_args += $" -ds {output_path}";
+                    }
+                    if (program.HullShader != null)
+                    {
+                        string input_path = $"{working_path}\\{program.HullShader.SourceFilePath}";
+                        string output_path = $"{working_path}\\{program.HullShader.SourceFilePath}.cso";
+                        string profile_name = $"hs_{shader_container.Settings.Compile.Profile}";
+
+                        process.StartInfo.Arguments = $"{input_path} /T {profile_name} /E main /Fo {output_path}";
+
+                        process.Start();
+                        process.BeginOutputReadLine();
+                        process.BeginErrorReadLine();
+                        process.WaitForExit();
+                        process.CancelOutputRead();
+                        process.CancelErrorRead();
+
+                        archive_args += $" -hs {output_path}";
+                    }
+/*                    if (program.AmplificationShader != null)
+                    {
+                        string input_path = $"{working_path}\\{program.AmplificationShader.SourceFilePath}";
+                        string output_path = $"{working_path}\\{program.AmplificationShader.SourceFilePath}.cso";
+                        string profile_name = $"as_{shader_container.Settings.Compile.Profile}";
+
+                        process.StartInfo.Arguments = $"{input_path} /T {profile_name} /E main /Fo {output_path}";
+
+                        process.Start();
+                        process.BeginOutputReadLine();
+                        process.BeginErrorReadLine();
+                        process.WaitForExit();
+                        process.CancelOutputRead();
+                        process.CancelErrorRead();
+
+                        archive_args += $" -as {output_path}";
+                    }
+                    if (program.MeshShader != null)
+                    {
+                        string input_path = $"{working_path}\\{program.MeshShader.SourceFilePath}";
+                        string output_path = $"{working_path}\\{program.MeshShader.SourceFilePath}.cso";
+                        string profile_name = $"ms_{shader_container.Settings.Compile.Profile}";
+
+                        process.StartInfo.Arguments = $"{input_path} /T {profile_name} /E main /Fo {output_path}";
+
+                        process.Start();
+                        process.BeginOutputReadLine();
+                        process.BeginErrorReadLine();
+                        process.WaitForExit();
+                        process.CancelOutputRead();
+                        process.CancelErrorRead();
+
+                        archive_args += $" -ms {output_path}";
+                    }
+*/
                     stream.WriteLine(archive_args);
                 }
                 stream.Close();
             }
 
-            // @TODO: アーカイブ
+            // アーカイブ
+            {
+                Process process = new Process();
+
+                // 基本設定
+                process.StartInfo.FileName = $"{Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)}\\ShaderArchiver.exe";
+
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardError = true;
+
+                process.OutputDataReceived += StandardOutput_;
+                process.ErrorDataReceived += StandardError_;
+
+                process.StartInfo.Arguments = $"-archive-list {archive_args_filepath} -output {options.Output}";
+
+                process.Start();
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+                process.WaitForExit();
+            }
 
             return 0;
         }

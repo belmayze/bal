@@ -37,9 +37,6 @@
     <Filter Include="graphics\d3d12">
       <UniqueIdentifier>{ef31fcdc-2329-4ea9-9c52-6b687cf41b28}</UniqueIdentifier>
     </Filter>
-    <Filter Include="shader">
-      <UniqueIdentifier>{bfcffa31-a771-48b2-a1ba-780429b939eb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="graphics\archiver">
       <UniqueIdentifier>{eef776c8-03c7-48d8-adfc-8aad6c7c47a1}</UniqueIdentifier>
     </Filter>
@@ -353,13 +350,5 @@
     <ClInclude Include="..\..\Include\graphics\archiver\balShaderArchiver.h">
       <Filter>graphics\archiver</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="..\..\Source\shader\main.ps.hlsl">
-      <Filter>shader</Filter>
-    </FxCompile>
-    <FxCompile Include="..\..\Source\shader\main.vs.hlsl">
-      <Filter>shader</Filter>
-    </FxCompile>
   </ItemGroup>
 </Project>

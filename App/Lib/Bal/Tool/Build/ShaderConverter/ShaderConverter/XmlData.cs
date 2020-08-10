@@ -25,8 +25,20 @@ namespace ShaderConverter
             public string Name { get; set; } = "";
             [XmlElement("Vertex")]
             public Shader VertexShader { get; set; } = null;
+            [XmlElement("Geometry")]
+            public Shader GeometryShader { get; set; } = null;
             [XmlElement("Pixel")]
             public Shader PixelShader { get; set; } = null;
+            [XmlElement("Compute")]
+            public Shader ComputeShader { get; set; } = null;
+            [XmlElement("Domain")]
+            public Shader DomainShader { get; set; } = null;
+            [XmlElement("Hull")]
+            public Shader HullShader { get; set; } = null;
+            [XmlElement("Amplification")]
+            public Shader AmplificationShader { get; set; } = null;
+            [XmlElement("Mesh")]
+            public Shader MeshShader { get; set; } = null;
         }
 
         /// <summary>

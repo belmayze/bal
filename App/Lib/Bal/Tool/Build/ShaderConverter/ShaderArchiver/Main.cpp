@@ -116,11 +116,35 @@ private:
 
                 if (option.first.isEquals("-vs"))
                 {
-                    shader_arg.mVsFilepath = option.second;
+                    shader_arg.mVertexShaderFilepath = option.second;
+                }
+                else if (option.first.isEquals("-gs"))
+                {
+                    shader_arg.mGeometryShaderFilepath = option.second;
                 }
                 else if (option.first.isEquals("-ps"))
                 {
-                    shader_arg.mPsFilepath = option.second;
+                    shader_arg.mPixelShaderFilepath = option.second;
+                }
+                else if (option.first.isEquals("-cs"))
+                {
+                    shader_arg.mComputeShaderFilepath = option.second;
+                }
+                else if (option.first.isEquals("-ds"))
+                {
+                    shader_arg.mDomainShaderFilepath = option.second;
+                }
+                else if (option.first.isEquals("-hs"))
+                {
+                    shader_arg.mHullShaderFilepath = option.second;
+                }
+                else if (option.first.isEquals("-as"))
+                {
+                    shader_arg.mAmplificationShaderFilepath = option.second;
+                }
+                else if (option.first.isEquals("-ms"))
+                {
+                    shader_arg.mMeshShaderFilepath = option.second;
                 }
                 else if (option.first.isEmpty())
                 {
