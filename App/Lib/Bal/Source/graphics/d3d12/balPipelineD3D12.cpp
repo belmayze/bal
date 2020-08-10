@@ -90,15 +90,15 @@ bool Pipeline::initialize(const InitializeArg& arg)
         desc.InputLayout.NumElements        = p_input_layout->getNumInputElementDesc();
         desc.InputLayout.pInputElementDescs = p_input_layout->getInputElementDescs();
         desc.pRootSignature                 = p_root_signature.Get();
-        if (arg.mpVSFile)
+        if (arg.mVertexShaderBufferSize > 0)
         {
-            desc.VS.pShaderBytecode         = arg.mpVSFile->getBuffer();
-            desc.VS.BytecodeLength          = arg.mpVSFile->getBufferSize();
+            desc.VS.pShaderBytecode         = arg.mpVertexShaderBuffer;
+            desc.VS.BytecodeLength          = arg.mVertexShaderBufferSize;
         }
-        if (arg.mpPSFile)
+        if (arg.mPixelShaderBufferSize)
         {
-            desc.PS.pShaderBytecode         = arg.mpPSFile->getBuffer();
-            desc.PS.BytecodeLength          = arg.mpPSFile->getBufferSize();
+            desc.PS.pShaderBytecode         = arg.mpPixelShaderBuffer;
+            desc.PS.BytecodeLength          = arg.mPixelShaderBufferSize;
         }
         desc.RasterizerState                = rasterizer_desc;
         desc.BlendState                     = blend_desc;

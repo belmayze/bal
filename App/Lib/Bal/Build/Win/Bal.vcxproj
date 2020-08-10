@@ -35,7 +35,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="..\..\Source\graphics\archiver\balShaderArchiver.cpp" />
+    <ClCompile Include="..\..\Source\graphics\archiver\balShaderArchive.cpp" />
     <ClCompile Include="..\..\Source\graphics\balFrameBuffer.cpp" />
     <ClCompile Include="..\..\Source\graphics\balIRenderTarget.cpp" />
     <ClCompile Include="..\..\Source\graphics\balViewport.cpp" />
@@ -110,7 +110,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="..\..\Include\graphics\archiver\balShaderArchiver.h" />
+    <ClInclude Include="..\..\Include\graphics\archiver\balShaderArchive.h" />
     <ClInclude Include="..\..\Include\graphics\balFrameBuffer.h" />
     <ClInclude Include="..\..\Include\graphics\balICommandList.h" />
     <ClInclude Include="..\..\Include\graphics\balICommandListBundle.h" />

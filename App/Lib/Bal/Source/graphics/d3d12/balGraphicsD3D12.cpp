@@ -10,6 +10,7 @@
 #include <io/balFile.h>
 #include <graphics/balFrameBuffer.h>
 #include <graphics/balViewport.h>
+#include <graphics/archiver/balShaderArchive.h>
 #include <graphics/d3d12/balCommandListBundleD3D12.h>
 #include <graphics/d3d12/balCommandListDirectD3D12.h>
 #include <graphics/d3d12/balCommandQueueD3D12.h>
@@ -224,6 +225,14 @@ bool Graphics::initialize(const InitializeArg& arg)
         }
     }
 
+    // シェーダーアーカイブを取得
+    mpShaderArchive = make_unique<ShaderArchive>(nullptr);
+    {
+        File file;
+        if (!file.loadFromFile("Shader\\bal_shader.bsa")) { return false; }
+        if (!mpShaderArchive->loadArchiver(std::move(file))) { return false; }
+    }
+
     // パイプラインを仮初期化
     mpPipeline = make_unique<Pipeline>(nullptr);
     {
@@ -241,12 +250,8 @@ bool Graphics::initialize(const InitializeArg& arg)
             if (!p_input_layout->initialize(init_arg)) { return false; }
         }
 
-        // ファイル読み込み
-        std::unique_ptr<File> p_vertex_shader = make_unique<File>(nullptr);
-        if (!p_vertex_shader->loadFromFile("main.vs.cso")) { return false; }
-
-        std::unique_ptr<File> p_pixel_shader = make_unique<File>(nullptr);
-        if (!p_pixel_shader->loadFromFile("main.ps.cso")) { return false; }
+        // シェーダー取得
+        const ShaderArchive::ShaderContainer& shader_container = mpShaderArchive->getShaderContainer(mpShaderArchive->findProgram("Sample1"));
 
         // パイプライン初期化
         Pipeline::InitializeArg init_arg;
@@ -254,8 +259,11 @@ bool Graphics::initialize(const InitializeArg& arg)
         init_arg.mNumOutput        = 1;
         init_arg.mOutputFormats[0] = Texture::Format::R8_G8_B8_A8_UNORM;
         init_arg.mpInputLayout     = p_input_layout.get();
-        init_arg.mpVSFile          = p_vertex_shader.get();
-        init_arg.mpPSFile          = p_pixel_shader.get();
+
+        init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
+        init_arg.mVertexShaderBufferSize = shader_container.mVertexShader.mBufferSize;
+        init_arg.mpPixelShaderBuffer     = shader_container.mPixelShader.mBuffer;
+        init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
         if (!mpPipeline->initialize(init_arg)) { return false; }
     }
 

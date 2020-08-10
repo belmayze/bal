@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balFrameBuffer.h
+ * @file   balShaderArchive.h
  * @brief  
  * @author belmayze
  *
@@ -15,7 +15,7 @@ namespace bal { class StringPtr; }
 // ----------------------------------------------------------------------------
 namespace bal::gfx {
 
-class ShaderArchiver
+class ShaderArchive
 {
     // ファイル構成
     //
@@ -57,13 +57,25 @@ public:
         uint32_t       mBufferSize = 0;
         const uint8_t* mBuffer     = nullptr;
     };
+    //! シェーダーのコンテナ
+    struct ShaderContainer
+    {
+        ShaderData mVertexShader;
+        ShaderData mGeometryShader;
+        ShaderData mPixelShader;
+        ShaderData mComputeShader;
+        ShaderData mDomainShader;
+        ShaderData mHullShader;
+        ShaderData mAmplificationShader;
+        ShaderData mMeshShader;
+    };
 
 public:
     /*!
      * アーカイバを読み込みます
      * @param[in] file ファイル
      */
-    void loadArchiver(File&& file);
+    bool loadArchiver(File&& file);
 
     /*!
      * プログラムを検索します
@@ -75,13 +87,13 @@ public:
      * シェーダーを取得します
      * @param[in] index シェーダーインデックス
      */
-    const ShaderData& getShaderData(uint32_t index) const;
+    const ShaderContainer& getShaderContainer(uint32_t index) const;
 
 private:
-    File                          mFile;
-    std::uint16_t                 mNumProgram = 0;
-    std::unique_ptr<StringPtr[]>  mNameTable;
-    std::unique_ptr<ShaderData[]> mShaderDataList;
+    File                               mFile;
+    std::uint16_t                      mNumProgram = 0;
+    std::unique_ptr<StringPtr[]>       mNameTable;
+    std::unique_ptr<ShaderContainer[]> mShaderDataList;
 };
 
 }

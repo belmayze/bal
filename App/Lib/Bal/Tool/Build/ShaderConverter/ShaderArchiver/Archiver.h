@@ -9,7 +9,7 @@
 // bal
 #include <container/balStringPtr.h>
 #include <io/balFile.h>
-#include <graphics/archiver/balShaderArchiver.h>
+#include <graphics/archiver/balShaderArchive.h>
 
 namespace app
 {
@@ -71,9 +71,9 @@ private:
     };
 
 private:
-    bal::gfx::ShaderArchiver::Header                 mHeader;
-    std::unique_ptr<bal::gfx::ShaderArchiver::Tag[]> mTags;
-    std::unique_ptr<ShaderContainer[]>               mShaders;
+    bal::gfx::ShaderArchive::Header                 mHeader;
+    std::unique_ptr<bal::gfx::ShaderArchive::Tag[]> mTags;
+    std::unique_ptr<ShaderContainer[]>              mShaders;
 };
 
 }

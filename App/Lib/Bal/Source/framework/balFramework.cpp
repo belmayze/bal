@@ -77,7 +77,17 @@ void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg)
 #           endif // UNICODE
         }
 
+        bal::StringPtr current_dir;
+        for (uint32_t i_option = 0; i_option < api_entry.getNumOption(); ++i_option)
+        {
+            if (api_entry.getOptions()[i_option].first.isEquals("-content"))
+            {
+                current_dir = api_entry.getOptions()[i_option].second;
+            }
+        }
+
         // カレントディレクトリの変更
+        if (current_dir.isEmpty())
         {
             std::unique_ptr<TCHAR[]> dir_path = make_unique<TCHAR[]>(mpRootHeap, MAX_PATH);
             GetModuleFileName(nullptr, dir_path.get(), MAX_PATH);
@@ -88,6 +98,17 @@ void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg)
                 *p_dir = _T('\0');
                 SetCurrentDirectory(dir_path.get());
             }
+        }
+        else
+        {
+            std::unique_ptr<TCHAR[]> dir_path = make_unique<TCHAR[]>(mpRootHeap, current_dir.size() + 1);
+#           if defined(UNICODE)
+            size_t ret;
+            mbstowcs_s(&ret, dir_path.get(), current_dir.size() + 1, current_dir.c_str(), current_dir.size() + 1);
+#           else
+            std::memcpy(dir_path.get(), current_dir.c_str(), current_dir.size() + 1);
+#           endif
+            SetCurrentDirectory(dir_path.get());
         }
 
         // ウィンドウの登録

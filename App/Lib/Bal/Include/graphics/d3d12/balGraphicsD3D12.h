@@ -11,6 +11,7 @@
 #include <graphics/balIGraphics.h>
 
 namespace bal::gfx { class FrameBuffer; }
+namespace bal::gfx { class ShaderArchive; }
 namespace bal::gfx::d3d12 { class CommandQueue; }
 namespace bal::gfx::d3d12 { class CommandListBundle; }
 namespace bal::gfx::d3d12 { class CommandListDirect; }
@@ -72,6 +73,8 @@ private:
     std::unique_ptr<RenderTargetColor>               mpRenderTargetColor;
     std::unique_ptr<RenderTargetDepth>               mpRenderTargetDepth;
     std::unique_ptr<FrameBuffer>                     mpFrameBuffer;
+
+    std::unique_ptr<ShaderArchive>                   mpShaderArchive;
 
     std::unique_ptr<CommandListBundle>               mpCmdBundle;
     std::unique_ptr<Pipeline>                        mpPipeline;

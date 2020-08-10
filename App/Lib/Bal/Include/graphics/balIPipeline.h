@@ -28,8 +28,23 @@ public:
         uint32_t                                                    mNumOutput    = 0;
         Array<ITexture::Format, FrameBuffer::cColorRenderTargetMax> mOutputFormats;
         const IInputLayout*                                         mpInputLayout = nullptr;
-        const File*                                                 mpVSFile      = nullptr;
-        const File*                                                 mpPSFile      = nullptr;
+
+        const uint8_t* mpVertexShaderBuffer        = nullptr;
+        const uint8_t* mpGeometryShaderBuffer      = nullptr;
+        const uint8_t* mpPixelShaderBuffer         = nullptr;
+        const uint8_t* mpComputeShaderBuffer       = nullptr;
+        const uint8_t* mpDomainShaderBuffer        = nullptr;
+        const uint8_t* mpHullShaderBuffer          = nullptr;
+        const uint8_t* mpAmplificationShaderBuffer = nullptr;
+        const uint8_t* mpMeshShaderBuffer          = nullptr;
+        uint32_t       mVertexShaderBufferSize        = 0;
+        uint32_t       mGeometryShaderBufferSize      = 0;
+        uint32_t       mPixelShaderBufferSize         = 0;
+        uint32_t       mComputeShaderBufferSize       = 0;
+        uint32_t       mDomainShaderBufferSize        = 0;
+        uint32_t       mHullShaderBufferSize          = 0;
+        uint32_t       mAmplificationShaderBufferSize = 0;
+        uint32_t       mMeshShaderBufferSize          = 0;
     };
 
 public:

@@ -144,7 +144,7 @@
     <ClCompile Include="..\..\Source\app\balOptionParser.cpp">
       <Filter>app</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\graphics\archiver\balShaderArchiver.cpp">
+    <ClCompile Include="..\..\Source\graphics\archiver\balShaderArchive.cpp">
       <Filter>graphics\archiver</Filter>
     </ClCompile>
   </ItemGroup>
@@ -347,7 +347,7 @@
     <ClInclude Include="..\..\Include\app\balOptionParser.h">
       <Filter>app</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\graphics\archiver\balShaderArchiver.h">
+    <ClInclude Include="..\..\Include\graphics\archiver\balShaderArchive.h">
       <Filter>graphics\archiver</Filter>
     </ClInclude>
   </ItemGroup>
