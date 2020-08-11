@@ -14,6 +14,7 @@
 #include <graphics/d3d12/balCommandListBundleD3D12.h>
 #include <graphics/d3d12/balCommandListDirectD3D12.h>
 #include <graphics/d3d12/balCommandQueueD3D12.h>
+#include <graphics/d3d12/balDescriptorTableD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <graphics/d3d12/balInputLayoutD3D12.h>
 #include <graphics/d3d12/balModelBufferD3D12.h>
@@ -233,6 +234,78 @@ bool Graphics::initialize(const InitializeArg& arg)
         if (!mpShaderArchive->loadArchiver(std::move(file))) { return false; }
     }
 
+    // コピー用の矩形ポリゴンを初期化
+    mpQuadModelBuffer = make_unique<ModelBuffer>(nullptr);
+    {
+        // position, texcoord
+        float vertices[] = {
+            -1.f,  1.f, 0.f, 0.f, 0.f,
+            -1.f, -3.f, 0.f, 0.f, 2.f,
+             3.f,  1.f, 0.f, 2.f, 0.f
+        };
+        uint16_t indices[] = { 0, 1, 2 };
+
+        ModelBuffer::InitializeArg init_arg;
+        init_arg.mpGraphics = this;
+        init_arg.mpVertexBuffer = reinterpret_cast<const uint8_t*>(vertices);
+        init_arg.mVertexBufferSize = sizeof(vertices);
+        init_arg.mVertexStride = sizeof(float) * 5;
+        init_arg.mpIndexBuffer = reinterpret_cast<const uint8_t*>(indices);
+        init_arg.mIndexBufferSize = sizeof(indices);
+        init_arg.mIndexCount = 3;
+        init_arg.mIndexBufferFormat = ModelBuffer::IndexBufferFormat::Uint16;
+        if (!mpQuadModelBuffer->initialize(init_arg)) { return false; }
+    }
+
+    // コピー用のデスクリプターテーブル
+    mpCopyDescriptorTable = make_unique<DescriptorTable>(nullptr);
+    {
+        // テクスチャー
+        const ITexture* p_textures[] = { mpRenderTargetColor->getTexture() };
+
+        DescriptorTable::InitializeArg init_arg;
+        init_arg.mpGraphics = this;
+        init_arg.mNumTexture = 1;
+        init_arg.mpTextures = p_textures;
+        if (!mpCopyDescriptorTable->initialize(init_arg)) { return false; }
+    }
+
+    // コピー用のパイプラインを初期化
+    mpCopyPipeline = make_unique<Pipeline>(nullptr);
+    {
+        // 頂点レイアウト
+        std::unique_ptr<InputLayout> p_input_layout = make_unique<InputLayout>(nullptr);
+        {
+            std::unique_ptr<InputLayout::InputLayoutDesc[]> descs = make_unique<InputLayout::InputLayoutDesc[]>(nullptr, 2);
+            descs[0] = { .mName = "POSITION", .mSemanticIndex = 0, .mType = InputLayout::Type::Vec3, .mOffset =  0 };
+            descs[1] = { .mName = "TEXCOORD", .mSemanticIndex = 0, .mType = InputLayout::Type::Vec2, .mOffset = 12 };
+
+            InputLayout::InitializeArg init_arg;
+            init_arg.mpGraphics      = this;
+            init_arg.mNumInputLayout = 2;
+            init_arg.mpInputLayouts  = descs.get();
+            if (!p_input_layout->initialize(init_arg)) { return false; }
+        }
+
+        // シェーダー取得
+        const ShaderArchive::ShaderContainer& shader_container = mpShaderArchive->getShaderContainer(mpShaderArchive->findProgram("Copy"));
+
+        // パイプライン初期化
+        Pipeline::InitializeArg init_arg;
+        init_arg.mpGraphics        = this;
+        init_arg.mNumOutput        = 1;
+        init_arg.mOutputFormats[0] = Texture::Format::R8_G8_B8_A8_UNORM;
+        init_arg.mpInputLayout     = p_input_layout.get();
+
+        init_arg.mNumTexture = 1;
+
+        init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
+        init_arg.mVertexShaderBufferSize = shader_container.mVertexShader.mBufferSize;
+        init_arg.mpPixelShaderBuffer     = shader_container.mPixelShader.mBuffer;
+        init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
+        if (!mpCopyPipeline->initialize(init_arg)) { return false; }
+    }
+
     // パイプラインを仮初期化
     mpPipeline = make_unique<Pipeline>(nullptr);
     {
@@ -257,7 +330,7 @@ bool Graphics::initialize(const InitializeArg& arg)
         Pipeline::InitializeArg init_arg;
         init_arg.mpGraphics        = this;
         init_arg.mNumOutput        = 1;
-        init_arg.mOutputFormats[0] = Texture::Format::R8_G8_B8_A8_UNORM;
+        init_arg.mOutputFormats[0] = Texture::Format::R16_G16_B16_A16_FLOAT;
         init_arg.mpInputLayout     = p_input_layout.get();
 
         init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
@@ -320,30 +393,52 @@ void Graphics::loop()
     mpCmdQueue->waitExecuted(mCurrentBufferIndex);
     mpCmdLists[mCurrentBufferIndex].reset();
 
+    // バリア
+    mpCmdLists[mCurrentBufferIndex].resourceBarrier(
+        *mpRenderTargetColor->getTexture(),
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        D3D12_RESOURCE_STATE_RENDER_TARGET
+    );
+    mpCmdLists[mCurrentBufferIndex].resourceBarrier(
+        *mpRenderTargetDepth->getTexture(),
+        D3D12_RESOURCE_STATE_GENERIC_READ,
+        D3D12_RESOURCE_STATE_DEPTH_WRITE
+    );
+
     // レンダリング用バッファに切り替え
     mpCmdLists[mCurrentBufferIndex].setViewport(Viewport(*mpFrameBuffer.get()));
     mpCmdLists[mCurrentBufferIndex].bindFrameBuffer(*mpFrameBuffer.get());
     mpCmdLists[mCurrentBufferIndex].clear(*mpFrameBuffer.get(), CommandListDirect::ClearFlag::Color | CommandListDirect::ClearFlag::Depth, MathColor(0.f, 0.f, 0.f, 1.f), 1.f, 0);
 
     // @TODO: レンダリング
+    mpCmdLists[mCurrentBufferIndex].executeBundle(*mpCmdBundle);
 
-    // スワップチェーンのバッファに書き出し
+    // バリア
+    mpCmdLists[mCurrentBufferIndex].resourceBarrier(
+        *mpRenderTargetColor->getTexture(),
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        D3D12_RESOURCE_STATE_GENERIC_READ
+    );
+    mpCmdLists[mCurrentBufferIndex].resourceBarrier(
+        *mpRenderTargetDepth->getTexture(),
+        D3D12_RESOURCE_STATE_DEPTH_WRITE,
+        D3D12_RESOURCE_STATE_GENERIC_READ
+    );
     mpCmdLists[mCurrentBufferIndex].resourceBarrier(
         *mpSwapChainRenderTargets[mCurrentBufferIndex]->getTexture(),
         D3D12_RESOURCE_STATE_PRESENT,
         D3D12_RESOURCE_STATE_RENDER_TARGET
     );
 
+    // スワップチェーンのバッファに書き出し
     mpCmdLists[mCurrentBufferIndex].setViewport(Viewport(*mpSwapChainFrameBuffers[mCurrentBufferIndex]));
     mpCmdLists[mCurrentBufferIndex].bindFrameBuffer(*mpSwapChainFrameBuffers[mCurrentBufferIndex]);
     mpCmdLists[mCurrentBufferIndex].clear(*mpSwapChainFrameBuffers[mCurrentBufferIndex], CommandListDirect::ClearFlag::Color, MathColor(1.f, 0.f, 0.f, 1.f), 1.f, 0);
 
-    // @TODO: 仮レンダリング
-    //mpCmdLists[mCurrentBufferIndex].bindPipeline(*mpPipeline);
-    //mpCmdLists[mCurrentBufferIndex].drawModel(*mpModelBuffer);
-    mpCmdLists[mCurrentBufferIndex].executeBundle(*mpCmdBundle);
-
     // @TODO: 書き出し
+    mpCmdLists[mCurrentBufferIndex].bindPipeline(*mpCopyPipeline);
+    mpCmdLists[mCurrentBufferIndex].setDescriptorTable(0, *mpCopyDescriptorTable);
+    mpCmdLists[mCurrentBufferIndex].drawModel(*mpQuadModelBuffer);
 
     mpCmdLists[mCurrentBufferIndex].resourceBarrier(
         *mpSwapChainRenderTargets[mCurrentBufferIndex]->getTexture(),
@@ -373,6 +468,10 @@ bool Graphics::destroy()
     mpCmdBundle.reset();
     mpModelBuffer.reset();
     mpPipeline.reset();
+
+    mpCopyDescriptorTable.reset();
+    mpQuadModelBuffer.reset();
+    mpCopyPipeline.reset();
 
     mpFrameBuffer.reset();
     mpRenderTargetDepth.reset();

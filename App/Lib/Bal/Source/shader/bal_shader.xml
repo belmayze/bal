@@ -7,6 +7,10 @@
     <Compile Profile="5_0" />
   </Settings>
   <ProgramArray>
+    <Program Name="Copy">
+      <Vertex Source="copy.hlsl" />
+      <Pixel Source="copy.hlsl" />
+    </Program>
     <Program Name="Sample1">
       <Vertex Source="main.vs.hlsl" />
       <Pixel Source="main.ps.hlsl" />

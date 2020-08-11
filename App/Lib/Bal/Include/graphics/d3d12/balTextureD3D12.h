@@ -28,6 +28,18 @@ public:
     //! フォーマット
     DXGI_FORMAT getFormat() const { return mFormat; }
 
+    //! ディメンジョン
+    D3D12_RESOURCE_DIMENSION getDimension() const { return mDimension; }
+
+    //! キューブマップチェック
+    bool isCubemap() const { return false; }
+
+    //! 配列数
+    uint32_t getNumArray() const { return mNumArray; }
+
+    //! ミップマップ数
+    uint32_t getNumMipLevel() const { return mNumMipLevel; }
+
 public:
     //! フォーマットを変換します
     static DXGI_FORMAT ConvertFormat(Format format);
@@ -43,8 +55,12 @@ private:
     };
 
 private:
-    std::unique_ptr<ID3D12Resource, ComDeleter> mpTexture;
-    DXGI_FORMAT                                 mFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+    std::unique_ptr<ID3D12Resource, ComDeleter>       mpTexture;
+    std::unique_ptr<ID3D12DescriptorHeap, ComDeleter> mpDescriptorHeap;
+    DXGI_FORMAT                                       mFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+    D3D12_RESOURCE_DIMENSION                          mDimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    uint32_t                                          mNumArray = 1;
+    uint32_t                                          mNumMipLevel = 1;
 };
 
 }

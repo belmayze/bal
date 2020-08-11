@@ -15,6 +15,7 @@ namespace bal::gfx { class ShaderArchive; }
 namespace bal::gfx::d3d12 { class CommandQueue; }
 namespace bal::gfx::d3d12 { class CommandListBundle; }
 namespace bal::gfx::d3d12 { class CommandListDirect; }
+namespace bal::gfx::d3d12 { class DescriptorTable; }
 namespace bal::gfx::d3d12 { class ModelBuffer; }
 namespace bal::gfx::d3d12 { class Pipeline; }
 namespace bal::gfx::d3d12 { class RenderTargetColor; }
@@ -79,6 +80,10 @@ private:
     std::unique_ptr<CommandListBundle>               mpCmdBundle;
     std::unique_ptr<Pipeline>                        mpPipeline;
     std::unique_ptr<ModelBuffer>                     mpModelBuffer;
+
+    std::unique_ptr<ModelBuffer>                     mpQuadModelBuffer;
+    std::unique_ptr<DescriptorTable>                 mpCopyDescriptorTable;
+    std::unique_ptr<Pipeline>                        mpCopyPipeline;
 
     UINT                                             mCurrentBufferIndex = 0;
 };

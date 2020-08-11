@@ -7,6 +7,7 @@
  */
 #pragma once
 
+namespace bal::gfx { class IDescriptorTable; }
 namespace bal::gfx { class IModelBuffer; }
 namespace bal::gfx { class IPipeline; }
 
@@ -35,6 +36,13 @@ public:
      * @param[in] pipeline パイプライン
      */
     virtual void bindPipeline(const IPipeline& pipeline) = 0;
+
+    /*!
+     * デスクリプターテーブルをセットする
+     * @param[in] index            インデックス
+     * @param[in] descriptor_table デスクリプターテーブル
+     */
+    virtual void setDescriptorTable(uint32_t index, const IDescriptorTable& descriptor_table) = 0;
 
     /*!
      * モデルを描画します

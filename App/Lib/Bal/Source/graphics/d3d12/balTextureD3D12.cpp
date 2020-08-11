@@ -37,16 +37,13 @@ bool Texture::initialize(const InitializeArg& arg)
             bool is_render_target = true;
             // フラグチェック
             D3D12_RESOURCE_FLAGS  resource_flag       = D3D12_RESOURCE_FLAG_NONE;
-            D3D12_RESOURCE_STATES resource_state_flag = D3D12_RESOURCE_STATE_COMMON;
-            D3D12_HEAP_TYPE       heap_type           = D3D12_HEAP_TYPE_DEFAULT;
-            D3D12_MEMORY_POOL     heap_pool           = D3D12_MEMORY_POOL_UNKNOWN;
+            D3D12_RESOURCE_STATES resource_state_flag = D3D12_RESOURCE_STATE_GENERIC_READ;
             D3D12_CLEAR_VALUE     clear_value;
             if (is_render_target)
             {
                 if (is_depth)
                 {
-                    resource_flag       |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-                    resource_state_flag |= D3D12_RESOURCE_STATE_DEPTH_WRITE;
+                    resource_flag                   |= D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
                     clear_value.Format               = format;
                     clear_value.DepthStencil.Depth   = 1.f;
                     clear_value.DepthStencil.Stencil = 0;
@@ -54,15 +51,12 @@ bool Texture::initialize(const InitializeArg& arg)
                 else
                 {
                     resource_flag       |= D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
-                    resource_state_flag |= D3D12_RESOURCE_STATE_RENDER_TARGET;
                     clear_value.Format   = format;
                     clear_value.Color[0] = 0.f;
                     clear_value.Color[1] = 0.f;
                     clear_value.Color[2] = 0.f;
                     clear_value.Color[3] = 1.f;
                 }
-                heap_type = D3D12_HEAP_TYPE_CUSTOM;
-                heap_pool = D3D12_MEMORY_POOL_L0;
             }
 
             // 列挙
@@ -77,9 +71,9 @@ bool Texture::initialize(const InitializeArg& arg)
             desc.Flags            = resource_flag;
 
             D3D12_HEAP_PROPERTIES prop = {};
-            prop.Type                 = heap_type;
-            prop.CPUPageProperty      = D3D12_CPU_PAGE_PROPERTY_NOT_AVAILABLE;
-            prop.MemoryPoolPreference = heap_pool;
+            prop.Type                 = D3D12_HEAP_TYPE_DEFAULT;
+            prop.CPUPageProperty      = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
+            prop.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
             prop.CreationNodeMask     = 1;
             prop.VisibleNodeMask      = 1;
 
@@ -97,7 +91,11 @@ bool Texture::initialize(const InitializeArg& arg)
         // 保持
         mpTexture.reset(p_texture.Detach());
     }
-    mFormat = format;
+
+    mFormat      = format;
+    mDimension   = dimension;
+    mNumArray    = arg.mArrayNum;
+    mNumMipLevel = arg.mMipNum;
 
     return true;
 }

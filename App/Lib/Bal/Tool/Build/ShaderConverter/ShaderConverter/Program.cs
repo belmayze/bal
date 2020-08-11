@@ -47,63 +47,11 @@ namespace ShaderConverter
                     return 1;
                 }
             }
-#if false
-            catch
-            {
-                // ファイルがなければ作っておく（仮）
-                try
-                {
-                    FileStream stream = new FileStream(options.Input, FileMode.CreateNew);
-
-                    XmlSerializer serializer = new XmlSerializer(typeof(XmlData.ShaderContainer));
-                    shader_container = new XmlData.ShaderContainer();
-
-                    // 設定サンプル
-                    {
-                        XmlData.Include include1 = new XmlData.Include();
-                        include1.Path = "..\\sample1";
-                        shader_container.Settings.Includes.Add(include1);
-
-                        XmlData.Include include2 = new XmlData.Include();
-                        include2.Path = "..\\sample2";
-                        shader_container.Settings.Includes.Add(include2);
-                    }
-
-                    // プログラムサンプル
-                    {
-                        XmlData.Program programs1 = new XmlData.Program();
-                        programs1.Name = "Sample1";
-                        programs1.VertexShader = new XmlData.Program.Shader();
-                        programs1.VertexShader.SourceFilePath = "sample1.vs.hlsl";
-                        programs1.PixelShader = new XmlData.Program.Shader();
-                        programs1.PixelShader.SourceFilePath = "sample1.ps.hlsl";
-                        shader_container.Programs.Add(programs1);
-
-                        XmlData.Program programs2 = new XmlData.Program();
-                        programs2.Name = "Sample2";
-                        programs2.VertexShader = new XmlData.Program.Shader();
-                        programs2.VertexShader.SourceFilePath = "sample2.vs.hlsl";
-                        programs2.PixelShader = new XmlData.Program.Shader();
-                        programs2.PixelShader.SourceFilePath = "sample2.ps.hlsl";
-                        shader_container.Programs.Add(programs2);
-                    }
-
-                    serializer.Serialize(stream, shader_container);
-                    shader_container = (XmlData.ShaderContainer)serializer.Deserialize(stream);
-                }
-                catch (Exception e)
-                {
-                    Console.Error.WriteLine($"Error: {e.Message}");
-                    return 1;
-                }
-            }
-#else
             catch (Exception e)
             {
                 Console.Error.WriteLine($"Error: {e.Message}");
                 return 1;
             }
-#endif
 
             // include に含まれているパスをすべてtmpにコピーする
             string working_path = $"{Environment.GetEnvironmentVariable("TEMP")}\\Bal\\ShaderConverter";
@@ -205,138 +153,98 @@ namespace ShaderConverter
                     if (program.VertexShader != null)
                     {
                         string input_path = $"{working_path}\\{program.VertexShader.SourceFilePath}";
-                        string output_path = $"{working_path}\\{program.VertexShader.SourceFilePath}.cso";
+                        string output_path = $"{working_path}\\{program.VertexShader.SourceFilePath}.vs.cso";
                         string profile_name = $"vs_{shader_container.Settings.Compile.Profile}";
-
-                        process.StartInfo.Arguments = $"{input_path} /T {profile_name} /E main /Fo {output_path}";
-
-                        process.Start();
-                        process.BeginOutputReadLine();
-                        process.BeginErrorReadLine();
-                        process.WaitForExit();
-                        process.CancelOutputRead();
-                        process.CancelErrorRead();
-
                         archive_args += $" -vs {output_path}";
+
+                        List<string> defines = new List<string>();
+                        defines.Add("BAL_VERTEX_SHADER=1");
+
+                        ConvertImpl_(process, input_path, output_path, profile_name, defines);
                     }
                     if (program.GeometryShader != null)
                     {
                         string input_path = $"{working_path}\\{program.GeometryShader.SourceFilePath}";
-                        string output_path = $"{working_path}\\{program.GeometryShader.SourceFilePath}.cso";
+                        string output_path = $"{working_path}\\{program.GeometryShader.SourceFilePath}.gs.cso";
                         string profile_name = $"gs_{shader_container.Settings.Compile.Profile}";
-
-                        process.StartInfo.Arguments = $"{input_path} /T {profile_name} /E main /Fo {output_path}";
-
-                        process.Start();
-                        process.BeginOutputReadLine();
-                        process.BeginErrorReadLine();
-                        process.WaitForExit();
-                        process.CancelOutputRead();
-                        process.CancelErrorRead();
-
                         archive_args += $" -gs {output_path}";
+
+                        List<string> defines = new List<string>();
+                        defines.Add("BAL_GEOMETRY_SHADER=1");
+
+                        ConvertImpl_(process, input_path, output_path, profile_name, defines);
                     }
                     if (program.PixelShader != null)
                     {
                         string input_path = $"{working_path}\\{program.PixelShader.SourceFilePath}";
-                        string output_path = $"{working_path}\\{program.PixelShader.SourceFilePath}.cso";
+                        string output_path = $"{working_path}\\{program.PixelShader.SourceFilePath}.ps.cso";
                         string profile_name = $"ps_{shader_container.Settings.Compile.Profile}";
-
-                        process.StartInfo.Arguments = $"{input_path} /T {profile_name} /E main /Fo {output_path}";
-
-                        process.Start();
-                        process.BeginOutputReadLine();
-                        process.BeginErrorReadLine();
-                        process.WaitForExit();
-                        process.CancelOutputRead();
-                        process.CancelErrorRead();
-
                         archive_args += $" -ps {output_path}";
+
+                        List<string> defines = new List<string>();
+                        defines.Add("BAL_PIXEL_SHADER=1");
+
+                        ConvertImpl_(process, input_path, output_path, profile_name, defines);
                     }
                     if (program.ComputeShader != null)
                     {
                         string input_path = $"{working_path}\\{program.ComputeShader.SourceFilePath}";
-                        string output_path = $"{working_path}\\{program.ComputeShader.SourceFilePath}.cso";
+                        string output_path = $"{working_path}\\{program.ComputeShader.SourceFilePath}.cs.cso";
                         string profile_name = $"cs_{shader_container.Settings.Compile.Profile}";
-
-                        process.StartInfo.Arguments = $"{input_path} /T {profile_name} /E main /Fo {output_path}";
-
-                        process.Start();
-                        process.BeginOutputReadLine();
-                        process.BeginErrorReadLine();
-                        process.WaitForExit();
-                        process.CancelOutputRead();
-                        process.CancelErrorRead();
-
                         archive_args += $" -cs {output_path}";
+
+                        List<string> defines = new List<string>();
+                        defines.Add("BAL_COMPUTE_SHADER=1");
+
+                        ConvertImpl_(process, input_path, output_path, profile_name, defines);
                     }
                     if (program.DomainShader != null)
                     {
                         string input_path = $"{working_path}\\{program.DomainShader.SourceFilePath}";
-                        string output_path = $"{working_path}\\{program.DomainShader.SourceFilePath}.cso";
+                        string output_path = $"{working_path}\\{program.DomainShader.SourceFilePath}.ds.cso";
                         string profile_name = $"ds_{shader_container.Settings.Compile.Profile}";
-
-                        process.StartInfo.Arguments = $"{input_path} /T {profile_name} /E main /Fo {output_path}";
-
-                        process.Start();
-                        process.BeginOutputReadLine();
-                        process.BeginErrorReadLine();
-                        process.WaitForExit();
-                        process.CancelOutputRead();
-                        process.CancelErrorRead();
-
                         archive_args += $" -ds {output_path}";
+
+                        List<string> defines = new List<string>();
+                        defines.Add("BAL_DOMAIN_SHADER=1");
+
+                        ConvertImpl_(process, input_path, output_path, profile_name, defines);
                     }
                     if (program.HullShader != null)
                     {
                         string input_path = $"{working_path}\\{program.HullShader.SourceFilePath}";
-                        string output_path = $"{working_path}\\{program.HullShader.SourceFilePath}.cso";
+                        string output_path = $"{working_path}\\{program.HullShader.SourceFilePath}.hs.cso";
                         string profile_name = $"hs_{shader_container.Settings.Compile.Profile}";
-
-                        process.StartInfo.Arguments = $"{input_path} /T {profile_name} /E main /Fo {output_path}";
-
-                        process.Start();
-                        process.BeginOutputReadLine();
-                        process.BeginErrorReadLine();
-                        process.WaitForExit();
-                        process.CancelOutputRead();
-                        process.CancelErrorRead();
-
                         archive_args += $" -hs {output_path}";
+
+                        List<string> defines = new List<string>();
+                        defines.Add("BAL_HULL_SHADER=1");
+
+                        ConvertImpl_(process, input_path, output_path, profile_name, defines);
                     }
 /*                    if (program.AmplificationShader != null)
                     {
                         string input_path = $"{working_path}\\{program.AmplificationShader.SourceFilePath}";
-                        string output_path = $"{working_path}\\{program.AmplificationShader.SourceFilePath}.cso";
+                        string output_path = $"{working_path}\\{program.AmplificationShader.SourceFilePath}.as.cso";
                         string profile_name = $"as_{shader_container.Settings.Compile.Profile}";
-
-                        process.StartInfo.Arguments = $"{input_path} /T {profile_name} /E main /Fo {output_path}";
-
-                        process.Start();
-                        process.BeginOutputReadLine();
-                        process.BeginErrorReadLine();
-                        process.WaitForExit();
-                        process.CancelOutputRead();
-                        process.CancelErrorRead();
-
                         archive_args += $" -as {output_path}";
+
+                        List<string> defines = new List<string>();
+                        defines.Add("BAL_AMPLIFICATION_SHADER=1");
+
+                        ConvertImpl_(process, input_path, output_path, profile_name, defines);
                     }
                     if (program.MeshShader != null)
                     {
                         string input_path = $"{working_path}\\{program.MeshShader.SourceFilePath}";
-                        string output_path = $"{working_path}\\{program.MeshShader.SourceFilePath}.cso";
+                        string output_path = $"{working_path}\\{program.MeshShader.SourceFilePath}.ms.cso";
                         string profile_name = $"ms_{shader_container.Settings.Compile.Profile}";
-
-                        process.StartInfo.Arguments = $"{input_path} /T {profile_name} /E main /Fo {output_path}";
-
-                        process.Start();
-                        process.BeginOutputReadLine();
-                        process.BeginErrorReadLine();
-                        process.WaitForExit();
-                        process.CancelOutputRead();
-                        process.CancelErrorRead();
-
                         archive_args += $" -ms {output_path}";
+
+                        List<string> defines = new List<string>();
+                        defines.Add("BAL_MESH_SHADER=1");
+
+                        ConvertImpl_(process, input_path, output_path, profile_name, defines);
                     }
 */
                     stream.WriteLine(archive_args);
@@ -377,6 +285,25 @@ namespace ShaderConverter
         static void StandardError_(object sender, DataReceivedEventArgs args)
         {
             Console.Error.WriteLine(args.Data);
+        }
+
+        static void ConvertImpl_(Process process, string input_path, string output_path, string profile_name, List<string> defines)
+        {
+            process.StartInfo.Arguments = $"{input_path} /T {profile_name} /E main /Fo {output_path}";
+
+            foreach (string define in defines)
+            {
+                process.StartInfo.Arguments += $" /D {define}";
+            }
+
+            Console.Out.WriteLine($"Convert Shader. [args={process.StartInfo.Arguments}]");
+
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            process.WaitForExit();
+            process.CancelOutputRead();
+            process.CancelErrorRead();
         }
     }
 }

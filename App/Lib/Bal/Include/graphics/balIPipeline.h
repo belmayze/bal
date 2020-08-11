@@ -29,6 +29,9 @@ public:
         Array<ITexture::Format, FrameBuffer::cColorRenderTargetMax> mOutputFormats;
         const IInputLayout*                                         mpInputLayout = nullptr;
 
+        uint32_t       mNumTexture        = 0; //!< テクスチャーの数
+        uint32_t       mNumConstantBuffer = 0; //!< 定数バッファの数
+
         const uint8_t* mpVertexShaderBuffer        = nullptr;
         const uint8_t* mpGeometryShaderBuffer      = nullptr;
         const uint8_t* mpPixelShaderBuffer         = nullptr;

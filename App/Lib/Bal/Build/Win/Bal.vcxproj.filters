@@ -147,6 +147,9 @@
     <ClCompile Include="..\..\Source\graphics\archiver\balShaderArchive.cpp">
       <Filter>graphics\archiver</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\d3d12\balDescriptorTableD3D12.cpp">
+      <Filter>graphics\d3d12</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\memory\balSingleton.h">
@@ -349,6 +352,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\graphics\archiver\balShaderArchive.h">
       <Filter>graphics\archiver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\balIDescriptorTable.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\d3d12\balDescriptorTableD3D12.h">
+      <Filter>graphics\d3d12</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
