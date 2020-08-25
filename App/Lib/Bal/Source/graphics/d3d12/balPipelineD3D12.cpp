@@ -67,6 +67,7 @@ bool Pipeline::initialize(const InitializeArg& arg)
             ranges = make_unique<D3D12_DESCRIPTOR_RANGE1[]>(nullptr, num_descriptor_range);
             D3D12_DESCRIPTOR_RANGE1* p_target = ranges.get();
 
+            // @TODO: レジスターを0以外から使えるようにしておく
             // パイプラインでレジスターを使う場合は設定しておく
             if (arg.mNumConstantBuffer != 0)
             {

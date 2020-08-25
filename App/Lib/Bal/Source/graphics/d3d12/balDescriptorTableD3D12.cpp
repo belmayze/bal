@@ -6,6 +6,7 @@
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 // bal
+#include <graphics/d3d12/balConstantBufferD3D12.h>
 #include <graphics/d3d12/balDescriptorTableD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <graphics/d3d12/balTextureD3D12.h>
@@ -23,7 +24,7 @@ bool DescriptorTable::initialize(const InitializeArg& arg)
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> p_descriptor_heap;
     {
         D3D12_DESCRIPTOR_HEAP_DESC desc = {};
-        desc.NumDescriptors = arg.mNumTexture;
+        desc.NumDescriptors = arg.mNumTexture + arg.mNumConstantBuffer;
         desc.Flags          = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
         desc.Type           = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 
@@ -109,7 +110,18 @@ bool DescriptorTable::initialize(const InitializeArg& arg)
         handle.ptr += increment_size;
     }
 
-    // @TODO: 定数バッファ
+    // 定数バッファ
+    for (uint32_t i_constant = 0; i_constant < arg.mNumConstantBuffer; ++i_constant)
+    {
+        const ConstantBuffer* p_constant_buffer = reinterpret_cast<const ConstantBuffer*>(arg.mpConstantBuffers[i_constant]);
+
+        D3D12_CONSTANT_BUFFER_VIEW_DESC desc = {};
+        desc.BufferLocation = p_constant_buffer->getGPUVirtualAddress();
+        desc.SizeInBytes    = static_cast<uint32_t>(Math::Ceil(p_constant_buffer->getBufferSize(), 256LLU));
+
+        p_device->CreateConstantBufferView(&desc, handle);
+        handle.ptr += increment_size;
+    }
 
     // 保持
     mpDescriptorHeap.reset(p_descriptor_heap.Detach());

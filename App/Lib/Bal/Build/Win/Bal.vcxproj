@@ -42,6 +42,7 @@
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandListBundleD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandListDirectD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandQueueD3D12.cpp" />
+    <ClCompile Include="..\..\Source\graphics\d3d12\balConstantBufferD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balDescriptorTableD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balGraphicsD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balInputLayoutD3D12.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="..\..\Include\graphics\balICommandListBundle.h" />
     <ClInclude Include="..\..\Include\graphics\balICommandListDirect.h" />
     <ClInclude Include="..\..\Include\graphics\balICommandQueue.h" />
+    <ClInclude Include="..\..\Include\graphics\balIConstantBuffer.h" />
     <ClInclude Include="..\..\Include\graphics\balIDescriptorTable.h" />
     <ClInclude Include="..\..\Include\graphics\balIGraphics.h" />
     <ClInclude Include="..\..\Include\graphics\balIInputLayout.h" />
@@ -128,6 +130,7 @@
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandListBundleD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandListDirectD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandQueueD3D12.h" />
+    <ClInclude Include="..\..\Include\graphics\d3d12\balConstantBufferD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balDescriptorTableD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balGraphicsD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balInputLayoutD3D12.h" />

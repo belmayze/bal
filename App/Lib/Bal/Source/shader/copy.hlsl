@@ -11,6 +11,7 @@ struct VARYING
     float2 Texcoord : TEXCOORD0;
 };
 
+// ----------------------------------------------------------------------------
 #ifdef BAL_VERTEX_SHADER
 
 struct INPUT
@@ -30,6 +31,8 @@ VARYING main(INPUT input)
 }
 
 #endif // BAL_VERTEX_SHADER
+
+// ----------------------------------------------------------------------------
 #ifdef BAL_PIXEL_SHADER
 
 struct OUTPUT

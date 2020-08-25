@@ -14,6 +14,7 @@
 #include <graphics/d3d12/balCommandListBundleD3D12.h>
 #include <graphics/d3d12/balCommandListDirectD3D12.h>
 #include <graphics/d3d12/balCommandQueueD3D12.h>
+#include <graphics/d3d12/balConstantBufferD3D12.h>
 #include <graphics/d3d12/balDescriptorTableD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <graphics/d3d12/balInputLayoutD3D12.h>
@@ -246,13 +247,13 @@ bool Graphics::initialize(const InitializeArg& arg)
         uint16_t indices[] = { 0, 1, 2 };
 
         ModelBuffer::InitializeArg init_arg;
-        init_arg.mpGraphics = this;
-        init_arg.mpVertexBuffer = reinterpret_cast<const uint8_t*>(vertices);
-        init_arg.mVertexBufferSize = sizeof(vertices);
-        init_arg.mVertexStride = sizeof(float) * 5;
-        init_arg.mpIndexBuffer = reinterpret_cast<const uint8_t*>(indices);
-        init_arg.mIndexBufferSize = sizeof(indices);
-        init_arg.mIndexCount = 3;
+        init_arg.mpGraphics         = this;
+        init_arg.mpVertexBuffer     = reinterpret_cast<const uint8_t*>(vertices);
+        init_arg.mVertexBufferSize  = sizeof(vertices);
+        init_arg.mVertexStride      = sizeof(float) * 5;
+        init_arg.mpIndexBuffer      = reinterpret_cast<const uint8_t*>(indices);
+        init_arg.mIndexBufferSize   = sizeof(indices);
+        init_arg.mIndexCount        = 3;
         init_arg.mIndexBufferFormat = ModelBuffer::IndexBufferFormat::Uint16;
         if (!mpQuadModelBuffer->initialize(init_arg)) { return false; }
     }
@@ -264,9 +265,9 @@ bool Graphics::initialize(const InitializeArg& arg)
         const ITexture* p_textures[] = { mpRenderTargetColor->getTexture() };
 
         DescriptorTable::InitializeArg init_arg;
-        init_arg.mpGraphics = this;
+        init_arg.mpGraphics  = this;
         init_arg.mNumTexture = 1;
-        init_arg.mpTextures = p_textures;
+        init_arg.mpTextures  = p_textures;
         if (!mpCopyDescriptorTable->initialize(init_arg)) { return false; }
     }
 
@@ -306,6 +307,61 @@ bool Graphics::initialize(const InitializeArg& arg)
         if (!mpCopyPipeline->initialize(init_arg)) { return false; }
     }
 
+    // 頂点、インデックスバッファを仮初期化
+    mpModelBuffer = make_unique<ModelBuffer>(nullptr);
+    {
+        // とりあえず position, texcoord
+        float vertices[] = {
+             0.f,  1.f, 0.f,  0.5f, 1.f,
+            -1.f, -1.f, 0.f,  0.f,  0.f,
+             1.f, -1.f, 0.f,  1.f,  0.f
+        };
+        uint16_t indices[] = {0, 1, 2};
+
+        ModelBuffer::InitializeArg init_arg;
+        init_arg.mpGraphics         = this;
+        init_arg.mpVertexBuffer     = reinterpret_cast<const uint8_t*>(vertices);
+        init_arg.mVertexBufferSize  = sizeof(vertices);
+        init_arg.mVertexStride      = sizeof(float) * 5;
+        init_arg.mpIndexBuffer      = reinterpret_cast<const uint8_t*>(indices);
+        init_arg.mIndexBufferSize   = sizeof(indices);
+        init_arg.mIndexCount        = 3;
+        init_arg.mIndexBufferFormat = ModelBuffer::IndexBufferFormat::Uint16;
+        if (!mpModelBuffer->initialize(init_arg)) { return false; }
+    }
+
+    // モデル用の定数バッファ
+    mpModelConstantBuffer = make_unique<ConstantBuffer>(nullptr);
+    {
+        // 仮
+        struct ModelCB
+        {
+            MathMatrix44 mWorldMtx;
+        };
+
+        ConstantBuffer::InitializeArg init_arg;
+        init_arg.mpGraphics   = this;
+        init_arg.mBufferCount = 1;
+        init_arg.mBufferSize  = sizeof(ModelCB);
+        if (!mpModelConstantBuffer->initialize(init_arg)) { return false; }
+
+        // 仮
+        mpModelConstantBuffer->getBufferPtr<ModelCB>()->mWorldMtx.setRotateZ(Radian(0.f));
+    }
+
+    // モデル用のデスクリプターテーブル
+    mpModelDescriptorTable = make_unique<DescriptorTable>(nullptr);
+    {
+        // 定数バッファ
+        const IConstantBuffer* p_constant_buffers[] = { mpModelConstantBuffer.get() };
+
+        DescriptorTable::InitializeArg init_arg;
+        init_arg.mpGraphics         = this;
+        init_arg.mNumConstantBuffer = 1;
+        init_arg.mpConstantBuffers  = p_constant_buffers;
+        if (!mpModelDescriptorTable->initialize(init_arg)) { return false; }
+    }
+
     // パイプラインを仮初期化
     mpPipeline = make_unique<Pipeline>(nullptr);
     {
@@ -333,34 +389,13 @@ bool Graphics::initialize(const InitializeArg& arg)
         init_arg.mOutputFormats[0] = Texture::Format::R16_G16_B16_A16_FLOAT;
         init_arg.mpInputLayout     = p_input_layout.get();
 
+        init_arg.mNumConstantBuffer = 1;
+
         init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
         init_arg.mVertexShaderBufferSize = shader_container.mVertexShader.mBufferSize;
         init_arg.mpPixelShaderBuffer     = shader_container.mPixelShader.mBuffer;
         init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
         if (!mpPipeline->initialize(init_arg)) { return false; }
-    }
-
-    // 頂点、インデックスバッファを仮初期化
-    mpModelBuffer = make_unique<ModelBuffer>(nullptr);
-    {
-        // とりあえず position, texcoord
-        float vertices[] = {
-             0.f,  1.f, 0.f,  0.5f, 1.f,
-            -1.f, -1.f, 0.f,  0.f,  0.f,
-             1.f, -1.f, 0.f,  1.f,  0.f
-        };
-        uint16_t indices[] = {0, 1, 2};
-
-        ModelBuffer::InitializeArg init_arg;
-        init_arg.mpGraphics         = this;
-        init_arg.mpVertexBuffer     = reinterpret_cast<const uint8_t*>(vertices);
-        init_arg.mVertexBufferSize  = sizeof(vertices);
-        init_arg.mVertexStride      = sizeof(float) * 5;
-        init_arg.mpIndexBuffer      = reinterpret_cast<const uint8_t*>(indices);
-        init_arg.mIndexBufferSize   = sizeof(indices);
-        init_arg.mIndexCount        = 3;
-        init_arg.mIndexBufferFormat = ModelBuffer::IndexBufferFormat::Uint16;
-        if (!mpModelBuffer->initialize(init_arg)) { return false; }
     }
 
     // バンドル
@@ -373,6 +408,7 @@ bool Graphics::initialize(const InitializeArg& arg)
         // コマンドの記録
         mpCmdBundle->reset();
         mpCmdBundle->bindPipeline(*mpPipeline);
+        mpCmdBundle->setDescriptorTable(0, *mpModelDescriptorTable);
         mpCmdBundle->drawModel(*mpModelBuffer);
         mpCmdBundle->close();
     }
@@ -410,7 +446,23 @@ void Graphics::loop()
     mpCmdLists[mCurrentBufferIndex].bindFrameBuffer(*mpFrameBuffer.get());
     mpCmdLists[mCurrentBufferIndex].clear(*mpFrameBuffer.get(), CommandListDirect::ClearFlag::Color | CommandListDirect::ClearFlag::Depth, MathColor(0.f, 0.f, 0.f, 1.f), 1.f, 0);
 
+    // 仮: 定数バッファ更新
+    {
+        struct ModelCB
+        {
+            MathMatrix44 mWorldMtx;
+        };
+
+        static float degree = 0.f;
+        degree += 0.1f;
+        ModelCB* p_cb = mpModelConstantBuffer->getBufferPtr<ModelCB>();
+        p_cb->mWorldMtx.setRotateZ(Degree(degree));
+        p_cb->mWorldMtx.setTranslate(MathVector3(0.f, 0.f, 0.f));
+    }
+
     // @TODO: レンダリング
+    mpCmdLists[mCurrentBufferIndex].bindPipeline(*mpPipeline);
+    mpCmdLists[mCurrentBufferIndex].setDescriptorTable(0, *mpModelDescriptorTable);
     mpCmdLists[mCurrentBufferIndex].executeBundle(*mpCmdBundle);
 
     // バリア
@@ -465,8 +517,10 @@ bool Graphics::destroy()
     mpCmdQueue->waitExecutedAll();
 
     // バッファ破棄
-    mpCmdBundle.reset();
+    mpModelConstantBuffer.reset();
+    mpModelDescriptorTable.reset();
     mpModelBuffer.reset();
+    mpCmdBundle.reset();
     mpPipeline.reset();
 
     mpCopyDescriptorTable.reset();

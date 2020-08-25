@@ -106,7 +106,7 @@ inline void MathCommonMatrix44::setYawPitchRoll(const Radian& yaw, const Radian&
 
 inline void MathCommonMatrix44::setTranslate(const MathVector3& translate)
 {
-    m[0][3] = translate.getX(); m[1][3] = translate.getY(); m[2][3] = translate.getZ();
+    m[0][3] = translate.getX(); m[1][3] = translate.getY(); m[2][3] = translate.getZ(); m[3][3] = 1.f;
 }
 
 // ------------------------------------------------------------------------
