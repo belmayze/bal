@@ -40,6 +40,12 @@
     <Filter Include="graphics\archiver">
       <UniqueIdentifier>{eef776c8-03c7-48d8-adfc-8aad6c7c47a1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="engine">
+      <UniqueIdentifier>{510105f3-ef94-412e-94ab-8d3804f31507}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="engine\module">
+      <UniqueIdentifier>{109f14d8-0fac-4b81-a055-18cccf6387db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\framework\balFramework.cpp">
@@ -152,6 +158,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\graphics\d3d12\balConstantBufferD3D12.cpp">
       <Filter>graphics\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\engine\balEngine.cpp">
+      <Filter>engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -370,6 +379,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\framework\balFrameworkCallback.h">
       <Filter>framework</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\engine\balEngine.h">
+      <Filter>engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\engine\module\balIModule.h">
+      <Filter>engine\module</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -30,7 +30,6 @@ public:
         MathSize           mRenderSize;                  //!< レンダリングサイズ
         uint32_t           mRenderBufferCount = 2;       //!< レンダリングバッファー数
         ApplicationBase*   mpApplication      = nullptr; //!< アプリケーション
-        FrameworkCallback* mpCallback         = nullptr; //!< コールバック
     };
 
 public:
@@ -53,9 +52,10 @@ public:
 
     /*!
      * アプリケーションループに入ります
+     * @param[in] p_callback コールバック
      * @return 終了コードを返します
      */
-    int enterApplicationLoop();
+    int enterApplicationLoop(FrameworkCallback* p_callback);
 
 private:
     /*!

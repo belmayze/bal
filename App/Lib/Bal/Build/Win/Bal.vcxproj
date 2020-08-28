@@ -31,6 +31,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\..\Source\engine\balEngine.cpp" />
     <ClCompile Include="..\..\Source\framework\balFramework.cpp">
       <SubType>
       </SubType>
@@ -108,6 +109,8 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\..\Include\engine\balEngine.h" />
+    <ClInclude Include="..\..\Include\engine\module\balIModule.h" />
     <ClInclude Include="..\..\Include\framework\balFramework.h">
       <SubType>
       </SubType>

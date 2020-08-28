@@ -58,8 +58,7 @@ void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg)
 {
     // 保持
     mpApplication = arg.mpApplication;
-    mpCallback    = arg.mpCallback;
-    if (!mpApplication || !mpCallback) { return; }
+    if (!mpApplication) { return; }
 
     // ヒープ取得
     mpRootHeap = api_entry.getRootHeap();
@@ -175,7 +174,7 @@ void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg)
 
 // ----------------------------------------------------------------------------
 
-int Framework::enterApplicationLoop()
+int Framework::enterApplicationLoop(FrameworkCallback* p_callback)
 {
     if (!mInitialized) { return -1; }
 
@@ -184,6 +183,16 @@ int Framework::enterApplicationLoop()
     {
         return -1;
     }
+
+    // コールバックがなければ即終了
+    if (!p_callback)
+    {
+        mEnableLoop = false;
+        PostQuitMessage(-1);
+    }
+
+    // 保持
+    mpCallback = p_callback;
 
     // ループ用スレッド
     std::thread loop_thread(std::bind(&Framework::applicationLoop_, this));
