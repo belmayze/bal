@@ -15,6 +15,7 @@
 #include <app/balApiEntry.h>
 #include <app/balApplicationBase.h>
 #include <framework/balFramework.h>
+#include <framework/balFrameworkCallback.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <memory/balSingletonFinalizer.h>
 #include <time/balStopwatch.h>
@@ -55,9 +56,10 @@ Framework::~Framework()
 
 void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg)
 {
-    // アプリケーション保持
+    // 保持
     mpApplication = arg.mpApplication;
-    if (!mpApplication) { return; }
+    mpCallback    = arg.mpCallback;
+    if (!mpApplication || !mpCallback) { return; }
 
     // ヒープ取得
     mpRootHeap = api_entry.getRootHeap();
@@ -173,14 +175,14 @@ void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg)
 
 // ----------------------------------------------------------------------------
 
-void Framework::enterApplicationLoop()
+int Framework::enterApplicationLoop()
 {
-    if (!mInitialized) { return; }
+    if (!mInitialized) { return -1; }
 
     // コンソールモードの時はループは不要
     if (!mEnableLoop)
     {
-        return;
+        return -1;
     }
 
     // ループ用スレッド
@@ -210,6 +212,8 @@ void Framework::enterApplicationLoop()
     // @TODO: グラフィックスの終了処理
     mpGraphics->destroy();
     mpGraphics.reset();
+
+    return static_cast<int>(msg.wParam);
 }
 
 // ----------------------------------------------------------------------------
@@ -220,6 +224,7 @@ void Framework::applicationLoop_()
     Stopwatch sw_for_frame, sw_for_second;
     sw_for_frame.start();
     sw_for_second.start();
+    TimeSpan diff(std::chrono::microseconds(16666));
 
     // ループ処理開始
     while (mEnableLoop)
@@ -229,15 +234,39 @@ void Framework::applicationLoop_()
             PostQuitMessage(0);
             return;
         }
-        // @Debug
-        reinterpret_cast<gfx::d3d12::Graphics*>(mpGraphics.get())->loop();
+
+        // 計算コールバック（nullptr ではない前提で OK）
+        {
+            FrameworkCallback::UpdateArg update_arg;
+            update_arg.mDiff = diff;
+            mpCallback->onUpdate(update_arg);
+        }
+
+        // 描画コールバック
+        {
+            // グラフィックスの前処理
+            mpGraphics->preDraw();
+
+            // コールバック
+            FrameworkCallback::DrawArg draw_arg;
+            draw_arg.mpSwapChainFrameBuffer = mpGraphics->getSwapChainFrameBuffer();
+            draw_arg.mpDefaultFrameBuffer   = mpGraphics->getDefaultFrameBuffer();
+            draw_arg.mpCommandList          = mpGraphics->getCommandList();
+            mpCallback->onDraw(draw_arg);
+
+            // グラフィックスの後処理
+            mpGraphics->postDraw();
+
+            // @debug
+            //reinterpret_cast<gfx::d3d12::Graphics*>(mpGraphics.get())->loop();
+        }
 
         // フレームレート計算
         {
             // 毎フレーム
             {
                 sw_for_frame.stop();
-                TimeSpan diff = sw_for_frame.getDiff();
+                diff = sw_for_frame.getDiff();
                 sw_for_frame.start();
 
                 mFrameRate = 1.f / (static_cast<float>(diff.getMicroseconds()) * 0.000001f);

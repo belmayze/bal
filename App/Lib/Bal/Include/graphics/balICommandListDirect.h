@@ -23,11 +23,20 @@ namespace bal::gfx {
 class ICommandListDirect
 {
 public:
+    // クリアフラグ
     enum ClearFlag
     {
         Color   = 0x1,
         Depth   = 0x2,
         Stencil = 0x4
+    };
+    // バリアタイプ
+    enum class ResourceBarrierType
+    {
+        Present,           //!< 画面反映
+        RenderTargetColor, //!< カラーのレンダーターゲット
+        RenderTargetDepth, //!< デプスのレンダーターゲット
+        GenericRead        //!< 読み込み可能
     };
     // 初期化
     struct InitializeArg
@@ -65,11 +74,11 @@ public:
 
     /*!
      * リソースのバリアを入れます
-     * @param[in] texture       バリアするテクスチャー
-     * @param[in] before_status 遷移前のステータス
-     * @param[in] after_status  遷移後のステータス
+     * @param[in] texture     バリアするテクスチャー
+     * @param[in] before_type 遷移前のステータス
+     * @param[in] after_type  遷移後のステータス
      */
-    virtual void resourceBarrier(const ITexture& texture, int before_status, int after_status) = 0;
+    virtual void resourceBarrier(const ITexture& texture, ResourceBarrierType before_type, ResourceBarrierType after_type) = 0;
 
     /*!
      * バンドルを実行します

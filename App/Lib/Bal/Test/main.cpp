@@ -8,14 +8,19 @@
 // bal
 #include <app/balApplicationBase.h>
 #include <framework/balFramework.h>
+#include <framework/balFrameworkCallback.h>
 #include <io/balLog.h>
 #include <container/balArray.h>
 #include <container/balString.h>
 #include <memory/balUniquePtr.h>
+// gfx
+#include <graphics/balFrameBuffer.h>
+#include <graphics/balICommandListDirect.h>
+#include <graphics/balIRenderTarget.h>
 // test
 #include "testHeap.h"
 
-class Main : public bal::ApplicationBase
+class Main : public bal::ApplicationBase, public bal::FrameworkCallback
 {
 public:
     /*!
@@ -43,12 +48,11 @@ public:
             init_arg.mRenderSize        = bal::MathSize(1280, 720);
             init_arg.mRenderBufferCount = 3;
             init_arg.mpApplication      = this;
+            init_arg.mpCallback         = this;
             framework.initialize(api_entry, init_arg);
         }
 
-        framework.enterApplicationLoop();
-
-        return 0;
+        return framework.enterApplicationLoop();
     }
 
     /*!
@@ -68,6 +72,44 @@ public:
 
         return true;
     }
+
+public:
+    /*!
+     * 計算処理するコールバック
+     */
+    virtual void onUpdate(const UpdateArg& arg) override
+    {
+
+    }
+
+    /*!
+     * 描画処理するコールバック
+     */
+    virtual void onDraw(const DrawArg& arg) override
+    {
+        // バリア
+        arg.mpCommandList->resourceBarrier(
+            *arg.mpSwapChainFrameBuffer->getRenderTargetColors()[0]->getTexture(),
+            bal::gfx::ICommandListDirect::ResourceBarrierType::Present,
+            bal::gfx::ICommandListDirect::ResourceBarrierType::RenderTargetColor
+        );
+
+        // スワップバッファをとりあえず適当にクリア
+        arg.mpCommandList->clear(
+            *arg.mpSwapChainFrameBuffer,
+            bal::gfx::ICommandListDirect::ClearFlag::Color,
+            bal::MathColor(1.f, 0.f, 0.f, 1.f),
+            1.f, 0
+        );
+
+        // バリア
+        arg.mpCommandList->resourceBarrier(
+            *arg.mpSwapChainFrameBuffer->getRenderTargetColors()[0]->getTexture(),
+            bal::gfx::ICommandListDirect::ResourceBarrierType::RenderTargetColor,
+            bal::gfx::ICommandListDirect::ResourceBarrierType::Present
+        );
+    }
+
 };
 
 Main gMain;

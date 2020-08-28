@@ -149,8 +149,8 @@ bool Graphics::initialize(const InitializeArg& arg)
     }
 
     // スワップバッファのテクスチャーをレンダーターゲット化
-    mpSwapChainRenderTargets.create(arg.mBufferCount);
-    mpSwapChainFrameBuffers.create(arg.mBufferCount);
+    mpSwapChainRenderTargets = make_unique<RenderTargetColor[]>(nullptr, arg.mBufferCount);
+    mpSwapChainFrameBuffers  = make_unique<FrameBuffer[]>(nullptr, arg.mBufferCount);
     {
         for (uint32_t i_buffer = 0; i_buffer < arg.mBufferCount; ++i_buffer)
         {
@@ -171,13 +171,11 @@ bool Graphics::initialize(const InitializeArg& arg)
             {
                 RenderTargetColor::InitializeArg init_arg;
                 init_arg.mpGraphics = this;
-                mpSwapChainRenderTargets[i_buffer] = make_unique<RenderTargetColor>(nullptr);
-                mpSwapChainRenderTargets[i_buffer]->initialize(init_arg, std::move(p_color_buffer));
+                mpSwapChainRenderTargets[i_buffer].initialize(init_arg, std::move(p_color_buffer));
             }
             {
-                mpSwapChainFrameBuffers[i_buffer] = make_unique<FrameBuffer>(nullptr);
-                mpSwapChainFrameBuffers[i_buffer]->setRenderTargetColor(0, mpSwapChainRenderTargets[i_buffer].get());
-                mpSwapChainFrameBuffers[i_buffer]->setResolution(arg.mRenderBufferSize);
+                mpSwapChainFrameBuffers[i_buffer].setRenderTargetColor(0, &mpSwapChainRenderTargets[i_buffer]);
+                mpSwapChainFrameBuffers[i_buffer].setResolution(arg.mRenderBufferSize);
             }
         }
     }
@@ -424,6 +422,29 @@ bool Graphics::initialize(const InitializeArg& arg)
 
 // ----------------------------------------------------------------------------
 
+void Graphics::preDraw()
+{
+    // バッファー切り替え
+    mpCmdQueue->waitExecuted(mCurrentBufferIndex);
+    mpCmdLists[mCurrentBufferIndex].reset();
+}
+
+// ----------------------------------------------------------------------------
+
+void Graphics::postDraw()
+{
+    // コマンドリストを閉じて実行
+    mpCmdLists[mCurrentBufferIndex].close();
+    mpCmdQueue->execute(mpCmdLists[mCurrentBufferIndex], mCurrentBufferIndex);
+
+    // 画面の反映
+    mpSwapChain->Present(0, 0);
+
+    // 実行待ち
+    if (++mCurrentBufferIndex > (mBufferCount - 1)) { mCurrentBufferIndex = 0; }
+}
+
+// ----------------------------------------------------------------------------
 void Graphics::loop()
 {
     mpCmdQueue->waitExecuted(mCurrentBufferIndex);
@@ -432,13 +453,13 @@ void Graphics::loop()
     // バリア
     mpCmdLists[mCurrentBufferIndex].resourceBarrier(
         *mpRenderTargetColor->getTexture(),
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
+        CommandListDirect::ResourceBarrierType::GenericRead,
+        CommandListDirect::ResourceBarrierType::RenderTargetColor
     );
     mpCmdLists[mCurrentBufferIndex].resourceBarrier(
         *mpRenderTargetDepth->getTexture(),
-        D3D12_RESOURCE_STATE_GENERIC_READ,
-        D3D12_RESOURCE_STATE_DEPTH_WRITE
+        CommandListDirect::ResourceBarrierType::GenericRead,
+        CommandListDirect::ResourceBarrierType::RenderTargetDepth
     );
 
     // レンダリング用バッファに切り替え
@@ -468,24 +489,24 @@ void Graphics::loop()
     // バリア
     mpCmdLists[mCurrentBufferIndex].resourceBarrier(
         *mpRenderTargetColor->getTexture(),
-        D3D12_RESOURCE_STATE_RENDER_TARGET,
-        D3D12_RESOURCE_STATE_GENERIC_READ
+        CommandListDirect::ResourceBarrierType::RenderTargetColor,
+        CommandListDirect::ResourceBarrierType::GenericRead
     );
     mpCmdLists[mCurrentBufferIndex].resourceBarrier(
         *mpRenderTargetDepth->getTexture(),
-        D3D12_RESOURCE_STATE_DEPTH_WRITE,
-        D3D12_RESOURCE_STATE_GENERIC_READ
+        CommandListDirect::ResourceBarrierType::RenderTargetDepth,
+        CommandListDirect::ResourceBarrierType::GenericRead
     );
     mpCmdLists[mCurrentBufferIndex].resourceBarrier(
-        *mpSwapChainRenderTargets[mCurrentBufferIndex]->getTexture(),
-        D3D12_RESOURCE_STATE_PRESENT,
-        D3D12_RESOURCE_STATE_RENDER_TARGET
+        *mpSwapChainRenderTargets[mCurrentBufferIndex].getTexture(),
+        CommandListDirect::ResourceBarrierType::Present,
+        CommandListDirect::ResourceBarrierType::RenderTargetColor
     );
 
     // スワップチェーンのバッファに書き出し
-    mpCmdLists[mCurrentBufferIndex].setViewport(Viewport(*mpSwapChainFrameBuffers[mCurrentBufferIndex]));
-    mpCmdLists[mCurrentBufferIndex].bindFrameBuffer(*mpSwapChainFrameBuffers[mCurrentBufferIndex]);
-    mpCmdLists[mCurrentBufferIndex].clear(*mpSwapChainFrameBuffers[mCurrentBufferIndex], CommandListDirect::ClearFlag::Color, MathColor(1.f, 0.f, 0.f, 1.f), 1.f, 0);
+    mpCmdLists[mCurrentBufferIndex].setViewport(Viewport(mpSwapChainFrameBuffers[mCurrentBufferIndex]));
+    mpCmdLists[mCurrentBufferIndex].bindFrameBuffer(mpSwapChainFrameBuffers[mCurrentBufferIndex]);
+    mpCmdLists[mCurrentBufferIndex].clear(mpSwapChainFrameBuffers[mCurrentBufferIndex], CommandListDirect::ClearFlag::Color, MathColor(1.f, 0.f, 0.f, 1.f), 1.f, 0);
 
     // @TODO: 書き出し
     mpCmdLists[mCurrentBufferIndex].bindPipeline(*mpCopyPipeline);
@@ -493,9 +514,9 @@ void Graphics::loop()
     mpCmdLists[mCurrentBufferIndex].drawModel(*mpQuadModelBuffer);
 
     mpCmdLists[mCurrentBufferIndex].resourceBarrier(
-        *mpSwapChainRenderTargets[mCurrentBufferIndex]->getTexture(),
-        D3D12_RESOURCE_STATE_RENDER_TARGET,
-        D3D12_RESOURCE_STATE_PRESENT
+        *mpSwapChainRenderTargets[mCurrentBufferIndex].getTexture(),
+        CommandListDirect::ResourceBarrierType::RenderTargetColor,
+        CommandListDirect::ResourceBarrierType::Present
     );
 
     // コマンドリストを閉じて実行
@@ -531,8 +552,8 @@ bool Graphics::destroy()
     mpRenderTargetDepth.reset();
     mpRenderTargetColor.reset();
 
-    mpSwapChainFrameBuffers.destroy();
-    mpSwapChainRenderTargets.destroy();
+    mpSwapChainFrameBuffers.reset();
+    mpSwapChainRenderTargets.reset();
 
     // 破棄
     mpCmdLists.reset();
@@ -541,6 +562,27 @@ bool Graphics::destroy()
     mpDevice.reset();
 
     return true;
+}
+
+// ----------------------------------------------------------------------------
+
+ICommandListDirect* Graphics::getCommandList()
+{
+    return &mpCmdLists[mCurrentBufferIndex];
+}
+
+// ----------------------------------------------------------------------------
+
+FrameBuffer* Graphics::getSwapChainFrameBuffer()
+{
+    return &mpSwapChainFrameBuffers[mCurrentBufferIndex];
+}
+
+// ----------------------------------------------------------------------------
+
+FrameBuffer* Graphics::getDefaultFrameBuffer()
+{
+    return mpFrameBuffer.get();
 }
 
 // ----------------------------------------------------------------------------

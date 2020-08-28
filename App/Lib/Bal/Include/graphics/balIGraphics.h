@@ -9,6 +9,9 @@
 // bal
 #include <math/balMath.h>
 
+namespace bal::gfx { class FrameBuffer; }
+namespace bal::gfx { class ICommandListDirect; }
+
 // ----------------------------------------------------------------------------
 namespace bal::gfx {
 
@@ -30,9 +33,35 @@ public:
     virtual bool initialize(const InitializeArg& arg) = 0;
 
     /*!
+     * 描画前処理
+     */
+    virtual void preDraw() = 0;
+
+    /*!
+     * 描画後処理
+     */
+    virtual void postDraw() = 0;
+
+    /*!
      * 破棄の処理を記述します
      */
     virtual bool destroy() = 0;
+
+public:
+    /*!
+     * コマンドリストを取得する
+     */
+    virtual ICommandListDirect* getCommandList() = 0;
+
+    /*!
+     * スワップチェーンのフレームバッファを取得する
+     */
+    virtual FrameBuffer* getSwapChainFrameBuffer() = 0;
+
+    /*!
+     * デフォルトのフレームバッファを取得する
+     */
+    virtual FrameBuffer* getDefaultFrameBuffer() = 0;
 };
 
 }

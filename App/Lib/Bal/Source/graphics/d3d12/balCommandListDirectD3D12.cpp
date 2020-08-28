@@ -175,10 +175,10 @@ void CommandListDirect::clear(const FrameBuffer& frame_buffer, uint32_t clear_fl
 
 // ----------------------------------------------------------------------------
 
-void CommandListDirect::resourceBarrier(const ITexture& texture, int before_status, int after_status)
+void CommandListDirect::resourceBarrier(const ITexture& texture, ResourceBarrierType before_type, ResourceBarrierType after_type)
 {
     const Texture* p_texture = reinterpret_cast<const Texture*>(&texture);
-    resourceBarrier_(p_texture->getTexture(), before_status, after_status);
+    resourceBarrier_(p_texture->getTexture(), convertResourceBarrierType_(before_type), convertResourceBarrierType_(after_type));
 }
 
 // ----------------------------------------------------------------------------
@@ -200,6 +200,24 @@ void CommandListDirect::resourceBarrier_(ID3D12Resource* p_resource, int before_
     desc.Transition.StateBefore = static_cast<D3D12_RESOURCE_STATES>(before_status);
     desc.Transition.StateAfter  = static_cast<D3D12_RESOURCE_STATES>(after_status);
     mpCmdList->ResourceBarrier(1, &desc);
+}
+
+// ----------------------------------------------------------------------------
+
+int CommandListDirect::convertResourceBarrierType_(ResourceBarrierType type)
+{
+    switch (type)
+    {
+        case bal::gfx::ICommandListDirect::ResourceBarrierType::Present:
+            return D3D12_RESOURCE_STATE_PRESENT;
+        case bal::gfx::ICommandListDirect::ResourceBarrierType::RenderTargetColor:
+            return D3D12_RESOURCE_STATE_RENDER_TARGET;
+        case bal::gfx::ICommandListDirect::ResourceBarrierType::RenderTargetDepth:
+            return D3D12_RESOURCE_STATE_DEPTH_WRITE;
+        case bal::gfx::ICommandListDirect::ResourceBarrierType::GenericRead:
+            return D3D12_RESOURCE_STATE_GENERIC_READ;
+    }
+    return D3D12_RESOURCE_STATE_COMMON;
 }
 
 // ----------------------------------------------------------------------------

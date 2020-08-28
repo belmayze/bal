@@ -368,5 +368,8 @@
     <ClInclude Include="..\..\Include\graphics\d3d12\balConstantBufferD3D12.h">
       <Filter>graphics\d3d12</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\framework\balFrameworkCallback.h">
+      <Filter>framework</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

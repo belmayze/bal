@@ -14,6 +14,7 @@
 
 namespace bal { class ApiEntry; }
 namespace bal { class ApplicationBase; }
+namespace bal { class FrameworkCallback; }
 namespace bal::gfx { class IGraphics; }
 
 // ----------------------------------------------------------------------------
@@ -25,10 +26,11 @@ public:
     //! 初期化構造体
     struct InitializeArg
     {
-        StringPtr        mTitle             = "";      //!< タイトル名
-        MathSize         mRenderSize;                  //!< レンダリングサイズ
-        uint32_t         mRenderBufferCount = 2;       //!< レンダリングバッファー数
-        ApplicationBase* mpApplication      = nullptr; //!< アプリケーション
+        StringPtr          mTitle             = "";      //!< タイトル名
+        MathSize           mRenderSize;                  //!< レンダリングサイズ
+        uint32_t           mRenderBufferCount = 2;       //!< レンダリングバッファー数
+        ApplicationBase*   mpApplication      = nullptr; //!< アプリケーション
+        FrameworkCallback* mpCallback         = nullptr; //!< コールバック
     };
 
 public:
@@ -51,8 +53,9 @@ public:
 
     /*!
      * アプリケーションループに入ります
+     * @return 終了コードを返します
      */
-    void enterApplicationLoop();
+    int enterApplicationLoop();
 
 private:
     /*!
@@ -64,6 +67,7 @@ private:
     heap::RootBlock*                mpRootHeap = nullptr; //!< ルートヒープ
 
     ApplicationBase*                mpApplication = nullptr;
+    FrameworkCallback*              mpCallback    = nullptr;
     std::unique_ptr<gfx::IGraphics> mpGraphics;
     float                           mFrameRate          = 0.f;
     float                           mFrameRatePerMinute = 0.f;

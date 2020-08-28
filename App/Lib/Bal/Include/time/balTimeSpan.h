@@ -16,7 +16,7 @@ class TimeSpan
 {
 public:
     //! コンストラクター
-    TimeSpan() {}
+    TimeSpan() :mMicroseconds(0) {}
 
     //! コンストラクター
     TimeSpan(std::chrono::microseconds microseconds) :mMicroseconds(microseconds) {}

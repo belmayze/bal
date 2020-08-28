@@ -41,7 +41,17 @@ public:
      */
     virtual bool initialize(const InitializeArg& arg) override;
 
-    // @Debug
+    /*!
+     * 描画前処理
+     */
+    virtual void preDraw() override;
+
+    /*!
+     * 描画後処理
+     */
+    virtual void postDraw() override;
+
+    // @debug
     void loop();
 
     /*!
@@ -54,6 +64,22 @@ public:
      * @note 基本的には内部で使用する想定です
      */
     ID3D12Device6* getDevice() const { return mpDevice.get(); }
+
+public:
+    /*!
+     * コマンドリストを取得する
+     */
+    virtual ICommandListDirect* getCommandList() override;
+
+    /*!
+     * スワップチェーンのフレームバッファを取得する
+     */
+    virtual FrameBuffer* getSwapChainFrameBuffer() override;
+
+    /*!
+     * デフォルトのフレームバッファを取得する
+     */
+    virtual FrameBuffer* getDefaultFrameBuffer() override;
 
 private:
     // Com の deleter
@@ -69,8 +95,8 @@ private:
     std::unique_ptr<CommandListDirect[]>             mpCmdLists;
     std::unique_ptr<CommandQueue>                    mpCmdQueue;
 
-    DynamicArray<std::unique_ptr<RenderTargetColor>> mpSwapChainRenderTargets;
-    DynamicArray<std::unique_ptr<FrameBuffer>>       mpSwapChainFrameBuffers;
+    std::unique_ptr<RenderTargetColor[]>             mpSwapChainRenderTargets;
+    std::unique_ptr<FrameBuffer[]>                   mpSwapChainFrameBuffers;
 
     std::unique_ptr<RenderTargetColor>               mpRenderTargetColor;
     std::unique_ptr<RenderTargetDepth>               mpRenderTargetDepth;

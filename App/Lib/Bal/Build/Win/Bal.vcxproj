@@ -112,6 +112,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\..\Include\framework\balFrameworkCallback.h" />
     <ClInclude Include="..\..\Include\graphics\archiver\balShaderArchive.h" />
     <ClInclude Include="..\..\Include\graphics\balFrameBuffer.h" />
     <ClInclude Include="..\..\Include\graphics\balICommandList.h" />

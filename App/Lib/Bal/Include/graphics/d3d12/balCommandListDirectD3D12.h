@@ -77,11 +77,11 @@ public:
 
     /*!
      * リソースのバリアを入れます
-     * @param[in] texture       テクスチャー
-     * @param[in] before_status 遷移前のステータス
-     * @param[in] after_status  遷移後のステータス
+     * @param[in] texture     バリアするテクスチャー
+     * @param[in] before_type 遷移前のステータス
+     * @param[in] after_type  遷移後のステータス
      */
-    virtual void resourceBarrier(const ITexture& texture, int before_status, int after_status) override;
+    virtual void resourceBarrier(const ITexture& texture, ResourceBarrierType before_type, ResourceBarrierType after_type) override;
 
     /*!
      * バンドルを実行します
@@ -100,7 +100,14 @@ private:
      * @param[in] before_status 遷移前のステータス
      * @param[in] after_status  遷移後のステータス
      */
-    virtual void resourceBarrier_(ID3D12Resource* p_resource, int before_status, int after_status);
+    void resourceBarrier_(ID3D12Resource* p_resource, int before_status, int after_status);
+
+private:
+    /*!
+     * リソースバリアの種類をネイティブに変換
+     * @param[in] type 種類
+     */
+    int convertResourceBarrierType_(ResourceBarrierType type);
 
 private:
     // Com の deleter
