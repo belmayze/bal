@@ -57,6 +57,10 @@ public:
      */
     int enterApplicationLoop(FrameworkCallback* p_callback);
 
+public:
+    /*! グラフィックス取得 */
+    gfx::IGraphics* getGraphics() { return mpGraphics.get(); }
+
 private:
     /*!
      * グラフィックスのアプリケーションループ

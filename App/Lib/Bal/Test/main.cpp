@@ -52,6 +52,8 @@ public:
         bal::Engine engine;
         {
             bal::Engine::InitializeArg init_arg;
+            init_arg.mpGraphics        = framework.getGraphics();
+            init_arg.mRenderBufferSize = bal::MathSize(1280, 720);
             engine.initialize(init_arg);
         }
 

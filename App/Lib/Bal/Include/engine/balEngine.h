@@ -8,6 +8,13 @@
 #pragma once
 // bal
 #include <framework/balFrameworkCallback.h>
+#include <math/balMath.h>
+
+namespace bal::gfx { class IGraphics; }
+namespace bal::gfx { class IRenderTargetColor; }
+namespace bal::gfx { class IRenderTargetDepth; }
+namespace bal::gfx { class FrameBuffer; }
+namespace bal::gfx { class ShaderArchive; }
 
 // ----------------------------------------------------------------------------
 namespace bal {
@@ -18,10 +25,17 @@ public:
     //! 初期化構造体
     struct InitializeArg
     {
-
+        gfx::IGraphics* mpGraphics = nullptr;
+        MathSize mRenderBufferSize;
     };
 
 public:
+    /*! コンストラクター */
+    Engine();
+
+    /*! デストラクター */
+    virtual ~Engine();
+
     /*!
      * エンジンの初期化
      * @param[in] arg 引数構造体
@@ -38,6 +52,12 @@ public:
      * 描画処理するコールバック
      */
     virtual void onDraw(const DrawArg& arg) override;
+
+private:
+    std::unique_ptr<gfx::IRenderTargetColor> mpRenderTargetColor;
+    std::unique_ptr<gfx::IRenderTargetDepth> mpRenderTargetDepth;
+    std::unique_ptr<gfx::FrameBuffer>        mpFrameBuffer;
+    std::unique_ptr<gfx::ShaderArchive>      mpShaderArchive;
 };
 
 }
