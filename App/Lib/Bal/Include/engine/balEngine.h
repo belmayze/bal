@@ -11,14 +11,25 @@
 #include <math/balMath.h>
 
 namespace bal::gfx { class IGraphics; }
-namespace bal::gfx { class IRenderTargetColor; }
-namespace bal::gfx { class IRenderTargetDepth; }
-namespace bal::gfx { class FrameBuffer; }
-namespace bal::gfx { class ShaderArchive; }
+namespace bal::mod { class IModule; }
+namespace bal::mod::gfx { class Module; }
 
 // ----------------------------------------------------------------------------
 namespace bal {
 
+/*!
+ * RE ENGINE の思考ベースに構築
+ * Engine はベースとし、Module を追加していく方式です
+ * 
+ * Engine が主に Module をマルチスレッドで動作させます
+ * 依存関係を張ることで、update の順序を制御できます
+ * 
+ * Engine ┬ Module0 ─ Module1
+ *        ├ Module2 ─ Module3
+ *        └ Module4 ─ Module5
+ * 
+ * @ref: https://cgworld.jp/feature/201910-re2019-01.html
+ */
 class Engine : public FrameworkCallback
 {
 public:
@@ -26,8 +37,10 @@ public:
     struct InitializeArg
     {
         gfx::IGraphics* mpGraphics = nullptr;
-        MathSize mRenderBufferSize;
+        MathSize        mRenderBufferSize;
     };
+    //! モジュールリスト
+    using ModuleArray = std::unique_ptr<std::unique_ptr<mod::IModule>[]>;
 
 public:
     /*! コンストラクター */
@@ -38,9 +51,11 @@ public:
 
     /*!
      * エンジンの初期化
-     * @param[in] arg 引数構造体
+     * @param[in] arg        引数構造体
+     * @param[in] p_modules  モジュールリスト
+     * @param[in] num_module モジュールの数
      */
-    bool initialize(const InitializeArg& arg);
+    bool initialize(const InitializeArg& arg, ModuleArray&& p_modules, size_t num_module);
 
 public:
     /*!
@@ -53,11 +68,15 @@ public:
      */
     virtual void onDraw(const DrawArg& arg) override;
 
+public:
+    //! グラフィックスシステム取得
+    gfx::IGraphics* getGraphicsSystem() const { return mpGraphicsSystem; }
+
 private:
-    std::unique_ptr<gfx::IRenderTargetColor> mpRenderTargetColor;
-    std::unique_ptr<gfx::IRenderTargetDepth> mpRenderTargetDepth;
-    std::unique_ptr<gfx::FrameBuffer>        mpFrameBuffer;
-    std::unique_ptr<gfx::ShaderArchive>      mpShaderArchive;
+    ModuleArray       mpModules;
+    mod::gfx::Module* mpGraphicsModule = nullptr;
+    gfx::IGraphics*   mpGraphicsSystem = nullptr;
+    size_t            mNumModule = 0;
 };
 
 }

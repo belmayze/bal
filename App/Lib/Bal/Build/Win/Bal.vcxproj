@@ -32,6 +32,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\..\Source\engine\balEngine.cpp" />
+    <ClCompile Include="..\..\Source\engine\module\gfx\balGfxModule.cpp" />
     <ClCompile Include="..\..\Source\framework\balFramework.cpp">
       <SubType>
       </SubType>
@@ -110,7 +111,11 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\..\Include\engine\balEngine.h" />
+    <ClInclude Include="..\..\Include\engine\module\balICustomModule.h" />
     <ClInclude Include="..\..\Include\engine\module\balIModule.h" />
+    <ClInclude Include="..\..\Include\engine\module\balModuleType.h" />
+    <ClInclude Include="..\..\Include\engine\module\gfx\balGfxModule.h" />
+    <ClInclude Include="..\..\Include\engine\module\gfx\balIGfxCustomModule.h" />
     <ClInclude Include="..\..\Include\framework\balFramework.h">
       <SubType>
       </SubType>

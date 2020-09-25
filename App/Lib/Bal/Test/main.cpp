@@ -13,6 +13,8 @@
 #include <container/balArray.h>
 #include <container/balString.h>
 #include <memory/balUniquePtr.h>
+// bal::mod
+#include <engine/module/gfx/balGfxModule.h>
 // test
 #include "testHeap.h"
 
@@ -48,13 +50,22 @@ public:
             framework.initialize(api_entry, init_arg);
         }
 
+        // 必要なモジュールを作成します
+        constexpr size_t cNumModule = 1;
+        bal::Engine::ModuleArray p_modules = bal::make_unique<std::unique_ptr<bal::mod::IModule>[]>(nullptr, cNumModule);
+        {
+            int module_index = 0;
+            // グラフィックス
+            p_modules[module_index++] = bal::make_unique<bal::mod::gfx::Module>(nullptr);
+        }
+
         // エンジン
         bal::Engine engine;
         {
             bal::Engine::InitializeArg init_arg;
             init_arg.mpGraphics        = framework.getGraphics();
             init_arg.mRenderBufferSize = bal::MathSize(1280, 720);
-            engine.initialize(init_arg);
+            engine.initialize(init_arg, std::move(p_modules), cNumModule);
         }
 
         return framework.enterApplicationLoop(&engine);
