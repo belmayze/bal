@@ -12,11 +12,11 @@
 #include <graphics/balITexture.h>
 
 namespace bal { class File; }
-namespace bal::gfx { class IGraphics; }
-namespace bal::gfx { class IInputLayout; }
+namespace bal { class IGraphics; }
+namespace bal { class IInputLayout; }
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx {
+namespace bal {
 
 class IPipeline
 {

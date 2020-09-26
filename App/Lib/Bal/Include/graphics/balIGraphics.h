@@ -9,11 +9,11 @@
 // bal
 #include <math/balMath.h>
 
-namespace bal::gfx { class FrameBuffer; }
-namespace bal::gfx { class ICommandListDirect; }
+namespace bal { class FrameBuffer; }
+namespace bal { class ICommandListDirect; }
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx {
+namespace bal {
 
 class IGraphics
 {

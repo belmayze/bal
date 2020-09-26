@@ -9,7 +9,7 @@
 #include <graphics/balIRenderTarget.h>
 #include <graphics/balITexture.h>
 
-namespace bal::gfx {
+namespace bal {
 
 // ----------------------------------------------------------------------------
 

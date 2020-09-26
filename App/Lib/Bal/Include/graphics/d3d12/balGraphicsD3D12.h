@@ -10,21 +10,21 @@
 #include <container/balDynamicArray.h>
 #include <graphics/balIGraphics.h>
 
-namespace bal::gfx { class FrameBuffer; }
-namespace bal::gfx { class ShaderArchive; }
-namespace bal::gfx::d3d12 { class CommandQueue; }
-namespace bal::gfx::d3d12 { class CommandListBundle; }
-namespace bal::gfx::d3d12 { class CommandListDirect; }
-namespace bal::gfx::d3d12 { class ConstantBuffer; }
-namespace bal::gfx::d3d12 { class DescriptorTable; }
-namespace bal::gfx::d3d12 { class ModelBuffer; }
-namespace bal::gfx::d3d12 { class Pipeline; }
-namespace bal::gfx::d3d12 { class RenderTargetColor; }
-namespace bal::gfx::d3d12 { class RenderTargetDepth; }
-namespace bal::gfx::d3d12 { class Texture; }
+namespace bal { class FrameBuffer; }
+namespace bal { class ShaderArchive; }
+namespace bal::d3d12 { class CommandQueue; }
+namespace bal::d3d12 { class CommandListBundle; }
+namespace bal::d3d12 { class CommandListDirect; }
+namespace bal::d3d12 { class ConstantBuffer; }
+namespace bal::d3d12 { class DescriptorTable; }
+namespace bal::d3d12 { class ModelBuffer; }
+namespace bal::d3d12 { class Pipeline; }
+namespace bal::d3d12 { class RenderTargetColor; }
+namespace bal::d3d12 { class RenderTargetDepth; }
+namespace bal::d3d12 { class Texture; }
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx::d3d12 {
+namespace bal::d3d12 {
 
 class Graphics : public IGraphics
 {

@@ -9,8 +9,8 @@
 // bal
 #include <time/balTimeSpan.h>
 
-namespace bal::gfx { class FrameBuffer; }
-namespace bal::gfx { class ICommandListDirect; }
+namespace bal { class FrameBuffer; }
+namespace bal { class ICommandListDirect; }
 
 // ----------------------------------------------------------------------------
 namespace bal {
@@ -26,9 +26,9 @@ public:
     //! 描画コールバック構造体
     struct DrawArg
     {
-        gfx::FrameBuffer*        mpSwapChainFrameBuffer = nullptr;
-        gfx::FrameBuffer*        mpDefaultFrameBuffer   = nullptr;
-        gfx::ICommandListDirect* mpCommandList          = nullptr;
+        FrameBuffer*        mpSwapChainFrameBuffer = nullptr;
+        FrameBuffer*        mpDefaultFrameBuffer   = nullptr;
+        ICommandListDirect* mpCommandList          = nullptr;
     };
 
 public:

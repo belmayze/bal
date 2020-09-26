@@ -8,6 +8,7 @@
 // bal
 #include <engine/balEngine.h>
 #include <engine/module/gfx/balGfxModule.h>
+#include <engine/module/gfx/balIGfxCustomModule.h>
 // gfx
 #include <graphics/balFrameBuffer.h>
 #include <graphics/balICommandListDirect.h>
@@ -19,8 +20,6 @@
 #include <graphics/d3d12/balTextureD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
 
-using namespace bal::gfx;
-
 namespace bal::mod::gfx {
 
 // ----------------------------------------------------------------------------
@@ -30,6 +29,13 @@ Module::Module() {}
 // ----------------------------------------------------------------------------
 
 Module::~Module() {}
+
+// ----------------------------------------------------------------------------
+
+void Module::setCustomModule(std::unique_ptr<mod::ICustomModule>&& p_custom_module)
+{
+    mpCustomModule.reset(static_cast<ICustomModule*>(p_custom_module.release()));
+}
 
 // ----------------------------------------------------------------------------
 
@@ -89,6 +95,12 @@ void Module::initialize(const InitializeArg& arg)
         if (!file.loadFromFile("Shader\\bal_shader.bsa")) { return; }
         if (!mpShaderArchive->loadArchiver(std::move(file))) { return; }
     }
+
+    // カスタムモジュールを保持し初期化
+    if (mpCustomModule)
+    {
+        mpCustomModule->initialize(arg);
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -140,23 +152,23 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
         // バリア
         arg.mpCommandList->resourceBarrier(
             *arg.mpSwapChainFrameBuffer->getRenderTargetColors()[0]->getTexture(),
-            bal::gfx::ICommandListDirect::ResourceBarrierType::Present,
-            bal::gfx::ICommandListDirect::ResourceBarrierType::RenderTargetColor
+            ICommandListDirect::ResourceBarrierType::Present,
+            ICommandListDirect::ResourceBarrierType::RenderTargetColor
         );
 
         // スワップバッファをとりあえず適当にクリア
         arg.mpCommandList->clear(
             *arg.mpSwapChainFrameBuffer,
-            bal::gfx::ICommandListDirect::ClearFlag::Color,
-            bal::MathColor(1.f, 0.f, 0.f, 1.f),
+            ICommandListDirect::ClearFlag::Color,
+            MathColor(1.f, 0.f, 0.f, 1.f),
             1.f, 0
         );
 
         // バリア
         arg.mpCommandList->resourceBarrier(
             *arg.mpSwapChainFrameBuffer->getRenderTargetColors()[0]->getTexture(),
-            bal::gfx::ICommandListDirect::ResourceBarrierType::RenderTargetColor,
-            bal::gfx::ICommandListDirect::ResourceBarrierType::Present
+            ICommandListDirect::ResourceBarrierType::RenderTargetColor,
+            ICommandListDirect::ResourceBarrierType::Present
         );
     }
 }

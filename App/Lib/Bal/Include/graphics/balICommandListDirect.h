@@ -9,16 +9,16 @@
 // bal
 #include <math/balMath.h>
 
-namespace bal::gfx { class ICommandListBundle; }
-namespace bal::gfx { class IGraphics; }
-namespace bal::gfx { class IRenderTargetColor; }
-namespace bal::gfx { class IRenderTargetDepth; }
-namespace bal::gfx { class ITexture; }
-namespace bal::gfx { class FrameBuffer; }
-namespace bal::gfx { class Viewport; }
+namespace bal { class ICommandListBundle; }
+namespace bal { class IGraphics; }
+namespace bal { class IRenderTargetColor; }
+namespace bal { class IRenderTargetDepth; }
+namespace bal { class ITexture; }
+namespace bal { class FrameBuffer; }
+namespace bal { class Viewport; }
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx {
+namespace bal {
 
 class ICommandListDirect
 {

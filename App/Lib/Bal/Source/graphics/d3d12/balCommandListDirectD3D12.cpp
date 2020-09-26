@@ -18,7 +18,7 @@
 #include <graphics/d3d12/balRenderTargetD3D12.h>
 #include <graphics/d3d12/balTextureD3D12.h>
 
-namespace bal::gfx::d3d12 {
+namespace bal::d3d12 {
 
 // ----------------------------------------------------------------------------
 
@@ -208,13 +208,13 @@ int CommandListDirect::convertResourceBarrierType_(ResourceBarrierType type)
 {
     switch (type)
     {
-        case bal::gfx::ICommandListDirect::ResourceBarrierType::Present:
+        case ICommandListDirect::ResourceBarrierType::Present:
             return D3D12_RESOURCE_STATE_PRESENT;
-        case bal::gfx::ICommandListDirect::ResourceBarrierType::RenderTargetColor:
+        case ICommandListDirect::ResourceBarrierType::RenderTargetColor:
             return D3D12_RESOURCE_STATE_RENDER_TARGET;
-        case bal::gfx::ICommandListDirect::ResourceBarrierType::RenderTargetDepth:
+        case ICommandListDirect::ResourceBarrierType::RenderTargetDepth:
             return D3D12_RESOURCE_STATE_DEPTH_WRITE;
-        case bal::gfx::ICommandListDirect::ResourceBarrierType::GenericRead:
+        case ICommandListDirect::ResourceBarrierType::GenericRead:
             return D3D12_RESOURCE_STATE_GENERIC_READ;
     }
     return D3D12_RESOURCE_STATE_COMMON;

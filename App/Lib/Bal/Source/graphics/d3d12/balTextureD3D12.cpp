@@ -9,7 +9,7 @@
 #include <graphics/d3d12/balTextureD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 
-namespace bal::gfx::d3d12 {
+namespace bal::d3d12 {
 
 // ----------------------------------------------------------------------------
 
@@ -162,9 +162,9 @@ D3D12_RESOURCE_DIMENSION Texture::ConvertDimension(Dimension dimension)
 {
     switch (dimension)
     {
-        case bal::gfx::ITexture::Dimension::Texture1D: return D3D12_RESOURCE_DIMENSION_TEXTURE1D;
-        case bal::gfx::ITexture::Dimension::Texture2D: return D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-        case bal::gfx::ITexture::Dimension::Texture3D: return D3D12_RESOURCE_DIMENSION_TEXTURE3D;
+        case ITexture::Dimension::Texture1D: return D3D12_RESOURCE_DIMENSION_TEXTURE1D;
+        case ITexture::Dimension::Texture2D: return D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+        case ITexture::Dimension::Texture3D: return D3D12_RESOURCE_DIMENSION_TEXTURE3D;
     }
 
     return D3D12_RESOURCE_DIMENSION_UNKNOWN;

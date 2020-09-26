@@ -10,7 +10,7 @@
 #include <framework/balFrameworkCallback.h>
 #include <math/balMath.h>
 
-namespace bal::gfx { class IGraphics; }
+namespace bal { class IGraphics; }
 namespace bal::mod { class IModule; }
 namespace bal::mod::gfx { class Module; }
 
@@ -36,8 +36,8 @@ public:
     //! 初期化構造体
     struct InitializeArg
     {
-        gfx::IGraphics* mpGraphics = nullptr;
-        MathSize        mRenderBufferSize;
+        IGraphics* mpGraphics = nullptr;
+        MathSize   mRenderBufferSize;
     };
     //! モジュールリスト
     using ModuleArray = std::unique_ptr<std::unique_ptr<mod::IModule>[]>;
@@ -70,12 +70,12 @@ public:
 
 public:
     //! グラフィックスシステム取得
-    gfx::IGraphics* getGraphicsSystem() const { return mpGraphicsSystem; }
+    IGraphics* getGraphicsSystem() const { return mpGraphicsSystem; }
 
 private:
     ModuleArray       mpModules;
     mod::gfx::Module* mpGraphicsModule = nullptr;
-    gfx::IGraphics*   mpGraphicsSystem = nullptr;
+    IGraphics*        mpGraphicsSystem = nullptr;
     size_t            mNumModule = 0;
 };
 

@@ -9,11 +9,12 @@
 // bal
 #include <engine/module/balIModule.h>
 
-namespace bal::gfx { class IGraphics; }
-namespace bal::gfx { class IRenderTargetColor; }
-namespace bal::gfx { class IRenderTargetDepth; }
-namespace bal::gfx { class FrameBuffer; }
-namespace bal::gfx { class ShaderArchive; }
+namespace bal { class IGraphics; }
+namespace bal { class IRenderTargetColor; }
+namespace bal { class IRenderTargetDepth; }
+namespace bal { class FrameBuffer; }
+namespace bal { class ShaderArchive; }
+namespace bal::mod::gfx { class ICustomModule; }
 
 // ----------------------------------------------------------------------------
 namespace bal::mod::gfx {
@@ -30,6 +31,12 @@ public:
      * デストラクター
      */
     virtual ~Module();
+
+    /*!
+     * カスタムモジュールを登録する
+     * @param[in] p_custom_module カスタムモジュール
+     */
+    virtual void setCustomModule(std::unique_ptr<mod::ICustomModule>&& p_custom_module) override;
 
     /*!
      * モジュールの初期化を行う関数です
@@ -56,10 +63,11 @@ public:
     void onDraw(const FrameworkCallback::DrawArg& arg);
 
 private:
-    std::unique_ptr<bal::gfx::IRenderTargetColor> mpRenderTargetColor;
-    std::unique_ptr<bal::gfx::IRenderTargetDepth> mpRenderTargetDepth;
-    std::unique_ptr<bal::gfx::FrameBuffer>        mpFrameBuffer;
-    std::unique_ptr<bal::gfx::ShaderArchive>      mpShaderArchive;
+    std::unique_ptr<ICustomModule>      mpCustomModule;
+    std::unique_ptr<IRenderTargetColor> mpRenderTargetColor;
+    std::unique_ptr<IRenderTargetDepth> mpRenderTargetDepth;
+    std::unique_ptr<FrameBuffer>        mpFrameBuffer;
+    std::unique_ptr<ShaderArchive>      mpShaderArchive;
 };
 
 }

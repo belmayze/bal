@@ -10,7 +10,7 @@
 #include <graphics/balICommandList.h>
 #include <graphics/balIRenderTarget.h>
 
-namespace bal::gfx {
+namespace bal {
 
 // ----------------------------------------------------------------------------
 

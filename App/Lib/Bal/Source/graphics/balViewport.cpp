@@ -9,7 +9,7 @@
 #include <graphics/balFrameBuffer.h>
 #include <graphics/balViewport.h>
 
-namespace bal::gfx {
+namespace bal {
 
 // ----------------------------------------------------------------------------
 

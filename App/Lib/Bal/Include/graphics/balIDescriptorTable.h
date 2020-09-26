@@ -7,12 +7,12 @@
  */
 #pragma once
 
-namespace bal::gfx { class IGraphics; }
-namespace bal::gfx { class ITexture; }
-namespace bal::gfx { class IConstantBuffer; }
+namespace bal { class IGraphics; }
+namespace bal { class ITexture; }
+namespace bal { class IConstantBuffer; }
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx {
+namespace bal {
 
 class IDescriptorTable
 {

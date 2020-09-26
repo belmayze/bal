@@ -12,7 +12,7 @@
 #include <graphics/d3d12/balModelBufferD3D12.h>
 #include <graphics/d3d12/balPipelineD3D12.h>
 
-namespace bal::gfx::d3d12 {
+namespace bal::d3d12 {
 
 // ----------------------------------------------------------------------------
 

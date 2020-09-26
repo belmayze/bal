@@ -9,10 +9,10 @@
 // bal
 #include <math/balMath.h>
 
-namespace bal::gfx { class IGraphics; }
+namespace bal { class IGraphics; }
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx {
+namespace bal {
 
 class ITexture
 {

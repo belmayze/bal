@@ -10,7 +10,7 @@
 #include <graphics/balIDescriptorTable.h>
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx::d3d12 {
+namespace bal::d3d12 {
 
 class DescriptorTable : public IDescriptorTable
 {

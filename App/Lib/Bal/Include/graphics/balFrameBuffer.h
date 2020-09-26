@@ -10,12 +10,12 @@
 #include <container/balArray.h>
 #include <math/balMath.h>
 
-namespace bal::gfx { class ICommandList; }
-namespace bal::gfx { class IRenderTargetColor; }
-namespace bal::gfx { class IRenderTargetDepth; }
+namespace bal { class ICommandList; }
+namespace bal { class IRenderTargetColor; }
+namespace bal { class IRenderTargetDepth; }
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx {
+namespace bal {
 
 class FrameBuffer
 {

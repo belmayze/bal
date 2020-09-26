@@ -23,7 +23,7 @@
 #include <graphics/d3d12/balRenderTargetD3D12.h>
 #include <graphics/d3d12/balTextureD3D12.h>
 
-namespace bal::gfx::d3d12 {
+namespace bal::d3d12 {
 
 // ----------------------------------------------------------------------------
 

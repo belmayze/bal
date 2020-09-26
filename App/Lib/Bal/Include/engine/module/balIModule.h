@@ -11,6 +11,7 @@
 #include <framework/balFrameworkCallback.h>
 
 namespace bal { class Engine; }
+namespace bal::mod { class ICustomModule; }
 
 // ----------------------------------------------------------------------------
 namespace bal::mod {
@@ -21,12 +22,20 @@ public:
     //! モジュールの初期化構造体
     struct InitializeArg
     {
-        const Engine* mpEngine = nullptr;
+        const Engine* mpEngine     = nullptr;
+        void*         mpModuleArgs = nullptr;
     };
 
 public:
     IModule() {}
     virtual ~IModule() {}
+
+    /*!
+     * カスタムモジュールを登録する
+     * @note 初期化前に指定してください
+     * @param[in] p_custom_module カスタムモジュール
+     */
+    virtual void setCustomModule(std::unique_ptr<ICustomModule>&& p_custom_module) = 0;
 
     /*!
      * モジュールの初期化を行う関数です

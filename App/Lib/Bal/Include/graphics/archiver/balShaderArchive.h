@@ -13,7 +13,7 @@ namespace bal { class File; }
 namespace bal { class StringPtr; }
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx {
+namespace bal {
 
 class ShaderArchive
 {

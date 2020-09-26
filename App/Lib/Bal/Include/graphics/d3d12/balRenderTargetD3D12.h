@@ -9,10 +9,10 @@
 // bal
 #include <graphics/balIRenderTarget.h>
 
-namespace bal::gfx { class IGraphics; }
+namespace bal { class IGraphics; }
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx::d3d12 {
+namespace bal::d3d12 {
 
 class RenderTargetColor : public IRenderTargetColor
 {

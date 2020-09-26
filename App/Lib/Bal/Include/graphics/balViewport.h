@@ -9,10 +9,10 @@
 // bal
 #include <math/balMath.h>
 
-namespace bal::gfx { class FrameBuffer; }
+namespace bal { class FrameBuffer; }
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx {
+namespace bal {
 
 class Viewport
 {

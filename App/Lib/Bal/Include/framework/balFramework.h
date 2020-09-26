@@ -15,7 +15,7 @@
 namespace bal { class ApiEntry; }
 namespace bal { class ApplicationBase; }
 namespace bal { class FrameworkCallback; }
-namespace bal::gfx { class IGraphics; }
+namespace bal { class IGraphics; }
 
 // ----------------------------------------------------------------------------
 namespace bal {
@@ -26,10 +26,10 @@ public:
     //! 初期化構造体
     struct InitializeArg
     {
-        StringPtr          mTitle             = "";      //!< タイトル名
-        MathSize           mRenderSize;                  //!< レンダリングサイズ
-        uint32_t           mRenderBufferCount = 2;       //!< レンダリングバッファー数
-        ApplicationBase*   mpApplication      = nullptr; //!< アプリケーション
+        StringPtr        mTitle             = "";      //!< タイトル名
+        MathSize         mRenderSize;                  //!< レンダリングサイズ
+        uint32_t         mRenderBufferCount = 2;       //!< レンダリングバッファー数
+        ApplicationBase* mpApplication      = nullptr; //!< アプリケーション
     };
 
 public:
@@ -59,7 +59,7 @@ public:
 
 public:
     /*! グラフィックス取得 */
-    gfx::IGraphics* getGraphics() { return mpGraphics.get(); }
+    IGraphics* getGraphics() { return mpGraphics.get(); }
 
 private:
     /*!
@@ -68,13 +68,13 @@ private:
     void applicationLoop_();
 
 private:
-    heap::RootBlock*                mpRootHeap = nullptr; //!< ルートヒープ
+    heap::RootBlock*           mpRootHeap = nullptr; //!< ルートヒープ
 
-    ApplicationBase*                mpApplication = nullptr;
-    FrameworkCallback*              mpCallback    = nullptr;
-    std::unique_ptr<gfx::IGraphics> mpGraphics;
-    float                           mFrameRate          = 0.f;
-    float                           mFrameRatePerMinute = 0.f;
+    ApplicationBase*           mpApplication = nullptr;
+    FrameworkCallback*         mpCallback    = nullptr;
+    std::unique_ptr<IGraphics> mpGraphics;
+    float                      mFrameRate          = 0.f;
+    float                      mFrameRatePerMinute = 0.f;
 
     HWND mHwnd;                //!< ウィンドウハンドル
     bool mInitialized = false; //!< 初期化完了フラグ

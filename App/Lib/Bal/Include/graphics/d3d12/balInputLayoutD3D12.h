@@ -10,7 +10,7 @@
 #include <graphics/balIInputLayout.h>
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx::d3d12 {
+namespace bal::d3d12 {
 
 class InputLayout : public IInputLayout
 {

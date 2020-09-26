@@ -13,7 +13,7 @@
 #include <graphics/d3d12/balTextureD3D12.h>
 #include <io/balFile.h>
 
-namespace bal::gfx::d3d12 {
+namespace bal::d3d12 {
 
 // ----------------------------------------------------------------------------
 

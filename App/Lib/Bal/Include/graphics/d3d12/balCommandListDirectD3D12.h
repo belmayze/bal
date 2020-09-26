@@ -11,7 +11,7 @@
 #include <graphics/balICommandListDirect.h>
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx::d3d12 {
+namespace bal::d3d12 {
 
 class CommandListDirect : public ICommandListDirect, public ICommandList
 {

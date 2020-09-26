@@ -11,7 +11,7 @@
 #include <graphics/balICommandListBundle.h>
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx::d3d12 {
+namespace bal::d3d12 {
 
 class CommandListBundle : public ICommandListBundle, public ICommandList
 {

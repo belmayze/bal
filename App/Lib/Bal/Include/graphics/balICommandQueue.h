@@ -7,11 +7,11 @@
  */
 #pragma once
 
-namespace bal::gfx { class ICommandListDirect; }
-namespace bal::gfx { class IGraphics; }
+namespace bal { class ICommandListDirect; }
+namespace bal { class IGraphics; }
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx {
+namespace bal {
 
 class ICommandQueue
 {

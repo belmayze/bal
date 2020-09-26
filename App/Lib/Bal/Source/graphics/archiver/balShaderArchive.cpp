@@ -8,7 +8,7 @@
 // bal
 #include <graphics/archiver/balShaderArchive.h>
 
-namespace bal::gfx {
+namespace bal {
 
 // ----------------------------------------------------------------------------
 

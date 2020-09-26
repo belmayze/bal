@@ -10,7 +10,7 @@
 #include <graphics/balICommandQueue.h>
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx::d3d12 {
+namespace bal::d3d12 {
 
 class CommandQueue : public ICommandQueue
 {

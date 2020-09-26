@@ -7,11 +7,11 @@
  */
 #pragma once
 
-namespace bal::gfx { class IGraphics; }
-namespace bal::gfx { class IPipeline; }
+namespace bal { class IGraphics; }
+namespace bal { class IPipeline; }
 
 // ----------------------------------------------------------------------------
-namespace bal::gfx {
+namespace bal {
 
 class ICommandListBundle
 {
