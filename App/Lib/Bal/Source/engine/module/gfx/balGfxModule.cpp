@@ -11,6 +11,7 @@
 // gfx
 #include <graphics/balFrameBuffer.h>
 #include <graphics/balICommandListDirect.h>
+#include <graphics/balIGraphics.h>
 #include <graphics/balIRenderTarget.h>
 #include <graphics/balViewport.h>
 #include <graphics/archiver/balShaderArchive.h>
@@ -36,6 +37,8 @@ void Module::initialize(const InitializeArg& arg)
 {
     // HDR 用レンダーバッファ
     {
+        const MathSize render_buffer_size = arg.mpEngine->getGraphicsSystem()->getDefaultFrameBuffer()->getResolution();
+
         // テクスチャーを確保
         std::unique_ptr<ITexture> p_color_buffer = make_unique<d3d12::Texture>(nullptr);
         {
@@ -43,7 +46,7 @@ void Module::initialize(const InitializeArg& arg)
             init_arg.mpGraphics = arg.mpEngine->getGraphicsSystem();
             init_arg.mDimension = ITexture::Dimension::Texture2D;
             init_arg.mFormat    = ITexture::Format::R16_G16_B16_A16_FLOAT;
-            init_arg.mSize      = bal::MathSize(1280, 720);
+            init_arg.mSize      = render_buffer_size;
             if (!p_color_buffer->initialize(init_arg)) { return; }
         }
         std::unique_ptr<ITexture> p_depth_buffer = make_unique<d3d12::Texture>(nullptr);
@@ -52,7 +55,7 @@ void Module::initialize(const InitializeArg& arg)
             init_arg.mpGraphics = arg.mpEngine->getGraphicsSystem();
             init_arg.mDimension = ITexture::Dimension::Texture2D;
             init_arg.mFormat    = ITexture::Format::D32_FLOAT;
-            init_arg.mSize      = bal::MathSize(1280, 720);
+            init_arg.mSize      = render_buffer_size;
             if (!p_depth_buffer->initialize(init_arg)) { return; }
         }
 
@@ -75,7 +78,7 @@ void Module::initialize(const InitializeArg& arg)
         {
             mpFrameBuffer->setRenderTargetColor(0, mpRenderTargetColor.get());
             mpFrameBuffer->setRenderTargetDepth(mpRenderTargetDepth.get());
-            mpFrameBuffer->setResolution(bal::MathSize(1280, 720));
+            mpFrameBuffer->setResolution(render_buffer_size);
         }
     }
 
