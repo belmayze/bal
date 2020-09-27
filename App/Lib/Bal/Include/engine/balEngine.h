@@ -9,6 +9,7 @@
 // bal
 #include <framework/balFrameworkCallback.h>
 #include <math/balMath.h>
+#include <memory/balSingleton.h>
 
 namespace bal { class IGraphics; }
 namespace bal::mod { class IModule; }
@@ -30,7 +31,7 @@ namespace bal {
  * 
  * @ref: https://cgworld.jp/feature/201910-re2019-01.html
  */
-class Engine : public FrameworkCallback
+class Engine : public FrameworkCallback, public Singleton<Engine>
 {
 public:
     //! 初期化構造体

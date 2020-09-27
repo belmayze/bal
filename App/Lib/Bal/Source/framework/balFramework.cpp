@@ -218,9 +218,8 @@ int Framework::enterApplicationLoop(FrameworkCallback* p_callback)
     // スレッド終了待ち
     loop_thread.join();
 
-    // @TODO: グラフィックスの終了処理
+    // グラフィックスの破棄には順序があるので関数で破棄させる
     mpGraphics->destroy();
-    mpGraphics.reset();
 
     return static_cast<int>(msg.wParam);
 }
@@ -296,6 +295,8 @@ void Framework::applicationLoop_()
             }
         }
     }
+
+    // @TODO: グラフィックス関連の破棄処理
 }
 
 // ----------------------------------------------------------------------------

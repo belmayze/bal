@@ -22,8 +22,7 @@ public:
     //! モジュールの初期化構造体
     struct InitializeArg
     {
-        const Engine* mpEngine     = nullptr;
-        void*         mpModuleArgs = nullptr;
+        void* mpDummy = nullptr;
     };
 
 public:

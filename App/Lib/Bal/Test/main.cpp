@@ -60,15 +60,14 @@ public:
         }
 
         // エンジン
-        bal::Engine engine;
         {
             bal::Engine::InitializeArg init_arg;
             init_arg.mpGraphics        = framework.getGraphics();
             init_arg.mRenderBufferSize = bal::MathSize(1280, 720);
-            engine.initialize(init_arg, std::move(p_modules), cNumModule);
+            bal::Engine::GetInstance().initialize(init_arg, std::move(p_modules), cNumModule);
         }
 
-        return framework.enterApplicationLoop(&engine);
+        return framework.enterApplicationLoop(&bal::Engine::GetInstance());
     }
 
     /*!

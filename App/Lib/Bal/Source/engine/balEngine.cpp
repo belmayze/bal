@@ -33,7 +33,6 @@ bool Engine::initialize(const InitializeArg& arg, ModuleArray&& p_modules, size_
     // モジュールを初期化
     {
         mod::IModule::InitializeArg init_arg;
-        init_arg.mpEngine = this;
 
         for (size_t i_module = 0; i_module < mNumModule; ++i_module)
         {

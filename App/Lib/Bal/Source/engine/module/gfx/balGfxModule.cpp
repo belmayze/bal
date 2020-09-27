@@ -9,6 +9,7 @@
 #include <engine/balEngine.h>
 #include <engine/module/gfx/balGfxModule.h>
 #include <engine/module/gfx/balIGfxCustomModule.h>
+#include <engine/module/gfx/balGfxShapeContainer.h>
 // gfx
 #include <graphics/balFrameBuffer.h>
 #include <graphics/balICommandListDirect.h>
@@ -41,15 +42,18 @@ void Module::setCustomModule(std::unique_ptr<mod::ICustomModule>&& p_custom_modu
 
 void Module::initialize(const InitializeArg& arg)
 {
+    // グラフィックスシステム
+    IGraphics*     p_graphics         = Engine::GetInstance().getGraphicsSystem();
+    const MathSize render_buffer_size = p_graphics->getDefaultFrameBuffer()->getResolution();
+
     // HDR 用レンダーバッファ
     {
-        const MathSize render_buffer_size = arg.mpEngine->getGraphicsSystem()->getDefaultFrameBuffer()->getResolution();
 
         // テクスチャーを確保
         std::unique_ptr<ITexture> p_color_buffer = make_unique<d3d12::Texture>(nullptr);
         {
             ITexture::InitializeArg init_arg;
-            init_arg.mpGraphics = arg.mpEngine->getGraphicsSystem();
+            init_arg.mpGraphics = p_graphics;
             init_arg.mDimension = ITexture::Dimension::Texture2D;
             init_arg.mFormat    = ITexture::Format::R16_G16_B16_A16_FLOAT;
             init_arg.mSize      = render_buffer_size;
@@ -58,7 +62,7 @@ void Module::initialize(const InitializeArg& arg)
         std::unique_ptr<ITexture> p_depth_buffer = make_unique<d3d12::Texture>(nullptr);
         {
             ITexture::InitializeArg init_arg;
-            init_arg.mpGraphics = arg.mpEngine->getGraphicsSystem();
+            init_arg.mpGraphics = p_graphics;
             init_arg.mDimension = ITexture::Dimension::Texture2D;
             init_arg.mFormat    = ITexture::Format::D32_FLOAT;
             init_arg.mSize      = render_buffer_size;
@@ -69,13 +73,13 @@ void Module::initialize(const InitializeArg& arg)
         mpRenderTargetColor = make_unique<d3d12::RenderTargetColor>(nullptr);
         {
             IRenderTargetColor::InitializeArg init_arg;
-            init_arg.mpGraphics = arg.mpEngine->getGraphicsSystem();
+            init_arg.mpGraphics = p_graphics;
             if (!mpRenderTargetColor->initialize(init_arg, std::move(p_color_buffer))) { return; }
         }
         mpRenderTargetDepth = make_unique<d3d12::RenderTargetDepth>(nullptr);
         {
             IRenderTargetDepth::InitializeArg init_arg;
-            init_arg.mpGraphics = arg.mpEngine->getGraphicsSystem();
+            init_arg.mpGraphics = p_graphics;
             if (!mpRenderTargetDepth->initialize(init_arg, std::move(p_depth_buffer))) { return; }
         }
 
@@ -97,7 +101,7 @@ void Module::initialize(const InitializeArg& arg)
     }
 
     // よく使用するシェイプ形状を初期化する
-
+    ShapeContainer::GetInstance().initialize();
 
     // カスタムモジュールを保持し初期化
     if (mpCustomModule)

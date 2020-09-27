@@ -72,9 +72,6 @@
     <ClCompile Include="..\..\Source\memory\balUniquePtr.cpp">
       <Filter>memory</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\heap\balHeapManager.cpp">
-      <Filter>heap</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\heap\balHeapContainer.cpp">
       <Filter>heap</Filter>
     </ClCompile>
@@ -167,6 +164,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\graphics\d3d12\balShapeBufferD3D12.cpp">
       <Filter>graphics\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\engine\module\gfx\balGfxShapeContainer.cpp">
+      <Filter>engine\module\gfx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -403,6 +403,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\graphics\d3d12\balShapeBufferD3D12.h">
       <Filter>graphics\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\engine\module\gfx\balGfxShapeContainer.h">
+      <Filter>engine\module\gfx</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
