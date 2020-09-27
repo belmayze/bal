@@ -17,7 +17,7 @@ namespace bal::d3d12 { class CommandListBundle; }
 namespace bal::d3d12 { class CommandListDirect; }
 namespace bal::d3d12 { class ConstantBuffer; }
 namespace bal::d3d12 { class DescriptorTable; }
-namespace bal::d3d12 { class ModelBuffer; }
+namespace bal::d3d12 { class ShapeBuffer; }
 namespace bal::d3d12 { class Pipeline; }
 namespace bal::d3d12 { class RenderTargetColor; }
 namespace bal::d3d12 { class RenderTargetDepth; }
@@ -106,11 +106,11 @@ private:
 
     std::unique_ptr<CommandListBundle>               mpCmdBundle;
     std::unique_ptr<Pipeline>                        mpPipeline;
-    std::unique_ptr<ModelBuffer>                     mpModelBuffer;
+    std::unique_ptr<ShapeBuffer>                     mpShapeBuffer;
     std::unique_ptr<DescriptorTable>                 mpModelDescriptorTable;
     std::unique_ptr<ConstantBuffer>                  mpModelConstantBuffer;
 
-    std::unique_ptr<ModelBuffer>                     mpQuadModelBuffer;
+    std::unique_ptr<ShapeBuffer>                     mpQuadShapeBuffer;
     std::unique_ptr<DescriptorTable>                 mpCopyDescriptorTable;
     std::unique_ptr<Pipeline>                        mpCopyPipeline;
 

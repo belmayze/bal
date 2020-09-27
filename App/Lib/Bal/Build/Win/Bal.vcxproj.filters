@@ -138,9 +138,6 @@
     <ClCompile Include="..\..\Source\graphics\d3d12\balPipelineD3D12.cpp">
       <Filter>graphics\d3d12</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\graphics\d3d12\balModelBufferD3D12.cpp">
-      <Filter>graphics\d3d12</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\graphics\d3d12\balInputLayoutD3D12.cpp">
       <Filter>graphics\d3d12</Filter>
     </ClCompile>
@@ -167,6 +164,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\engine\module\gfx\balGfxModule.cpp">
       <Filter>engine\module\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\d3d12\balShapeBufferD3D12.cpp">
+      <Filter>graphics\d3d12</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -347,12 +347,6 @@
     <ClInclude Include="..\..\Include\graphics\d3d12\balPipelineD3D12.h">
       <Filter>graphics\d3d12</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\graphics\balIModelBuffer.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\graphics\d3d12\balModelBufferD3D12.h">
-      <Filter>graphics\d3d12</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\graphics\balIInputLayout.h">
       <Filter>graphics</Filter>
     </ClInclude>
@@ -403,6 +397,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\engine\module\balModuleType.h">
       <Filter>engine\module</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\balIShapeBuffer.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\d3d12\balShapeBufferD3D12.h">
+      <Filter>graphics\d3d12</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

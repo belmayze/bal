@@ -96,6 +96,9 @@ void Module::initialize(const InitializeArg& arg)
         if (!mpShaderArchive->loadArchiver(std::move(file))) { return; }
     }
 
+    // よく使用するシェイプ形状を初期化する
+
+
     // カスタムモジュールを保持し初期化
     if (mpCustomModule)
     {

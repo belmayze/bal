@@ -18,7 +18,7 @@
 #include <graphics/d3d12/balDescriptorTableD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <graphics/d3d12/balInputLayoutD3D12.h>
-#include <graphics/d3d12/balModelBufferD3D12.h>
+#include <graphics/d3d12/balShapeBufferD3D12.h>
 #include <graphics/d3d12/balPipelineD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
 #include <graphics/d3d12/balTextureD3D12.h>
@@ -234,7 +234,7 @@ bool Graphics::initialize(const InitializeArg& arg)
     }
 
     // コピー用の矩形ポリゴンを初期化
-    mpQuadModelBuffer = make_unique<ModelBuffer>(nullptr);
+    mpQuadShapeBuffer = make_unique<ShapeBuffer>(nullptr);
     {
         // position, texcoord
         float vertices[] = {
@@ -244,7 +244,7 @@ bool Graphics::initialize(const InitializeArg& arg)
         };
         uint16_t indices[] = { 0, 1, 2 };
 
-        ModelBuffer::InitializeArg init_arg;
+        ShapeBuffer::InitializeArg init_arg;
         init_arg.mpGraphics         = this;
         init_arg.mpVertexBuffer     = reinterpret_cast<const uint8_t*>(vertices);
         init_arg.mVertexBufferSize  = sizeof(vertices);
@@ -252,8 +252,8 @@ bool Graphics::initialize(const InitializeArg& arg)
         init_arg.mpIndexBuffer      = reinterpret_cast<const uint8_t*>(indices);
         init_arg.mIndexBufferSize   = sizeof(indices);
         init_arg.mIndexCount        = 3;
-        init_arg.mIndexBufferFormat = ModelBuffer::IndexBufferFormat::Uint16;
-        if (!mpQuadModelBuffer->initialize(init_arg)) { return false; }
+        init_arg.mIndexBufferFormat = ShapeBuffer::IndexBufferFormat::Uint16;
+        if (!mpQuadShapeBuffer->initialize(init_arg)) { return false; }
     }
 
     // コピー用のデスクリプターテーブル
@@ -306,7 +306,7 @@ bool Graphics::initialize(const InitializeArg& arg)
     }
 
     // 頂点、インデックスバッファを仮初期化
-    mpModelBuffer = make_unique<ModelBuffer>(nullptr);
+    mpShapeBuffer = make_unique<ShapeBuffer>(nullptr);
     {
         // とりあえず position, texcoord
         float vertices[] = {
@@ -316,7 +316,7 @@ bool Graphics::initialize(const InitializeArg& arg)
         };
         uint16_t indices[] = {0, 1, 2};
 
-        ModelBuffer::InitializeArg init_arg;
+        ShapeBuffer::InitializeArg init_arg;
         init_arg.mpGraphics         = this;
         init_arg.mpVertexBuffer     = reinterpret_cast<const uint8_t*>(vertices);
         init_arg.mVertexBufferSize  = sizeof(vertices);
@@ -324,8 +324,8 @@ bool Graphics::initialize(const InitializeArg& arg)
         init_arg.mpIndexBuffer      = reinterpret_cast<const uint8_t*>(indices);
         init_arg.mIndexBufferSize   = sizeof(indices);
         init_arg.mIndexCount        = 3;
-        init_arg.mIndexBufferFormat = ModelBuffer::IndexBufferFormat::Uint16;
-        if (!mpModelBuffer->initialize(init_arg)) { return false; }
+        init_arg.mIndexBufferFormat = ShapeBuffer::IndexBufferFormat::Uint16;
+        if (!mpShapeBuffer->initialize(init_arg)) { return false; }
     }
 
     // モデル用の定数バッファ
@@ -407,7 +407,7 @@ bool Graphics::initialize(const InitializeArg& arg)
         mpCmdBundle->reset();
         mpCmdBundle->bindPipeline(*mpPipeline);
         mpCmdBundle->setDescriptorTable(0, *mpModelDescriptorTable);
-        mpCmdBundle->drawModel(*mpModelBuffer);
+        mpCmdBundle->drawShape(*mpShapeBuffer);
         mpCmdBundle->close();
     }
 
@@ -511,7 +511,7 @@ void Graphics::loop()
     // @TODO: 書き出し
     mpCmdLists[mCurrentBufferIndex].bindPipeline(*mpCopyPipeline);
     mpCmdLists[mCurrentBufferIndex].setDescriptorTable(0, *mpCopyDescriptorTable);
-    mpCmdLists[mCurrentBufferIndex].drawModel(*mpQuadModelBuffer);
+    mpCmdLists[mCurrentBufferIndex].drawShape(*mpQuadShapeBuffer);
 
     mpCmdLists[mCurrentBufferIndex].resourceBarrier(
         *mpSwapChainRenderTargets[mCurrentBufferIndex].getTexture(),
@@ -540,12 +540,12 @@ bool Graphics::destroy()
     // バッファ破棄
     mpModelConstantBuffer.reset();
     mpModelDescriptorTable.reset();
-    mpModelBuffer.reset();
+    mpShapeBuffer.reset();
     mpCmdBundle.reset();
     mpPipeline.reset();
 
     mpCopyDescriptorTable.reset();
-    mpQuadModelBuffer.reset();
+    mpQuadShapeBuffer.reset();
     mpCopyPipeline.reset();
 
     mpFrameBuffer.reset();

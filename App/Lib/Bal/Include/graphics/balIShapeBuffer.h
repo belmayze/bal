@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balIModelBuffer.h
+ * @file   balIShapeBuffer.h
  * @brief  
  * @author belmayze
  *
@@ -12,7 +12,7 @@ namespace bal { class IGraphics; }
 // ----------------------------------------------------------------------------
 namespace bal {
 
-class IModelBuffer
+class IShapeBuffer
 {
 public:
     //! インデックスバッファのフォーマット

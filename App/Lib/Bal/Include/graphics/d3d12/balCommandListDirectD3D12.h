@@ -47,10 +47,10 @@ public:
     virtual void setDescriptorTable(uint32_t index, const IDescriptorTable& descriptor_table) override;
 
     /*!
-     * モデルを描画します
-     * @param[in] model_buffer モデルバッファ
+     * シェイプを描画します
+     * @param[in] shape_buffer シェイプバッファ
      */
-    virtual void drawModel(const IModelBuffer& model_buffer) override;
+    virtual void drawShape(const IShapeBuffer& shape_buffer) override;
 
 public:
     /*!
