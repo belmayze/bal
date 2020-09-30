@@ -60,7 +60,7 @@ OUTPUT main(VARYING input)
     else                      { output.Color0.g = 1.055 * pow(color.g, 1.0 / 2.4) - 0.055; }
     if (color.b <= 0.0031308) { output.Color0.b = color.b * 12.92; }
     else                      { output.Color0.b = 1.055 * pow(color.b, 1.0 / 2.4) - 0.055; }
-    output.Color0.a = 0.0;
+    output.Color0.a = 1.0;
 
     return output;
 }
