@@ -18,6 +18,7 @@
 #include <framework/balFrameworkCallback.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <memory/balSingletonFinalizer.h>
+#include <memory/balSingletonGfxFinalizer.h>
 #include <time/balStopwatch.h>
 
 // ----------------------------------------------------------------------------
@@ -296,7 +297,8 @@ void Framework::applicationLoop_()
         }
     }
 
-    // @TODO: グラフィックス関連の破棄処理
+    // グラフィックス関連の破棄処理
+    SingletonGfxFinalizer::Finalize();
 }
 
 // ----------------------------------------------------------------------------

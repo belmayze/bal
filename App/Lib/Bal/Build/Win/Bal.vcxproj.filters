@@ -168,6 +168,9 @@
     <ClCompile Include="..\..\Source\engine\module\gfx\balGfxShapeContainer.cpp">
       <Filter>engine\module\gfx</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\memory\balSingletonGfxFinalizer.cpp">
+      <Filter>memory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\memory\balSingleton.h">
@@ -406,6 +409,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\engine\module\gfx\balGfxShapeContainer.h">
       <Filter>engine\module\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\memory\balSingletonGfxFinalizer.h">
+      <Filter>memory</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

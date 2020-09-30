@@ -70,6 +70,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\..\Source\memory\balSingletonFinalizer.cpp" />
+    <ClCompile Include="..\..\Source\memory\balSingletonGfxFinalizer.cpp" />
     <ClCompile Include="..\..\Source\memory\balUniquePtr.cpp">
       <SubType>
       </SubType>
@@ -192,6 +193,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\..\Include\memory\balSingletonFinalizer.h" />
+    <ClInclude Include="..\..\Include\memory\balSingletonGfxFinalizer.h" />
     <ClInclude Include="..\..\Include\memory\balUniquePtr.h" />
     <ClInclude Include="..\..\Include\time\balDateTime.h" />
     <ClInclude Include="..\..\Include\time\balStopwatch.h" />

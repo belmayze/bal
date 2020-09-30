@@ -8,6 +8,7 @@
 #pragma once
 // bal
 #include <memory/balSingletonFinalizer.h>
+#include <memory/balSingletonGfxFinalizer.h>
 #include <memory/balUniquePtr.h>
 
 namespace bal { class ApiEntry; }
@@ -34,6 +35,14 @@ public:
         if (!mpInstance) { Create_(); }
         BAL_ASSERT(mpInstance);
         return *mpInstance.get();
+    }
+
+    /*!
+     * グラフィックス関連の破棄処理を登録しておく
+     */
+    static void AddGfxFinalizer()
+    {
+        SingletonGfxFinalizer::AddFunc(&Singleton<T>::Destroy_);
     }
 
 private:

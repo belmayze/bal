@@ -102,6 +102,7 @@ void Module::initialize(const InitializeArg& arg)
 
     // よく使用するシェイプ形状を初期化する
     ShapeContainer::GetInstance().initialize();
+    ShapeContainer::AddGfxFinalizer();
 
     // カスタムモジュールを保持し初期化
     if (mpCustomModule)
