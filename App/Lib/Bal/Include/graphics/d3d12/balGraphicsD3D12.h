@@ -52,6 +52,11 @@ public:
     virtual void postDraw() override;
 
     /*!
+     * GPUの実行終了を待機する
+     */
+    virtual void waitGPU() override;
+
+    /*!
      * 破棄の処理を記述します
      */
     virtual bool destroy() override;
@@ -106,10 +111,6 @@ private:
     std::unique_ptr<ShapeBuffer>                     mpShapeBuffer;
     std::unique_ptr<DescriptorTable>                 mpModelDescriptorTable;
     std::unique_ptr<ConstantBuffer>                  mpModelConstantBuffer;
-
-    std::unique_ptr<ShapeBuffer>                     mpQuadShapeBuffer;
-    std::unique_ptr<DescriptorTable>                 mpCopyDescriptorTable;
-    std::unique_ptr<Pipeline>                        mpCopyPipeline;
 
     UINT                                             mCurrentBufferIndex = 0;
 };

@@ -43,6 +43,11 @@ public:
     virtual void postDraw() = 0;
 
     /*!
+     * GPUの実行終了を待機する
+     */
+    virtual void waitGPU() = 0;
+
+    /*!
      * 破棄の処理を記述します
      */
     virtual bool destroy() = 0;

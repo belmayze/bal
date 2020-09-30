@@ -47,7 +47,20 @@ OUTPUT main(VARYING input)
 {
     OUTPUT output;
 
-    output.Color0 = ColorTexture.Sample(ColorSampler, input.Texcoord);
+    float4 color = ColorTexture.Sample(ColorSampler, input.Texcoord);
+
+    // @TODO: トーンカーブ
+
+    color = abs(color);
+
+    // ガンマ補正（sRGB）
+    if (color.r <= 0.0031308) { output.Color0.r = color.r * 12.92; }
+    else                      { output.Color0.r = 1.055 * pow(color.r, 1.0 / 2.4) - 0.055; }
+    if (color.g <= 0.0031308) { output.Color0.g = color.g * 12.92; }
+    else                      { output.Color0.g = 1.055 * pow(color.g, 1.0 / 2.4) - 0.055; }
+    if (color.b <= 0.0031308) { output.Color0.b = color.b * 12.92; }
+    else                      { output.Color0.b = 1.055 * pow(color.b, 1.0 / 2.4) - 0.055; }
+    output.Color0.a = 0.0;
 
     return output;
 }

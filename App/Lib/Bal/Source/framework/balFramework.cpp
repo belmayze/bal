@@ -219,6 +219,9 @@ int Framework::enterApplicationLoop(FrameworkCallback* p_callback)
     // スレッド終了待ち
     loop_thread.join();
 
+    // コマンドの実行待ち
+    mpGraphics->waitGPU();
+
     // グラフィックスの破棄には順序があるので関数で破棄させる
     SingletonGfxFinalizer::Finalize();
     mpGraphics->destroy();

@@ -233,78 +233,6 @@ bool Graphics::initialize(const InitializeArg& arg)
         if (!mpShaderArchive->loadArchiver(std::move(file))) { return false; }
     }
 
-    // コピー用の矩形ポリゴンを初期化
-    mpQuadShapeBuffer = make_unique<ShapeBuffer>(nullptr);
-    {
-        // position, texcoord
-        float vertices[] = {
-            -1.f,  1.f, 0.f, 0.f, 0.f,
-            -1.f, -3.f, 0.f, 0.f, 2.f,
-             3.f,  1.f, 0.f, 2.f, 0.f
-        };
-        uint16_t indices[] = { 0, 1, 2 };
-
-        ShapeBuffer::InitializeArg init_arg;
-        init_arg.mpGraphics         = this;
-        init_arg.mpVertexBuffer     = reinterpret_cast<const uint8_t*>(vertices);
-        init_arg.mVertexBufferSize  = sizeof(vertices);
-        init_arg.mVertexStride      = sizeof(float) * 5;
-        init_arg.mpIndexBuffer      = reinterpret_cast<const uint8_t*>(indices);
-        init_arg.mIndexBufferSize   = sizeof(indices);
-        init_arg.mIndexCount        = 3;
-        init_arg.mIndexBufferFormat = ShapeBuffer::IndexBufferFormat::Uint16;
-        if (!mpQuadShapeBuffer->initialize(init_arg)) { return false; }
-    }
-
-    // コピー用のデスクリプターテーブル
-    mpCopyDescriptorTable = make_unique<DescriptorTable>(nullptr);
-    {
-        // テクスチャー
-        const ITexture* p_textures[] = { mpRenderTargetColor->getTexture() };
-
-        DescriptorTable::InitializeArg init_arg;
-        init_arg.mpGraphics  = this;
-        init_arg.mNumTexture = 1;
-        init_arg.mpTextures  = p_textures;
-        if (!mpCopyDescriptorTable->initialize(init_arg)) { return false; }
-    }
-
-    // コピー用のパイプラインを初期化
-    mpCopyPipeline = make_unique<Pipeline>(nullptr);
-    {
-        // 頂点レイアウト
-        std::unique_ptr<InputLayout> p_input_layout = make_unique<InputLayout>(nullptr);
-        {
-            std::unique_ptr<InputLayout::InputLayoutDesc[]> descs = make_unique<InputLayout::InputLayoutDesc[]>(nullptr, 2);
-            descs[0] = { .mName = "POSITION", .mSemanticIndex = 0, .mType = InputLayout::Type::Vec3, .mOffset =  0 };
-            descs[1] = { .mName = "TEXCOORD", .mSemanticIndex = 0, .mType = InputLayout::Type::Vec2, .mOffset = 12 };
-
-            InputLayout::InitializeArg init_arg;
-            init_arg.mpGraphics      = this;
-            init_arg.mNumInputLayout = 2;
-            init_arg.mpInputLayouts  = descs.get();
-            if (!p_input_layout->initialize(init_arg)) { return false; }
-        }
-
-        // シェーダー取得
-        const ShaderArchive::ShaderContainer& shader_container = mpShaderArchive->getShaderContainer(mpShaderArchive->findProgram("Copy"));
-
-        // パイプライン初期化
-        Pipeline::InitializeArg init_arg;
-        init_arg.mpGraphics        = this;
-        init_arg.mNumOutput        = 1;
-        init_arg.mOutputFormats[0] = Texture::Format::R8_G8_B8_A8_UNORM;
-        init_arg.mpInputLayout     = p_input_layout.get();
-
-        init_arg.mNumTexture = 1;
-
-        init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
-        init_arg.mVertexShaderBufferSize = shader_container.mVertexShader.mBufferSize;
-        init_arg.mpPixelShaderBuffer     = shader_container.mPixelShader.mBuffer;
-        init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
-        if (!mpCopyPipeline->initialize(init_arg)) { return false; }
-    }
-
     // 頂点、インデックスバッファを仮初期化
     mpShapeBuffer = make_unique<ShapeBuffer>(nullptr);
     {
@@ -429,6 +357,13 @@ void Graphics::postDraw()
     if (++mCurrentBufferIndex > (mBufferCount - 1)) { mCurrentBufferIndex = 0; }
 }
 
+// ----------------------------------------------------------------------------
+
+void Graphics::waitGPU()
+{
+    mpCmdQueue->waitExecutedAll();
+}
+
 #if 0
 // ----------------------------------------------------------------------------
 void Graphics::loop()
@@ -521,19 +456,12 @@ void Graphics::loop()
 
 bool Graphics::destroy()
 {
-    // 終了待ち
-    mpCmdQueue->waitExecutedAll();
-
     // バッファ破棄
     mpModelConstantBuffer.reset();
     mpModelDescriptorTable.reset();
     mpShapeBuffer.reset();
     mpCmdBundle.reset();
     mpPipeline.reset();
-
-    mpCopyDescriptorTable.reset();
-    mpQuadShapeBuffer.reset();
-    mpCopyPipeline.reset();
 
     mpFrameBuffer.reset();
     mpRenderTargetDepth.reset();
