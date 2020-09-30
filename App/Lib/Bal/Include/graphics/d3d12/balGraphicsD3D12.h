@@ -51,9 +51,6 @@ public:
      */
     virtual void postDraw() override;
 
-    // @debug
-    void loop();
-
     /*!
      * 破棄の処理を記述します
      */

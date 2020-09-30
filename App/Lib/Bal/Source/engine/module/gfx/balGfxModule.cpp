@@ -18,8 +18,11 @@
 #include <graphics/balViewport.h>
 #include <graphics/archiver/balShaderArchive.h>
 // gfx::d3d12
-#include <graphics/d3d12/balTextureD3D12.h>
+#include <graphics/d3d12/balDescriptorTableD3D12.h>
+#include <graphics/d3d12/balInputLayoutD3D12.h>
+#include <graphics/d3d12/balPipelineD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
+#include <graphics/d3d12/balTextureD3D12.h>
 
 namespace bal::mod::gfx {
 
@@ -100,6 +103,55 @@ void Module::initialize(const InitializeArg& arg)
         if (!mpShaderArchive->loadArchiver(std::move(file))) { return; }
     }
 
+    // 各種パイプラインの作成
+    {
+        // 最終画面反映
+        {
+            // 頂点レイアウト
+            std::unique_ptr<d3d12::InputLayout> p_input_layout = make_unique<d3d12::InputLayout>(nullptr);
+            {
+                std::unique_ptr<IInputLayout::InputLayoutDesc[]> descs = make_unique<IInputLayout::InputLayoutDesc[]>(nullptr, 2);
+                descs[0] = { .mName = "POSITION", .mType = IInputLayout::Type::Vec3, .mOffset =  0 };
+                descs[1] = { .mName = "TEXCOORD", .mType = IInputLayout::Type::Vec2, .mOffset = 12 };
+
+                IInputLayout::InitializeArg init_arg;
+                init_arg.mpGraphics      = p_graphics;
+                init_arg.mNumInputLayout = 2;
+                init_arg.mpInputLayouts = descs.get();
+                if (!p_input_layout->initialize(init_arg)) { return; }
+            }
+
+            // パイプライン初期化
+            mpPresentPipeline = make_unique<d3d12::Pipeline>(nullptr);
+            {
+                IPipeline::InitializeArg init_arg;
+                init_arg.mpGraphics        = p_graphics;
+                init_arg.mNumOutput        = 1;
+                init_arg.mOutputFormats[0] = p_graphics->getSwapChainFrameBuffer()->getRenderTargetColors()[0]->getTexture()->getFormat();
+                init_arg.mNumTexture       = 1;
+                init_arg.mpInputLayout     = p_input_layout.get();
+
+                const ShaderArchive::ShaderContainer& shader_container = mpShaderArchive->getShaderContainer(mpShaderArchive->findProgram("Present"));
+                init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
+                init_arg.mVertexShaderBufferSize = shader_container.mVertexShader.mBufferSize;
+                init_arg.mpPixelShaderBuffer     = shader_container.mPixelShader.mBuffer;
+                init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
+                if (!mpPresentPipeline->initialize(init_arg)) { return; }
+            }
+
+            // デスクリプターテーブル
+            mpPresentDescriptorTable = make_unique<d3d12::DescriptorTable>(nullptr);
+            {
+                const ITexture* p_textures[] = { mpRenderTargetColor->getTexture() };
+                IDescriptorTable::InitializeArg init_arg;
+                init_arg.mpGraphics  = p_graphics;
+                init_arg.mNumTexture = 1;
+                init_arg.mpTextures  = p_textures;
+                if (!mpPresentDescriptorTable->initialize(init_arg)) { return; }
+            }
+        }
+    }
+
     // よく使用するシェイプ形状を初期化する
     ShapeContainer::GetInstance().initialize();
     ShapeContainer::AddGfxFinalizer();
@@ -164,13 +216,14 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
             ICommandListDirect::ResourceBarrierType::RenderTargetColor
         );
 
-        // スワップバッファをとりあえず適当にクリア
-        arg.mpCommandList->clear(
-            *arg.mpSwapChainFrameBuffer,
-            ICommandListDirect::ClearFlag::Color,
-            MathColor(1.f, 0.f, 0.f, 1.f),
-            1.f, 0
-        );
+        // フレームバッファ切り替え
+        arg.mpCommandList->setViewport(Viewport(*arg.mpSwapChainFrameBuffer));
+        arg.mpCommandList->bindFrameBuffer(*arg.mpSwapChainFrameBuffer);
+
+        // 画面反映
+        arg.mpCommandList->bindPipeline(*mpPresentPipeline);
+        arg.mpCommandList->setDescriptorTable(0, *mpPresentDescriptorTable);
+        arg.mpCommandList->drawShape(*ShapeContainer::GetInstance().getQuadBuffer());
 
         // バリア
         arg.mpCommandList->resourceBarrier(

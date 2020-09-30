@@ -21,15 +21,15 @@ public:
      */
     virtual bool initialize(const InitializeArg& arg) override;
 
+    //! 次元
+    virtual Dimension getDimension() const override { return mDimension; }
+
+    //! フォーマット
+    virtual Format getFormat() const override { return mFormat; }
+
 public:
     //! バッファ
     ID3D12Resource* getTexture() const { return mpTexture.get(); }
-
-    //! フォーマット
-    DXGI_FORMAT getFormat() const { return mFormat; }
-
-    //! ディメンジョン
-    D3D12_RESOURCE_DIMENSION getDimension() const { return mDimension; }
 
     //! キューブマップチェック
     bool isCubemap() const { return false; }
@@ -57,9 +57,9 @@ private:
 private:
     std::unique_ptr<ID3D12Resource, ComDeleter>       mpTexture;
     std::unique_ptr<ID3D12DescriptorHeap, ComDeleter> mpDescriptorHeap;
-    DXGI_FORMAT                                       mFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-    D3D12_RESOURCE_DIMENSION                          mDimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    uint32_t                                          mNumArray = 1;
+    Format                                            mFormat      = Format::R8_G8_B8_A8_UNORM;
+    Dimension                                         mDimension   = Dimension::Texture2D;
+    uint32_t                                          mNumArray    = 1;
     uint32_t                                          mNumMipLevel = 1;
 };
 

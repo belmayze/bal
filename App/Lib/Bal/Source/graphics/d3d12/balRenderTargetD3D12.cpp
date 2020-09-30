@@ -37,7 +37,7 @@ bool RenderTargetColor::initialize(const InitializeArg& arg, std::unique_ptr<ITe
     // レンダーターゲット
     {
         D3D12_RENDER_TARGET_VIEW_DESC desc = {};
-        desc.Format        = p_texture->getFormat();
+        desc.Format        = Texture::ConvertFormat(p_texture->getFormat());
         desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
         p_device->CreateRenderTargetView(p_texture->getTexture(), &desc, p_descriptor_heap->GetCPUDescriptorHandleForHeapStart());
     }
@@ -74,7 +74,7 @@ bool RenderTargetDepth::initialize(const InitializeArg& arg, std::unique_ptr<ITe
     // レンダーターゲット
     {
         D3D12_DEPTH_STENCIL_VIEW_DESC desc = {};
-        desc.Format        = p_texture->getFormat();
+        desc.Format        = Texture::ConvertFormat(p_texture->getFormat());
         desc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
         p_device->CreateDepthStencilView(p_texture->getTexture(), &desc, p_descriptor_heap->GetCPUDescriptorHandleForHeapStart());
     }

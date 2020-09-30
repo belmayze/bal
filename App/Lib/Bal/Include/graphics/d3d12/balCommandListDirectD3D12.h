@@ -7,13 +7,12 @@
  */
 #pragma once
 // bal
-#include <graphics/balICommandList.h>
 #include <graphics/balICommandListDirect.h>
 
 // ----------------------------------------------------------------------------
 namespace bal::d3d12 {
 
-class CommandListDirect : public ICommandListDirect, public ICommandList
+class CommandListDirect : public ICommandListDirect
 {
 public:
     /*!

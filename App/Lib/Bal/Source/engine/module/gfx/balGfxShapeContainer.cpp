@@ -46,11 +46,12 @@ void ShapeContainer::initialize()
         init_arg.mpGraphics         = p_graphics;
         init_arg.mpVertexBuffer     = reinterpret_cast<const uint8_t*>(vertices);
         init_arg.mVertexBufferSize  = sizeof(vertices);
+        init_arg.mVertexStride      = sizeof(float) * 5;
         init_arg.mpIndexBuffer      = reinterpret_cast<const uint8_t*>(indices);
         init_arg.mIndexBufferSize   = sizeof(indices);
         init_arg.mIndexCount        = 6;
         init_arg.mIndexBufferFormat = IShapeBuffer::IndexBufferFormat::Uint16;
-        //if (!mpQuadBuffer->initialize(init_arg)) { return; }
+        if (!mpQuadBuffer->initialize(init_arg)) { return; }
     }
 }
 

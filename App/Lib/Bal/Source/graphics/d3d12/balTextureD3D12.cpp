@@ -92,8 +92,8 @@ bool Texture::initialize(const InitializeArg& arg)
         mpTexture.reset(p_texture.Detach());
     }
 
-    mFormat      = format;
-    mDimension   = dimension;
+    mFormat      = arg.mFormat;
+    mDimension   = arg.mDimension;
     mNumArray    = arg.mArrayNum;
     mNumMipLevel = arg.mMipNum;
 

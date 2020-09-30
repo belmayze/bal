@@ -28,6 +28,9 @@ public:
     };
 
 public:
+    //! デストラクター
+    virtual ~IDescriptorTable() {}
+
     /*!
      * 初期化の処理を記述します
      * @param[in] arg 初期化構造体

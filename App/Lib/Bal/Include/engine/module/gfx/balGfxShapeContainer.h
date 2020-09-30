@@ -28,6 +28,9 @@ public:
      */
     void initialize();
 
+    //! 矩形
+    const IShapeBuffer* getQuadBuffer() const { return mpQuadBuffer.get(); }
+
 private:
     std::unique_ptr<IShapeBuffer> mpQuadBuffer;
 };

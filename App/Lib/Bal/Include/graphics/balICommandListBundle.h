@@ -7,13 +7,15 @@
  */
 #pragma once
 
+#include <graphics/balICommandList.h>
+
 namespace bal { class IGraphics; }
 namespace bal { class IPipeline; }
 
 // ----------------------------------------------------------------------------
 namespace bal {
 
-class ICommandListBundle
+class ICommandListBundle : public ICommandList
 {
 public:
     // 初期化

@@ -15,5 +15,9 @@
       <Vertex Source="main.vs.hlsl" />
       <Pixel Source="main.ps.hlsl" />
     </Program>
+    <Program Name="Present">
+      <Vertex Source="balPresent.hlsl" />
+      <Pixel Source="balPresent.hlsl" />
+    </Program>
   </ProgramArray>
 </Shader>

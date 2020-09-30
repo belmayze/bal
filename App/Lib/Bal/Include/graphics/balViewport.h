@@ -26,7 +26,7 @@ public:
      * フレームバッファを覆うビューポートを初期化します
      * @param[in] frame_buffer フレームバッファ
      */
-    Viewport(const FrameBuffer& frame_buffer);
+    explicit Viewport(const FrameBuffer& frame_buffer);
 
     /*! 
      * コンストラクター

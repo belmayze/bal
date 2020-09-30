@@ -47,13 +47,13 @@ bool DescriptorTable::initialize(const InitializeArg& arg)
         D3D12_SRV_DIMENSION dimension;
         switch (p_texture->getDimension())
         {
-            case D3D12_RESOURCE_DIMENSION_TEXTURE1D:
+            case Texture::Dimension::Texture1D:
                 dimension = D3D12_SRV_DIMENSION_TEXTURE1D;
                 break;
-            case D3D12_RESOURCE_DIMENSION_TEXTURE2D:
+            case Texture::Dimension::Texture2D:
                 dimension = p_texture->isCubemap() ? D3D12_SRV_DIMENSION_TEXTURECUBE : D3D12_SRV_DIMENSION_TEXTURE2D;
                 break;
-            case D3D12_RESOURCE_DIMENSION_TEXTURE3D:
+            case Texture::Dimension::Texture3D:
                 dimension = D3D12_SRV_DIMENSION_TEXTURE3D;
                 break;
         }
@@ -76,7 +76,7 @@ bool DescriptorTable::initialize(const InitializeArg& arg)
         D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
         desc.ViewDimension           = dimension;
         desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-        desc.Format                  = p_texture->getFormat();
+        desc.Format                  = Texture::ConvertFormat(p_texture->getFormat());
 
         switch (dimension)
         {

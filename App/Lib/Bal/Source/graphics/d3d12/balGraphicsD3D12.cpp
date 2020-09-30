@@ -396,21 +396,6 @@ bool Graphics::initialize(const InitializeArg& arg)
         if (!mpPipeline->initialize(init_arg)) { return false; }
     }
 
-    // バンドル
-    mpCmdBundle = make_unique<CommandListBundle>(nullptr);
-    {
-        CommandListBundle::InitializeArg init_arg;
-        init_arg.mpGraphics = this;
-        if (!mpCmdBundle->initialize(init_arg)) { return false; }
-
-        // コマンドの記録
-        mpCmdBundle->reset();
-        mpCmdBundle->bindPipeline(*mpPipeline);
-        mpCmdBundle->setDescriptorTable(0, *mpModelDescriptorTable);
-        mpCmdBundle->drawShape(*mpShapeBuffer);
-        mpCmdBundle->close();
-    }
-
     // 情報
     mBufferCount = arg.mBufferCount;
 
@@ -444,6 +429,7 @@ void Graphics::postDraw()
     if (++mCurrentBufferIndex > (mBufferCount - 1)) { mCurrentBufferIndex = 0; }
 }
 
+#if 0
 // ----------------------------------------------------------------------------
 void Graphics::loop()
 {
@@ -529,6 +515,7 @@ void Graphics::loop()
     // 実行待ち
     if (++mCurrentBufferIndex > (mBufferCount - 1)) { mCurrentBufferIndex = 0; }
 }
+#endif
 
 // ----------------------------------------------------------------------------
 

@@ -9,7 +9,9 @@
 // bal
 #include <engine/module/balIModule.h>
 
+namespace bal { class IDescriptorTable; }
 namespace bal { class IGraphics; }
+namespace bal { class IPipeline; }
 namespace bal { class IRenderTargetColor; }
 namespace bal { class IRenderTargetDepth; }
 namespace bal { class FrameBuffer; }
@@ -68,6 +70,9 @@ private:
     std::unique_ptr<IRenderTargetDepth> mpRenderTargetDepth;
     std::unique_ptr<FrameBuffer>        mpFrameBuffer;
     std::unique_ptr<ShaderArchive>      mpShaderArchive;
+
+    std::unique_ptr<IPipeline>          mpPresentPipeline;
+    std::unique_ptr<IDescriptorTable>   mpPresentDescriptorTable;
 };
 
 }

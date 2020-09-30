@@ -7,6 +7,7 @@
  */
 #pragma once
 // bal
+#include <graphics/balICommandList.h>
 #include <math/balMath.h>
 
 namespace bal { class ICommandListBundle; }
@@ -20,7 +21,7 @@ namespace bal { class Viewport; }
 // ----------------------------------------------------------------------------
 namespace bal {
 
-class ICommandListDirect
+class ICommandListDirect : public ICommandList
 {
 public:
     // クリアフラグ

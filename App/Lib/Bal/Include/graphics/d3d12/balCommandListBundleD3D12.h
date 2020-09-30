@@ -13,7 +13,7 @@
 // ----------------------------------------------------------------------------
 namespace bal::d3d12 {
 
-class CommandListBundle : public ICommandListBundle, public ICommandList
+class CommandListBundle : public ICommandListBundle
 {
 public:
     /*!

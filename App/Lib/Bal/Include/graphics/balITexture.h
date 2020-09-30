@@ -89,6 +89,16 @@ public:
      * @param[in] arg 初期化構造体
      */
     virtual bool initialize(const InitializeArg& arg) = 0;
+
+    /*!
+     * 次元取得
+     */
+    virtual Dimension getDimension() const = 0;
+
+    /*!
+     * フォーマット取得
+     */
+    virtual Format getFormat() const = 0;
 };
 
 }

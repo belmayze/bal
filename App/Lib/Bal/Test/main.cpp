@@ -64,6 +64,7 @@ public:
             bal::Engine::InitializeArg init_arg;
             init_arg.mpGraphics        = framework.getGraphics();
             init_arg.mRenderBufferSize = bal::MathSize(1280, 720);
+            bal::Engine::GetInstance().AddGfxFinalizer();
             bal::Engine::GetInstance().initialize(init_arg, std::move(p_modules), cNumModule);
         }
 

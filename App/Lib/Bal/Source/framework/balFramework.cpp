@@ -220,6 +220,7 @@ int Framework::enterApplicationLoop(FrameworkCallback* p_callback)
     loop_thread.join();
 
     // グラフィックスの破棄には順序があるので関数で破棄させる
+    SingletonGfxFinalizer::Finalize();
     mpGraphics->destroy();
 
     return static_cast<int>(msg.wParam);
@@ -265,9 +266,6 @@ void Framework::applicationLoop_()
 
             // グラフィックスの後処理
             mpGraphics->postDraw();
-
-            // @debug
-            //reinterpret_cast<gfx::d3d12::Graphics*>(mpGraphics.get())->loop();
         }
 
         // フレームレート計算
@@ -296,9 +294,6 @@ void Framework::applicationLoop_()
             }
         }
     }
-
-    // グラフィックス関連の破棄処理
-    SingletonGfxFinalizer::Finalize();
 }
 
 // ----------------------------------------------------------------------------
