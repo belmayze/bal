@@ -15,15 +15,15 @@ namespace test {
 
 void TestBase::exec()
 {
-    bal::Log::Print("====テスト開始 [%s]====\n", mName.c_str());
+    BAL_LOG_INFO("====テスト開始 [%s]====\n", mName.c_str());
     bal::DateTime start;
     {
         exec_();
     }
     bal::DateTime end;
     bal::TimeSpan diff = end - start;
-    bal::Log::Print("====テスト終了====\n");
-    bal::Log::Print("処理時間 [%dms]\n", diff.getMilliseconds());
+    BAL_LOG_INFO("====テスト終了====\n");
+    BAL_LOG_INFO("処理時間 [%dms]\n", diff.getMilliseconds());
 }
 
 }

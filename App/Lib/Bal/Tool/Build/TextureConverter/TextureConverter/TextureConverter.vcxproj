@@ -20,7 +20,6 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
-    <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{46f44fa8-cb72-4dc6-9abb-68929eb3aba5}</ProjectGuid>
     <RootNamespace>TextureConverter</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
@@ -39,23 +38,45 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets">
     <Import Project="..\..\..\..\Build\Win\Props\Bal\Bal.props" />
-    <Import Project="Props\TextureConverter.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>$(ProjectDir)..\..\..\..\Include;$(IncludePath)</IncludePath>
-    <OutDir>$(ProjectDir)..\TextureArchiver\bin\$(Configuration)\netcoreapp3.1\</OutDir>
-    <LibraryPath>$(ProjectDir)..\..\..\..\Lib\$(Platform)\$(Configuration);$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)</OutDir>
+    <IncludePath>$(ProjectDir)..\..\..\..\Include;$(ProjectDir)..\..\..\..\..\DirectXTex\DirectXTex;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)..\..\..\..\Lib\$(Platform)\$(Configuration);$(ProjectDir)..\..\..\..\..\DirectXTex\DirectXTex\Bin\Desktop_2019_Win10\$(Platform)\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>bal.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>bal.lib;DirectXTex.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ClCompile />
+    <ClCompile>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Shipping|x64'">MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Test|x64'">MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <ClCompile>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Development|x64'">MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <PostBuildEvent>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Shipping|x64'">if not $(ConfigurationName) == Shipping exit
+
+set COPY_DIRECTORY=$(SolutionDir)..\..\$(SolutionName)
+if not exist %COPY_DIRECTORY% md %COPY_DIRECTORY%
+cd $(TargetDir)
+robocopy . %COPY_DIRECTORY% /MIR /xf *.pdb /xf *.ilk
+if ERRORLEVEL 8 exit 1
+
+exit 0</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="TextureConverter.cpp" />
+    <ClCompile Include="Main.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

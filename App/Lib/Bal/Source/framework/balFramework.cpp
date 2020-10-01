@@ -292,7 +292,7 @@ void Framework::applicationLoop_()
 
                     mFrameRatePerMinute = static_cast<float>(frame_count) / (static_cast<float>(diff.getMicroseconds()) * 0.000001f);
                     frame_count         = 0;
-                    Log::Print("FrameRate: %.2f\n", mFrameRatePerMinute);
+                    BAL_LOG_INFO("FrameRate: %.2f\n", mFrameRatePerMinute);
                 }
             }
         }

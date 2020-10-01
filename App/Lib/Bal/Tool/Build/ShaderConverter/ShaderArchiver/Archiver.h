@@ -71,9 +71,9 @@ private:
     };
 
 private:
-    bal::gfx::ShaderArchive::Header                 mHeader;
-    std::unique_ptr<bal::gfx::ShaderArchive::Tag[]> mTags;
-    std::unique_ptr<ShaderContainer[]>              mShaders;
+    bal::ShaderArchive::Header                 mHeader;
+    std::unique_ptr<bal::ShaderArchive::Tag[]> mTags;
+    std::unique_ptr<ShaderContainer[]>         mShaders;
 };
 
 }

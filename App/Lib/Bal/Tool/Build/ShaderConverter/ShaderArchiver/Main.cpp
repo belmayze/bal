@@ -42,7 +42,7 @@ public:
             framework.initialize(api_entry, init_arg);
         }
 
-        framework.enterApplicationLoop();
+        framework.enterApplicationLoop(nullptr);
 
         // オプション検索
         bal::StringPtr input_filepath;

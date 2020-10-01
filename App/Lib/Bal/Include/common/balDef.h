@@ -54,7 +54,8 @@
 #define BAL_STATIC_ASSERT(cond, ...) static_assert(cond, __VA_ARGS__)
 
 // ログ
-#define BAL_LOG_INFO(format, ...) bal::Log::Print(format, __VA_ARGS__)
+#define BAL_LOG_INFO(format, ...)  bal::Log::Print(bal::Log::EType::Info, format, __VA_ARGS__)
+#define BAL_LOG_ERROR(format, ...) bal::Log::Print(bal::Log::EType::Error, format, __VA_ARGS__)
 
 // プラットフォーム別の必須 include
 #if BAL_PLATFORM_IS_WIN

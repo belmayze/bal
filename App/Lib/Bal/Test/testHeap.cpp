@@ -23,7 +23,7 @@ void TestHeap::exec_()
     auto heap = bal::heap::Block::Create(1 * 1024, "Test", p_root_heap);
     {
         void* ptr = heap->alloc(100);
-        bal::Log::Print("Alloc [%p]\n", ptr);
+        BAL_LOG_INFO("Alloc [%p]\n", ptr);
         delete ptr;
     }
 
@@ -62,7 +62,7 @@ void TestHeap::exec_()
         }
         bal::DateTime end;
         bal::TimeSpan diff = end - start;
-        bal::Log::Print("Calc SSE: %dms\n", diff.getMilliseconds());
+        BAL_LOG_INFO("Calc SSE: %dms\n", diff.getMilliseconds());
     }
     {
         bal::DateTime start;
@@ -98,7 +98,7 @@ void TestHeap::exec_()
         }
         bal::DateTime end;
         bal::TimeSpan diff = end - start;
-        bal::Log::Print("Calc Common: %dms\n", diff.getMilliseconds());
+        BAL_LOG_INFO("Calc Common: %dms\n", diff.getMilliseconds());
     }
 
 #if 1
@@ -115,7 +115,7 @@ void TestHeap::exec_()
         }
         bal::DateTime end;
         bal::TimeSpan diff = end - start;
-        bal::Log::Print("Calc SSE: %dms\n", diff.getMilliseconds());
+        BAL_LOG_INFO("Calc SSE: %dms\n", diff.getMilliseconds());
     }
     {
         bal::DateTime start;
@@ -129,7 +129,7 @@ void TestHeap::exec_()
         }
         bal::DateTime end;
         bal::TimeSpan diff = end - start;
-        bal::Log::Print("Calc Common: %dms\n", diff.getMilliseconds());
+        BAL_LOG_INFO("Calc Common: %dms\n", diff.getMilliseconds());
     }
 #endif
 }

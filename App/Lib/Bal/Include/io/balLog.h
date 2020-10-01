@@ -14,7 +14,7 @@ class Log
 {
 public:
     //! ログの種類
-    enum EType
+    enum class EType
     {
         Debug,   //!< デバッグ
         Info,    //!< 情報
@@ -28,7 +28,7 @@ public:
      * @param[in] formats フォーマット
      */
     template <typename... Formats>
-    static void Print(Formats... args);
+    static void Print(EType type, Formats... args);
 
 private:
     /*!

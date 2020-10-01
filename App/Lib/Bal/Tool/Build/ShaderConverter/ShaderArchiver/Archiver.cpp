@@ -16,7 +16,7 @@ namespace app
 void Archiver::initialize(const InitializeArg& arg)
 {
     mHeader.mNumPrograms = arg.mNumShader;
-    mTags                = bal::make_unique<bal::gfx::ShaderArchive::Tag[]>(nullptr, mHeader.mNumPrograms);
+    mTags                = bal::make_unique<bal::ShaderArchive::Tag[]>(nullptr, mHeader.mNumPrograms);
     mShaders             = bal::make_unique<ShaderContainer[]>(nullptr, mHeader.mNumPrograms);
 }
 
@@ -25,7 +25,7 @@ void Archiver::initialize(const InitializeArg& arg)
 void Archiver::setShader(const ShaderArg& arg)
 {
     ShaderContainer& container = mShaders[arg.mShaderIndex];
-    bal::gfx::ShaderArchive::Tag& tag = mTags[arg.mShaderIndex];
+    bal::ShaderArchive::Tag& tag = mTags[arg.mShaderIndex];
 
     // プログラム名
     container.mProgramName = bal::StringBuffer(arg.mShaderName.c_str(), arg.mShaderName.size());
@@ -79,12 +79,12 @@ void Archiver::setShader(const ShaderArg& arg)
 void Archiver::archive(const bal::StringPtr& output_path)
 {
     // ファイルサイズを計算
-    size_t memory_size = sizeof(bal::gfx::ShaderArchive::Header)
-                       + sizeof(bal::gfx::ShaderArchive::Tag) * mHeader.mNumPrograms;
+    size_t memory_size = sizeof(bal::ShaderArchive::Header)
+                       + sizeof(bal::ShaderArchive::Tag) * mHeader.mNumPrograms;
     for (int i_program = 0; i_program < mHeader.mNumPrograms; ++i_program)
     {
         // オフセット計算しつつ、メモリーサイズも求める
-        bal::gfx::ShaderArchive::Tag& tag = mTags[i_program];
+        bal::ShaderArchive::Tag& tag = mTags[i_program];
         tag.mOffset = static_cast<uint32_t>(memory_size);
         memory_size += tag.mNameSize
                     +  tag.mVertexShaderSize
@@ -102,16 +102,16 @@ void Archiver::archive(const bal::StringPtr& output_path)
 
     // ヘッダー書き出し
     uint8_t* ptr = buffer.get();
-    std::memcpy(ptr, &mHeader, sizeof(bal::gfx::ShaderArchive::Header));
-    ptr += sizeof(bal::gfx::ShaderArchive::Header);
-    std::memcpy(ptr, mTags.get(), sizeof(bal::gfx::ShaderArchive::Tag) * mHeader.mNumPrograms);
-    ptr += sizeof(bal::gfx::ShaderArchive::Tag) * mHeader.mNumPrograms;
+    std::memcpy(ptr, &mHeader, sizeof(bal::ShaderArchive::Header));
+    ptr += sizeof(bal::ShaderArchive::Header);
+    std::memcpy(ptr, mTags.get(), sizeof(bal::ShaderArchive::Tag) * mHeader.mNumPrograms);
+    ptr += sizeof(bal::ShaderArchive::Tag) * mHeader.mNumPrograms;
 
     // シェーダー書き出し
     for (int i_program = 0; i_program < mHeader.mNumPrograms; ++i_program)
     {
         const ShaderContainer& container = mShaders[i_program];
-        const bal::gfx::ShaderArchive::Tag& tag = mTags[i_program];
+        const bal::ShaderArchive::Tag& tag = mTags[i_program];
         
         // 名前
         std::memcpy(ptr, container.mProgramName.c_str(), tag.mNameSize);
