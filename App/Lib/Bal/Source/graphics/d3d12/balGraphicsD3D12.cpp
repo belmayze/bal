@@ -59,30 +59,50 @@ bool Graphics::initialize(const InitializeArg& arg)
         return false;
     }
 
-    // アダプターの検索
+    // アダプターの検索しながらデバイス取得
+    D3D_FEATURE_LEVEL feature_level = D3D_FEATURE_LEVEL_1_0_CORE;
+    std::array initialize_feature_levels =
+    {
+        D3D_FEATURE_LEVEL_12_1,
+        D3D_FEATURE_LEVEL_12_0,
+        D3D_FEATURE_LEVEL_11_1,
+        D3D_FEATURE_LEVEL_11_0,
+    };
     Microsoft::WRL::ComPtr<IDXGIAdapter1> p_adapter;
-    for (uint32_t i_adapter = 0; p_factory->EnumAdapters1(i_adapter, p_adapter.GetAddressOf()) != DXGI_ERROR_NOT_FOUND; ++i_adapter)
-    {
-        DXGI_ADAPTER_DESC1 desc;
-        p_adapter->GetDesc1(&desc);
-
-        if ((desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) != 0)
-        {
-            // ソフトウェア駆動は除外
-            p_adapter.Reset();
-            continue;
-        }
-        else
-        {
-            break;
-        }
-    }
-
-    // デバイス取得
     Microsoft::WRL::ComPtr<ID3D12Device6> p_device;
-    if (FAILED(D3D12CreateDevice(p_adapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&p_device))))
     {
-        return false;
+        bool found_adapter = false;
+        for (uint32_t i_adapter = 0; p_factory->EnumAdapters1(i_adapter, p_adapter.GetAddressOf()) != DXGI_ERROR_NOT_FOUND; ++i_adapter)
+        {
+            DXGI_ADAPTER_DESC1 desc;
+            p_adapter->GetDesc1(&desc);
+
+            if ((desc.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) != 0)
+            {
+                // ソフトウェア駆動は除外
+                p_adapter.Reset();
+                continue;
+            }
+            else
+            {
+                // ハードウェアなら初期化
+                for (D3D_FEATURE_LEVEL level : initialize_feature_levels)
+                {
+                    if (SUCCEEDED(D3D12CreateDevice(p_adapter.Get(), level, IID_PPV_ARGS(&p_device))))
+                    {
+                        feature_level = level;
+                        found_adapter = true;
+                        break;
+                    }
+                }
+            }
+
+            if (found_adapter) { break; }
+        }
+        if (!found_adapter)
+        {
+            return false;
+        }
     }
     mpDevice.reset(p_device.Detach());
 
