@@ -186,11 +186,20 @@ void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg)
 
 int Framework::enterApplicationLoop(FrameworkCallback* p_callback)
 {
-    if (!mInitialized) { return -1; }
+    if (!mInitialized)
+    {
+        // グラフィックスの破棄には順序があるので関数で破棄させる
+        SingletonGfxFinalizer::Finalize();
+        mpGraphics->destroy();
+        return -1;
+    }
 
     // コンソールモードの時はループは不要
     if (!mEnableLoop)
     {
+        // グラフィックスの破棄には順序があるので関数で破棄させる
+        SingletonGfxFinalizer::Finalize();
+        mpGraphics->destroy();
         return -1;
     }
 

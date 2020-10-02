@@ -244,7 +244,7 @@ bool Graphics::initialize(const InitializeArg& arg)
             mpFrameBuffer->setResolution(arg.mRenderBufferSize);
         }
     }
-
+#if 0
     // シェーダーアーカイブを取得
     mpShaderArchive = make_unique<ShaderArchive>(nullptr);
     {
@@ -343,7 +343,7 @@ bool Graphics::initialize(const InitializeArg& arg)
         init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
         if (!mpPipeline->initialize(init_arg)) { return false; }
     }
-
+#endif
     // 情報
     mBufferCount = arg.mBufferCount;
 
