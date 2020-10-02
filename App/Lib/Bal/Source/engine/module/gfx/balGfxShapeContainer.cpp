@@ -12,6 +12,19 @@
 // bal::d3d12
 #include <graphics/d3d12/balShapeBufferD3D12.h>
 
+namespace {
+
+const bal::mod::gfx::ShapeContainer::Vertex cQuadVertices[] =
+{
+    {{-1.f,  1.f, 0.f}, {0.f, 0.f, 1.f}, {0.f, 0.f}},
+    {{-1.f, -1.f, 0.f}, {0.f, 0.f, 1.f}, {0.f, 1.f}},
+    {{ 1.f, -1.f, 0.f}, {0.f, 0.f, 1.f}, {1.f, 1.f}},
+    {{ 1.f,  1.f, 0.f}, {0.f, 0.f, 1.f}, {1.f, 0.f}},
+};
+const uint16_t cQuadIndices[] = {0, 1, 2, 0, 2, 3};
+
+}
+
 namespace bal::mod::gfx {
 
 // ----------------------------------------------------------------------------
@@ -29,29 +42,28 @@ void ShapeContainer::initialize()
     // グラフィックスシステム
     IGraphics* p_graphics = Engine::GetInstance().getGraphicsSystem();
 
-    // 矩形
+    // 矩形を初期化していくリスト
+    using InitializeTuple = std::tuple<std::unique_ptr<IShapeBuffer>*, const Vertex*, size_t, const uint16_t*, size_t>;
+    std::array initialize_list =
     {
-        mpQuadBuffer = make_unique<d3d12::ShapeBuffer>(nullptr);
+        InitializeTuple(&mpQuadBuffer, cQuadVertices, sizeof(cQuadVertices), cQuadIndices, sizeof(cQuadIndices))
+    };
 
-        // position, texcoord
-        float vertices[] = {
-            -1.f,  1.f, 0.f,  0.f, 0.f,
-            -1.f, -1.f, 0.f,  0.f, 1.f,
-             1.f, -1.f, 0.f,  1.f, 1.f,
-             1.f,  1.f, 0.f,  1.f, 0.f
-        };
-        uint16_t indices[] = { 0, 1, 2, 0, 2, 3 };
+    // 初期化
+    for (InitializeTuple& list : initialize_list)
+    {
+        *std::get<0>(list) = make_unique<d3d12::ShapeBuffer>(nullptr);
 
         IShapeBuffer::InitializeArg init_arg;
         init_arg.mpGraphics         = p_graphics;
-        init_arg.mpVertexBuffer     = reinterpret_cast<const uint8_t*>(vertices);
-        init_arg.mVertexBufferSize  = sizeof(vertices);
-        init_arg.mVertexStride      = sizeof(float) * 5;
-        init_arg.mpIndexBuffer      = reinterpret_cast<const uint8_t*>(indices);
-        init_arg.mIndexBufferSize   = sizeof(indices);
-        init_arg.mIndexCount        = 6;
+        init_arg.mpVertexBuffer     = std::get<1>(list);
+        init_arg.mVertexBufferSize  = std::get<2>(list);
+        init_arg.mVertexStride      = sizeof(Vertex);
+        init_arg.mpIndexBuffer      = std::get<3>(list);
+        init_arg.mIndexBufferSize   = std::get<4>(list);
         init_arg.mIndexBufferFormat = IShapeBuffer::IndexBufferFormat::Uint16;
-        if (!mpQuadBuffer->initialize(init_arg)) { return; }
+        init_arg.mIndexCount        = static_cast<uint32_t>(init_arg.mIndexBufferSize / sizeof(uint16_t));
+        if (!(*std::get<0>(list))->initialize(init_arg)) { return; }
     }
 }
 

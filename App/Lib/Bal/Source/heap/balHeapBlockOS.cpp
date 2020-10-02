@@ -5,8 +5,6 @@
  *
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
-// C++
-#include <memory>
 // bal
 #include <heap/balHeapBlockOS.h>
 

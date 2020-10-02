@@ -30,10 +30,10 @@ public:
     struct InitializeArg
     {
         IGraphics*        mpGraphics         = nullptr;
-        const uint8_t*    mpVertexBuffer     = nullptr;
+        const void*       mpVertexBuffer     = nullptr;
         size_t            mVertexBufferSize  = 0;
         size_t            mVertexStride      = 0;
-        const uint8_t*    mpIndexBuffer      = nullptr;
+        const void*       mpIndexBuffer      = nullptr;
         size_t            mIndexBufferSize   = 0;
         uint32_t          mIndexCount        = 0;
         IndexBufferFormat mIndexBufferFormat = IndexBufferFormat::Uint16;

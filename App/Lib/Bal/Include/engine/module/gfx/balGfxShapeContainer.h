@@ -17,6 +17,18 @@ namespace bal::mod::gfx {
 class ShapeContainer : public Singleton<ShapeContainer>
 {
 public:
+    struct Vertex
+    {
+        MathVector3 mPosition;
+        MathVector3 mNormal;
+        MathVector2 mTexcoord;
+    };
+
+    constexpr static size_t cOffsetPosition = offsetof(Vertex, mPosition);
+    constexpr static size_t cOffsetNormal   = offsetof(Vertex, mNormal);
+    constexpr static size_t cOffsetTexcoord = offsetof(Vertex, mTexcoord);
+
+public:
     //! コンストラクター
     ShapeContainer();
 

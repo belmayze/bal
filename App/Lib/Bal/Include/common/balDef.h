@@ -67,7 +67,10 @@
 #   include <wrl.h>
 #endif
 // 使っていい C++ の include
+#include <array>
 #include <cstdint>
+#include <memory>
+#include <tuple>
 // bal
 #include <io/balLog.h>
 #include <memory/balUniquePtr.h>

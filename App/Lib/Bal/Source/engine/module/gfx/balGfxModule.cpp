@@ -51,7 +51,6 @@ void Module::initialize(const InitializeArg& arg)
 
     // HDR 用レンダーバッファ
     {
-
         // テクスチャーを確保
         std::unique_ptr<ITexture> p_color_buffer = make_unique<d3d12::Texture>(nullptr);
         {
@@ -111,8 +110,8 @@ void Module::initialize(const InitializeArg& arg)
             std::unique_ptr<d3d12::InputLayout> p_input_layout = make_unique<d3d12::InputLayout>(nullptr);
             {
                 std::unique_ptr<IInputLayout::InputLayoutDesc[]> descs = make_unique<IInputLayout::InputLayoutDesc[]>(nullptr, 2);
-                descs[0] = { .mName = "POSITION", .mType = IInputLayout::Type::Vec3, .mOffset =  0 };
-                descs[1] = { .mName = "TEXCOORD", .mType = IInputLayout::Type::Vec2, .mOffset = 12 };
+                descs[0] = {.mName = "POSITION", .mType = IInputLayout::Type::Vec3, .mOffset = ShapeContainer::cOffsetPosition};
+                descs[1] = {.mName = "TEXCOORD", .mType = IInputLayout::Type::Vec2, .mOffset = ShapeContainer::cOffsetTexcoord};
 
                 IInputLayout::InitializeArg init_arg;
                 init_arg.mpGraphics      = p_graphics;

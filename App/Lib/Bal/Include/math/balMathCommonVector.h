@@ -23,7 +23,7 @@ public:
         m[0] = 0.f; m[1] = 0.f;
     }
     //! コンストラクター
-    explicit MathCommonVector2(float x, float y)
+    MathCommonVector2(float x, float y)
     {
         m[0] = x; m[1] = y;
     }
@@ -121,12 +121,12 @@ public:
         m[0] = 0.f; m[1] = 0.f; m[2] = 0.f;
     }
     //! コンストラクター
-    explicit MathCommonVector3(float x, float y, float z)
+    MathCommonVector3(float x, float y, float z)
     {
         m[0] = x; m[1] = y; m[2] = z;
     }
     //! コンストラクター
-    explicit MathCommonVector3(const MathCommonVector2& v, float z)
+    MathCommonVector3(const MathCommonVector2& v, float z)
     {
         m[0] = v[0]; m[1] = v[1]; m[2] = z;
     }

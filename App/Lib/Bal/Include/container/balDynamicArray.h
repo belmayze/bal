@@ -8,7 +8,6 @@
 #pragma once
 // C++
 #include <cassert>
-#include <memory>
 #include <stdexcept>
 
 // ----------------------------------------------------------------------------

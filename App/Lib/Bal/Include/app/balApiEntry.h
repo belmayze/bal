@@ -6,8 +6,6 @@
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 #pragma once
-// std
-#include <memory>
 // bal
 #include <container/balStringPtr.h>
 #include <heap/balHeapRootBlock.h>
