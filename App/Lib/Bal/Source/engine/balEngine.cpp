@@ -56,7 +56,11 @@ bool Engine::initialize(const InitializeArg& arg, ModuleArray&& p_modules, size_
 
 void Engine::onUpdate(const UpdateArg& arg)
 {
-
+    // @TODO: 依存をもとにマルチスレッドで実行
+    for (size_t i_module = 0; i_module < mNumModule; ++i_module)
+    {
+        mpModules[i_module]->onUpdate(arg);
+    }
 }
 
 // ----------------------------------------------------------------------------

@@ -34,7 +34,7 @@ bool ConstantBuffer::initialize(const InitializeArg& arg)
 
             D3D12_RESOURCE_DESC desc = {};
             desc.Dimension        = D3D12_RESOURCE_DIMENSION_BUFFER;
-            desc.Width            = arg.mBufferSize;
+            desc.Width            = static_cast<uint32_t>(Math::Ceil(arg.mBufferSize, static_cast<size_t>(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT)));
             desc.Height           = 1;
             desc.DepthOrArraySize = 1;
             desc.MipLevels        = 1;

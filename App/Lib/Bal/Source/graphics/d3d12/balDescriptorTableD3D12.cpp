@@ -117,7 +117,7 @@ bool DescriptorTable::initialize(const InitializeArg& arg)
 
         D3D12_CONSTANT_BUFFER_VIEW_DESC desc = {};
         desc.BufferLocation = p_constant_buffer->getGPUVirtualAddress();
-        desc.SizeInBytes    = static_cast<uint32_t>(Math::Ceil(p_constant_buffer->getBufferSize(), 256LLU));
+        desc.SizeInBytes    = static_cast<uint32_t>(Math::Ceil(p_constant_buffer->getBufferSize(), static_cast<size_t>(D3D12_CONSTANT_BUFFER_DATA_PLACEMENT_ALIGNMENT)));
 
         p_device->CreateConstantBufferView(&desc, handle);
         handle.ptr += increment_size;

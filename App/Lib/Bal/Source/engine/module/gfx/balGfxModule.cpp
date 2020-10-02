@@ -19,6 +19,7 @@
 #include <graphics/archiver/balShaderArchive.h>
 // gfx::d3d12
 #include <graphics/d3d12/balDescriptorTableD3D12.h>
+#include <graphics/d3d12/balConstantBufferD3D12.h>
 #include <graphics/d3d12/balInputLayoutD3D12.h>
 #include <graphics/d3d12/balPipelineD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
@@ -120,7 +121,7 @@ void Module::initialize(const InitializeArg& arg)
                 if (!p_input_layout->initialize(init_arg)) { return; }
             }
 
-            // パイプライン初期化
+            // パイプライン
             mpPresentPipeline = make_unique<d3d12::Pipeline>(nullptr);
             {
                 IPipeline::InitializeArg init_arg;
@@ -149,6 +150,63 @@ void Module::initialize(const InitializeArg& arg)
                 if (!mpPresentDescriptorTable->initialize(init_arg)) { return; }
             }
         }
+
+        // 仮描画
+        {
+            // 頂点レイアウト
+            std::unique_ptr<d3d12::InputLayout> p_input_layout = make_unique<d3d12::InputLayout>(nullptr);
+            {
+                std::unique_ptr<IInputLayout::InputLayoutDesc[]> descs = make_unique<IInputLayout::InputLayoutDesc[]>(nullptr, 3);
+                descs[0] = {.mName = "POSITION", .mType = IInputLayout::Type::Vec3, .mOffset = ShapeContainer::cOffsetPosition};
+                descs[1] = {.mName = "NORMAL",   .mType = IInputLayout::Type::Vec3, .mOffset = ShapeContainer::cOffsetNormal  };
+                descs[2] = {.mName = "TEXCOORD", .mType = IInputLayout::Type::Vec2, .mOffset = ShapeContainer::cOffsetTexcoord};
+
+                IInputLayout::InitializeArg init_arg;
+                init_arg.mpGraphics      = p_graphics;
+                init_arg.mNumInputLayout = 3;
+                init_arg.mpInputLayouts  = descs.get();
+                if (!p_input_layout->initialize(init_arg)) { return; }
+            }
+
+            // パイプライン
+            mpSamplePipeline = make_unique<d3d12::Pipeline>(nullptr);
+            {
+                IPipeline::InitializeArg init_arg;
+                init_arg.mpGraphics         = p_graphics;
+                init_arg.mNumOutput         = 1;
+                init_arg.mOutputFormats[0]  = mpRenderTargetColor->getTexture()->getFormat();
+                init_arg.mNumConstantBuffer = 1;
+                init_arg.mpInputLayout      = p_input_layout.get();
+
+                const ShaderArchive::ShaderContainer& shader_container = mpShaderArchive->getShaderContainer(mpShaderArchive->findProgram("Sample"));
+                init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
+                init_arg.mVertexShaderBufferSize = shader_container.mVertexShader.mBufferSize;
+                init_arg.mpPixelShaderBuffer     = shader_container.mPixelShader.mBuffer;
+                init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
+                if (!mpSamplePipeline->initialize(init_arg)) { return; }
+            }
+
+            // 定数バッファ
+            mpSampleConstantBuffer = make_unique<d3d12::ConstantBuffer>(nullptr);
+            {
+                IConstantBuffer::InitializeArg init_arg;
+                init_arg.mpGraphics   = p_graphics;
+                init_arg.mBufferCount = 1;
+                init_arg.mBufferSize  = sizeof(mSampleMeshCB);
+                if (!mpSampleConstantBuffer->initialize(init_arg)) { return; }
+            }
+
+            // デスクリプターテーブル
+            mpSampleDescriptorTable = make_unique<d3d12::DescriptorTable>(nullptr);
+            {
+                const IConstantBuffer* p_content_buffers[] = { mpSampleConstantBuffer.get() };
+                IDescriptorTable::InitializeArg init_arg;
+                init_arg.mpGraphics = p_graphics;
+                init_arg.mNumConstantBuffer = 1;
+                init_arg.mpConstantBuffers  = p_content_buffers;
+                if (!mpSampleDescriptorTable->initialize(init_arg)) { return; }
+            }
+        }
     }
 
     // よく使用するシェイプ形状を初期化する
@@ -166,6 +224,20 @@ void Module::initialize(const InitializeArg& arg)
 
 void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 {
+    // 仮
+    {
+        static float rotate_value = 0.f;
+        rotate_value += 0.001f;
+        mSampleMeshCB.mWorldMatrix.setRotateZ(bal::Radian(rotate_value));
+        mSampleMeshCB.mWorldMatrixForNormal.setRotateZ(bal::Radian(rotate_value));
+    }
+    // 定数バッファ更新
+    {
+        SampleMeshCB* p_buffer = mpSampleConstantBuffer->getBufferPtr<SampleMeshCB>();
+        p_buffer->mWorldMatrix          = mSampleMeshCB.mWorldMatrix;
+        p_buffer->mWorldMatrixForNormal = mSampleMeshCB.mWorldMatrixForNormal;
+    }
+
     // カスタムモジュール
     if (mpCustomModule)
     {
@@ -196,7 +268,10 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
         arg.mpCommandList->bindFrameBuffer(*mpFrameBuffer);
         arg.mpCommandList->clear(*mpFrameBuffer, ICommandListDirect::ClearFlag::Color | ICommandListDirect::ClearFlag::Depth, MathColor(0.f, 0.f, 0.f, 1.f), 1.f, 0);
 
-        // @TODO: レンダリング
+        // 仮レンダリング
+        arg.mpCommandList->bindPipeline(*mpSamplePipeline);
+        arg.mpCommandList->setDescriptorTable(0, *mpSampleDescriptorTable);
+        arg.mpCommandList->drawShape(*ShapeContainer::GetInstance().getQuadBuffer());
 
         // バリア
         arg.mpCommandList->resourceBarrier(

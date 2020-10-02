@@ -9,6 +9,7 @@
 // bal
 #include <engine/module/balIModule.h>
 
+namespace bal { class IConstantBuffer; }
 namespace bal { class IDescriptorTable; }
 namespace bal { class IGraphics; }
 namespace bal { class IPipeline; }
@@ -65,6 +66,14 @@ public:
     void onDraw(const FrameworkCallback::DrawArg& arg);
 
 private:
+    //! Sample Constant Buffer
+    struct SampleMeshCB
+    {
+        MathMatrix44 mWorldMatrix;
+        MathMatrix44 mWorldMatrixForNormal;
+    };
+
+private:
     std::unique_ptr<ICustomModule>      mpCustomModule;
     std::unique_ptr<IRenderTargetColor> mpRenderTargetColor;
     std::unique_ptr<IRenderTargetDepth> mpRenderTargetDepth;
@@ -73,6 +82,12 @@ private:
 
     std::unique_ptr<IPipeline>          mpPresentPipeline;
     std::unique_ptr<IDescriptorTable>   mpPresentDescriptorTable;
+
+    std::unique_ptr<IPipeline>          mpSamplePipeline;
+    std::unique_ptr<IDescriptorTable>   mpSampleDescriptorTable;
+    std::unique_ptr<IConstantBuffer>    mpSampleConstantBuffer;
+    SampleMeshCB                        mSampleMeshCB;
+
 };
 
 }
