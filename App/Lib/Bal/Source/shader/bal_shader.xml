@@ -2,22 +2,18 @@
 <Shader xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Settings>
     <IncludeArray>
-      <Include Path="D:\Documents\Git\bal\App\Lib\Bal\Source\shader" />
+      <Include Path=".\" />
     </IncludeArray>
     <Compile Profile="5_0" />
   </Settings>
   <ProgramArray>
-    <Program Name="Copy">
-      <Vertex Source="copy.hlsl" />
-      <Pixel Source="copy.hlsl" />
-    </Program>
-    <Program Name="Sample1">
-      <Vertex Source="main.vs.hlsl" />
-      <Pixel Source="main.ps.hlsl" />
-    </Program>
     <Program Name="Present">
       <Vertex Source="balPresent.hlsl" />
       <Pixel Source="balPresent.hlsl" />
+    </Program>
+    <Program Name="Sample">
+      <Vertex Source="sample.hlsl" />
+      <Pixel Source="sample.hlsl" />
     </Program>
   </ProgramArray>
 </Shader>

@@ -1,5 +1,5 @@
 /*!
- * @file   copy.hlsl
+ * @file   balPresent.hlsl
  * @brief
  * @author belmayze
  *
@@ -8,6 +8,7 @@
 struct VARYING
 {
     float4 Position : SV_POSITION;
+    float3 Normal   : NORMAL;
     float2 Texcoord : TEXCOORD0;
 };
 
@@ -17,14 +18,22 @@ struct VARYING
 struct INPUT
 {
     float3 Position : POSITION;
+    float3 Normal   : NORMAL;
     float2 Texcoord : TEXCOORD0;
+};
+
+cbuffer MeshConstantBuffer : register(b0)
+{
+    float4x4 WorldMatrix;
+    float4x4 WorldMatrixForNormal; //!< 法線用にスケールを除いた行列
 };
 
 VARYING main(INPUT input)
 {
     VARYING output;
 
-    output.Position = float4(input.Position, 1.0);
+    output.Position = mul(float4(input.Position, 1.0), WorldMatrix);
+    output.Normal   = mul(float4(input.Normal,   0.0), WorldMatrixForNormal).xyz;
     output.Texcoord = input.Texcoord;
 
     return output;
@@ -40,15 +49,10 @@ struct OUTPUT
     float4 Color0 : SV_TARGET0;
 };
 
-Texture2D    ColorTexture : register(t0);
-SamplerState ColorSampler : register(s0);
-
 OUTPUT main(VARYING input)
 {
     OUTPUT output;
-
-    output.Color0 = ColorTexture.Sample(ColorSampler, input.Texcoord);
-
+    output.Color0 = float4(1.0, 1.0, 1.0, 1.0);
     return output;
 }
 
