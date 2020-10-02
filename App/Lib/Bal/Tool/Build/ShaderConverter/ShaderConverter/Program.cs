@@ -67,15 +67,19 @@ namespace ShaderConverter
                 }
             }
 
+            // ルートパス
+            string root_path = Path.GetDirectoryName(Path.GetFullPath(options.Input));
+
             foreach (XmlData.Include include in shader_container.Settings.Includes)
             {
                 // パスを決定
                 string path = include.Path;
                 if (!Path.IsPathRooted(path))
                 {
-                    path = $"{Path.GetDirectoryName(options.Input)}\\{path}";
+                    path = $"{root_path}\\{path}";
                 }
                 // ファイルのコピー
+                Console.WriteLine($"Path: {path}");
                 string[] files = Directory.GetFiles(path, "*", SearchOption.TopDirectoryOnly);
                 foreach (string file in files)
                 {
