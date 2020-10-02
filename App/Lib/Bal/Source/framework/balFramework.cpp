@@ -91,15 +91,24 @@ void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg)
         // カレントディレクトリの変更
         if (current_dir.isEmpty())
         {
+            // 未指定だったら、ROM ディレクトリの ../../Contents にしておく
             std::unique_ptr<TCHAR[]> dir_path = make_unique<TCHAR[]>(mpRootHeap, MAX_PATH);
+
+            // 実行パス取得
             GetModuleFileName(nullptr, dir_path.get(), MAX_PATH);
+
+            // ../../
             TCHAR* p_dir = _tcsrchr(dir_path.get(), _T('\\'));
-            if (p_dir)
-            {
-                p_dir  = _wcsinc(p_dir);
-                *p_dir = _T('\0');
-                SetCurrentDirectory(dir_path.get());
-            }
+            if (p_dir) { *p_dir = _T('\0'); }
+            p_dir = _tcsrchr(dir_path.get(), _T('\\'));
+            if (p_dir) { *p_dir = _T('\0'); }
+            p_dir = _tcsrchr(dir_path.get(), _T('\\'));
+            if (p_dir) { p_dir = _wcsinc(p_dir); *p_dir = _T('\0'); }
+
+            // Contents
+            std::memcpy(p_dir, _T("Contents\\"), sizeof(TCHAR) * 9);
+            *(p_dir + 9) = _T('\0');
+            SetCurrentDirectory(dir_path.get());
         }
         else
         {
