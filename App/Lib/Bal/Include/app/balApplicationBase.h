@@ -37,13 +37,6 @@ public:
      * @param[in] api_entry 起動したときのオプション設定などが入っているクラスです
      */
     virtual int main(const bal::ApiEntry& api_entry) = 0;
-
-    /*!
-     * アプリケーションモードの時、ループ処理が行われる関数です
-     * @note Console モードの場合は使用しません
-     * @return false を返せばループが終了します
-     */
-    virtual bool onLoop() { return false; };
 };
 
 // 実態

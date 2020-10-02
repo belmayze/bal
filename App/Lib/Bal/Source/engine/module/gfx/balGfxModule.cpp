@@ -116,7 +116,7 @@ void Module::initialize(const InitializeArg& arg)
                 IInputLayout::InitializeArg init_arg;
                 init_arg.mpGraphics      = p_graphics;
                 init_arg.mNumInputLayout = 2;
-                init_arg.mpInputLayouts = descs.get();
+                init_arg.mpInputLayouts  = descs.get();
                 if (!p_input_layout->initialize(init_arg)) { return; }
             }
 
@@ -155,7 +155,7 @@ void Module::initialize(const InitializeArg& arg)
     ShapeContainer::GetInstance().initialize();
     ShapeContainer::AddGfxFinalizer();
 
-    // カスタムモジュールを保持し初期化
+    // カスタムモジュールを初期化
     if (mpCustomModule)
     {
         mpCustomModule->initialize(arg);
@@ -166,6 +166,11 @@ void Module::initialize(const InitializeArg& arg)
 
 void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 {
+    // カスタムモジュール
+    if (mpCustomModule)
+    {
+        mpCustomModule->onUpdate(arg);
+    }
 }
 
 // ----------------------------------------------------------------------------

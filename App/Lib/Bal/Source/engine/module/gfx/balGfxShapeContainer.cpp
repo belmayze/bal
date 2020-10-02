@@ -14,6 +14,7 @@
 
 namespace {
 
+// 矩形
 const bal::mod::gfx::ShapeContainer::Vertex cQuadVertices[] =
 {
     {{-1.f,  1.f, 0.f}, {0.f, 0.f, 1.f}, {0.f, 0.f}},

@@ -251,12 +251,6 @@ void Framework::applicationLoop_()
     // ループ処理開始
     while (mEnableLoop)
     {
-        if (!mpApplication->onLoop())
-        {
-            PostQuitMessage(0);
-            return;
-        }
-
         // 計算コールバック（nullptr ではない前提で OK）
         {
             FrameworkCallback::UpdateArg update_arg;

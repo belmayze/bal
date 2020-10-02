@@ -15,8 +15,6 @@
 #include <memory/balUniquePtr.h>
 // bal::mod
 #include <engine/module/gfx/balGfxModule.h>
-// test
-#include "testHeap.h"
 
 class Main : public bal::ApplicationBase
 {
@@ -29,7 +27,6 @@ public:
     virtual void setupBoot(bal::ApiEntry::BootArg* p_arg)
     {
         p_arg->mBootMode = bal::ApiEntry::BootMode::Application;
-        //p_arg->mBootMode = bal::ApiEntry::BootMode::Console;
         p_arg->mRootHeapSize = 100 * 1024 * 1024;
     }
 
@@ -69,24 +66,6 @@ public:
         }
 
         return framework.enterApplicationLoop(&bal::Engine::GetInstance());
-    }
-
-    /*!
-     * アプリケーションモードの時、ループ処理が行われる関数です
-     * @note Console モードの場合は 1 回しか呼ばれません
-     * @return false を返せばループが終了します
-     */
-    virtual bool onLoop()
-    {
-        //bal::Array<std::unique_ptr<test::TestBase>, 1> arr = {
-        //    bal::make_unique<test::TestHeap>(nullptr, "TestHeap")
-        //};
-        //for (auto& test : arr)
-        //{
-        //    test->exec();
-        //}
-
-        return true;
     }
 
 };
