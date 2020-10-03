@@ -310,7 +310,7 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
 
         // 仮レンダリング
         arg.mpCommandList->setDescriptorHeap(1, *mpSampleDescriptorHeap);
-        arg.mpCommandList->drawMesh(*MeshContainer::GetInstance().getBuffer(MeshContainer::Type::Cube));
+        arg.mpCommandList->drawMesh(*MeshContainer::GetInstance().getBuffer(MeshContainer::Type::Sphere));
 
         // バリア
         arg.mpCommandList->resourceBarrier(

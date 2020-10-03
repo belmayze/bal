@@ -115,14 +115,16 @@ void MeshContainer::initialize()
             {
                 // -90～90 を 10 分割
                 // ただし完全に半周する必要があるので11分割相当
-                float y = Math::Sin(Degree((180.f / 10.f) * i_y - 90.f));
+                Degree y_degree = Degree((180.f / 10.f) * i_y - 90.f);
+                float y = Math::Sin(y_degree);
+                float s = Math::Cos(y_degree);
 
                 for (uint32_t i_r = 0; i_r < 30; ++i_r)
                 {
                     // 360°を30分割
                     Degree degree = Degree((360.f / 30.f) * i_r);
-                    float x = Math::Cos(degree);
-                    float z = Math::Sin(degree);
+                    float x = Math::Cos(degree) * s;
+                    float z = Math::Sin(degree) * s;
 
                     // 
                     uint32_t i_vertex = i_y * 30 + i_r;
