@@ -9,17 +9,9 @@
 // bal
 #include <io/balFile.h>
 #include <graphics/balFrameBuffer.h>
-#include <graphics/balViewport.h>
-#include <graphics/archiver/balShaderArchive.h>
-#include <graphics/d3d12/balCommandListBundleD3D12.h>
 #include <graphics/d3d12/balCommandListDirectD3D12.h>
 #include <graphics/d3d12/balCommandQueueD3D12.h>
-#include <graphics/d3d12/balConstantBufferD3D12.h>
-#include <graphics/d3d12/balDescriptorTableD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
-#include <graphics/d3d12/balInputLayoutD3D12.h>
-#include <graphics/d3d12/balShapeBufferD3D12.h>
-#include <graphics/d3d12/balPipelineD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
 #include <graphics/d3d12/balTextureD3D12.h>
 
@@ -200,6 +192,7 @@ bool Graphics::initialize(const InitializeArg& arg)
         }
     }
 
+#if 0
     // レンダーバッファを確保
     {
         // テクスチャーを確保
@@ -244,7 +237,7 @@ bool Graphics::initialize(const InitializeArg& arg)
             mpFrameBuffer->setResolution(arg.mRenderBufferSize);
         }
     }
-#if 0
+
     // シェーダーアーカイブを取得
     mpShaderArchive = make_unique<ShaderArchive>(nullptr);
     {
@@ -477,16 +470,6 @@ void Graphics::loop()
 bool Graphics::destroy()
 {
     // バッファ破棄
-    mpModelConstantBuffer.reset();
-    mpModelDescriptorTable.reset();
-    mpShapeBuffer.reset();
-    mpCmdBundle.reset();
-    mpPipeline.reset();
-
-    mpFrameBuffer.reset();
-    mpRenderTargetDepth.reset();
-    mpRenderTargetColor.reset();
-
     mpSwapChainFrameBuffers.reset();
     mpSwapChainRenderTargets.reset();
 
@@ -511,13 +494,6 @@ ICommandListDirect* Graphics::getCommandList()
 FrameBuffer* Graphics::getSwapChainFrameBuffer()
 {
     return &mpSwapChainFrameBuffers[mCurrentBufferIndex];
-}
-
-// ----------------------------------------------------------------------------
-
-FrameBuffer* Graphics::getDefaultFrameBuffer()
-{
-    return mpFrameBuffer.get();
 }
 
 // ----------------------------------------------------------------------------

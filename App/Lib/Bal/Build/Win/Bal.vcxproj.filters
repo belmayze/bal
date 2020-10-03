@@ -150,9 +150,6 @@
     <ClCompile Include="..\..\Source\graphics\archiver\balShaderArchive.cpp">
       <Filter>graphics\archiver</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\graphics\d3d12\balDescriptorTableD3D12.cpp">
-      <Filter>graphics\d3d12</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\graphics\d3d12\balConstantBufferD3D12.cpp">
       <Filter>graphics\d3d12</Filter>
     </ClCompile>
@@ -170,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\memory\balSingletonGfxFinalizer.cpp">
       <Filter>memory</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\d3d12\balDescriptorHeapD3D12.cpp">
+      <Filter>graphics\d3d12</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -368,12 +368,6 @@
     <ClInclude Include="..\..\Include\graphics\archiver\balShaderArchive.h">
       <Filter>graphics\archiver</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\graphics\balIDescriptorTable.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\graphics\d3d12\balDescriptorTableD3D12.h">
-      <Filter>graphics\d3d12</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\graphics\balIConstantBuffer.h">
       <Filter>graphics</Filter>
     </ClInclude>
@@ -412,6 +406,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\memory\balSingletonGfxFinalizer.h">
       <Filter>memory</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\d3d12\balDescriptorHeapD3D12.h">
+      <Filter>graphics\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\balIDescriptorHeap.h">
+      <Filter>graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

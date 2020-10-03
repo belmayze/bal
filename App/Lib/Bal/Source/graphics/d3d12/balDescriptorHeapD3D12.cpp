@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balDescriptorTableD3D12.cpp
+ * @file   balDescriptorHeapD3D12.cpp
  * @brief  
  * @author belmayze
  *
@@ -7,7 +7,7 @@
  */
 // bal
 #include <graphics/d3d12/balConstantBufferD3D12.h>
-#include <graphics/d3d12/balDescriptorTableD3D12.h>
+#include <graphics/d3d12/balDescriptorHeapD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <graphics/d3d12/balTextureD3D12.h>
 
@@ -15,7 +15,7 @@ namespace bal::d3d12 {
 
 // ----------------------------------------------------------------------------
 
-bool DescriptorTable::initialize(const InitializeArg& arg)
+bool DescriptorHeap::initialize(const InitializeArg& arg)
 {
     // デバイス
     ID3D12Device6* p_device = reinterpret_cast<Graphics*>(arg.mpGraphics)->getDevice();
@@ -125,8 +125,40 @@ bool DescriptorTable::initialize(const InitializeArg& arg)
 
     // 保持
     mpDescriptorHeap.reset(p_descriptor_heap.Detach());
+    mTextureRangeBase  = arg.mTextureRangeBase;
+    mNumTexture        = arg.mNumTexture;
+    mConstantRangeBase = arg.mConstantRangeBase;
+    mNumConstantBuffer = arg.mNumConstantBuffer;
 
     return true;
+}
+
+// ----------------------------------------------------------------------------
+
+uint32_t DescriptorHeap::getTextureRangeBase() const
+{
+    return mTextureRangeBase;
+}
+
+// ----------------------------------------------------------------------------
+
+uint32_t DescriptorHeap::getNumTexture() const
+{
+    return mNumTexture;
+}
+
+// ----------------------------------------------------------------------------
+
+uint32_t DescriptorHeap::getConstantRangeBase() const
+{
+    return mConstantRangeBase;
+}
+
+// ----------------------------------------------------------------------------
+
+uint32_t DescriptorHeap::getNumConstantBuffer() const
+{
+    return mNumConstantBuffer;
 }
 
 // ----------------------------------------------------------------------------

@@ -11,17 +11,9 @@
 #include <graphics/balIGraphics.h>
 
 namespace bal { class FrameBuffer; }
-namespace bal { class ShaderArchive; }
 namespace bal::d3d12 { class CommandQueue; }
-namespace bal::d3d12 { class CommandListBundle; }
 namespace bal::d3d12 { class CommandListDirect; }
-namespace bal::d3d12 { class ConstantBuffer; }
-namespace bal::d3d12 { class DescriptorTable; }
-namespace bal::d3d12 { class ShapeBuffer; }
-namespace bal::d3d12 { class Pipeline; }
 namespace bal::d3d12 { class RenderTargetColor; }
-namespace bal::d3d12 { class RenderTargetDepth; }
-namespace bal::d3d12 { class Texture; }
 
 // ----------------------------------------------------------------------------
 namespace bal::d3d12 {
@@ -78,11 +70,6 @@ public:
      */
     virtual FrameBuffer* getSwapChainFrameBuffer() override;
 
-    /*!
-     * デフォルトのフレームバッファを取得する
-     */
-    virtual FrameBuffer* getDefaultFrameBuffer() override;
-
 private:
     // Com の deleter
     struct ComDeleter
@@ -99,18 +86,6 @@ private:
 
     std::unique_ptr<RenderTargetColor[]>             mpSwapChainRenderTargets;
     std::unique_ptr<FrameBuffer[]>                   mpSwapChainFrameBuffers;
-
-    std::unique_ptr<RenderTargetColor>               mpRenderTargetColor;
-    std::unique_ptr<RenderTargetDepth>               mpRenderTargetDepth;
-    std::unique_ptr<FrameBuffer>                     mpFrameBuffer;
-
-    std::unique_ptr<ShaderArchive>                   mpShaderArchive;
-
-    std::unique_ptr<CommandListBundle>               mpCmdBundle;
-    std::unique_ptr<Pipeline>                        mpPipeline;
-    std::unique_ptr<ShapeBuffer>                     mpShapeBuffer;
-    std::unique_ptr<DescriptorTable>                 mpModelDescriptorTable;
-    std::unique_ptr<ConstantBuffer>                  mpModelConstantBuffer;
 
     UINT                                             mCurrentBufferIndex = 0;
 };

@@ -62,11 +62,6 @@ public:
      * スワップチェーンのフレームバッファを取得する
      */
     virtual FrameBuffer* getSwapChainFrameBuffer() = 0;
-
-    /*!
-     * デフォルトのフレームバッファを取得する
-     */
-    virtual FrameBuffer* getDefaultFrameBuffer() = 0;
 };
 
 }

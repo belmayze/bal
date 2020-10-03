@@ -275,7 +275,6 @@ void Framework::applicationLoop_()
             // コールバック
             FrameworkCallback::DrawArg draw_arg;
             draw_arg.mpSwapChainFrameBuffer = mpGraphics->getSwapChainFrameBuffer();
-            draw_arg.mpDefaultFrameBuffer   = mpGraphics->getDefaultFrameBuffer();
             draw_arg.mpCommandList          = mpGraphics->getCommandList();
             mpCallback->onDraw(draw_arg);
 

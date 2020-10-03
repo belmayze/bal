@@ -22,7 +22,7 @@ struct INPUT
     float2 Texcoord : TEXCOORD0;
 };
 
-cbuffer MeshConstantBuffer : register(b0)
+cbuffer MeshConstantBuffer : register(b1)
 {
     float4x4 WorldMatrix;
     float4x4 WorldMatrixForNormal; //!< 法線用にスケールを除いた行列

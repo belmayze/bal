@@ -18,7 +18,7 @@
 #include <graphics/balViewport.h>
 #include <graphics/archiver/balShaderArchive.h>
 // gfx::d3d12
-#include <graphics/d3d12/balDescriptorTableD3D12.h>
+#include <graphics/d3d12/balDescriptorHeapD3D12.h>
 #include <graphics/d3d12/balConstantBufferD3D12.h>
 #include <graphics/d3d12/balInputLayoutD3D12.h>
 #include <graphics/d3d12/balPipelineD3D12.h>
@@ -48,7 +48,7 @@ void Module::initialize(const InitializeArg& arg)
 {
     // グラフィックスシステム
     IGraphics*     p_graphics         = Engine::GetInstance().getGraphicsSystem();
-    const MathSize render_buffer_size = p_graphics->getDefaultFrameBuffer()->getResolution();
+    const MathSize render_buffer_size = p_graphics->getSwapChainFrameBuffer()->getResolution();
 
     // HDR 用レンダーバッファ
     {
@@ -121,15 +121,28 @@ void Module::initialize(const InitializeArg& arg)
                 if (!p_input_layout->initialize(init_arg)) { return; }
             }
 
+            // デスクリプターテーブル
+            mpPresentDescriptorHeap = make_unique<d3d12::DescriptorHeap>(nullptr);
+            {
+                const ITexture* p_textures[] = { mpRenderTargetColor->getTexture() };
+                IDescriptorHeap::InitializeArg init_arg;
+                init_arg.mpGraphics  = p_graphics;
+                init_arg.mNumTexture = 1;
+                init_arg.mpTextures  = p_textures;
+                if (!mpPresentDescriptorHeap->initialize(init_arg)) { return; }
+            }
+
             // パイプライン
             mpPresentPipeline = make_unique<d3d12::Pipeline>(nullptr);
             {
+                const IDescriptorHeap* p_heaps[] = { mpPresentDescriptorHeap.get() };
                 IPipeline::InitializeArg init_arg;
-                init_arg.mpGraphics        = p_graphics;
-                init_arg.mNumOutput        = 1;
-                init_arg.mOutputFormats[0] = p_graphics->getSwapChainFrameBuffer()->getRenderTargetColors()[0]->getTexture()->getFormat();
-                init_arg.mNumTexture       = 1;
-                init_arg.mpInputLayout     = p_input_layout.get();
+                init_arg.mpGraphics         = p_graphics;
+                init_arg.mNumOutput         = 1;
+                init_arg.mOutputFormats[0]  = p_graphics->getSwapChainFrameBuffer()->getRenderTargetColors()[0]->getTexture()->getFormat();
+                init_arg.mNumDescriptorHeap = 1;
+                init_arg.mpDescriptorHeaps  = p_heaps;
+                init_arg.mpInputLayout      = p_input_layout.get();
 
                 const ShaderArchive::ShaderContainer& shader_container = mpShaderArchive->getShaderContainer(mpShaderArchive->findProgram("Present"));
                 init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
@@ -138,16 +151,29 @@ void Module::initialize(const InitializeArg& arg)
                 init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
                 if (!mpPresentPipeline->initialize(init_arg)) { return; }
             }
+        }
+
+        // 環境定数バッファ
+        {
+            // 定数バッファ
+            mpEnvConstantBuffer = make_unique<d3d12::ConstantBuffer>(nullptr);
+            {
+                IConstantBuffer::InitializeArg init_arg;
+                init_arg.mpGraphics   = p_graphics;
+                init_arg.mBufferCount = 1;
+                init_arg.mBufferSize  = sizeof(SampleEnvCB);
+                if (!mpEnvConstantBuffer->initialize(init_arg)) { return; }
+            }
 
             // デスクリプターテーブル
-            mpPresentDescriptorTable = make_unique<d3d12::DescriptorTable>(nullptr);
+            mpEnvDescriptorHeap = make_unique<d3d12::DescriptorHeap>(nullptr);
             {
-                const ITexture* p_textures[] = { mpRenderTargetColor->getTexture() };
-                IDescriptorTable::InitializeArg init_arg;
-                init_arg.mpGraphics  = p_graphics;
-                init_arg.mNumTexture = 1;
-                init_arg.mpTextures  = p_textures;
-                if (!mpPresentDescriptorTable->initialize(init_arg)) { return; }
+                const IConstantBuffer* p_content_buffers[] = { mpEnvConstantBuffer.get() };
+                IDescriptorHeap::InitializeArg init_arg;
+                init_arg.mpGraphics         = p_graphics;
+                init_arg.mNumConstantBuffer = 1;
+                init_arg.mpConstantBuffers  = p_content_buffers;
+                if (!mpEnvDescriptorHeap->initialize(init_arg)) { return; }
             }
         }
 
@@ -168,24 +194,6 @@ void Module::initialize(const InitializeArg& arg)
                 if (!p_input_layout->initialize(init_arg)) { return; }
             }
 
-            // パイプライン
-            mpSamplePipeline = make_unique<d3d12::Pipeline>(nullptr);
-            {
-                IPipeline::InitializeArg init_arg;
-                init_arg.mpGraphics         = p_graphics;
-                init_arg.mNumOutput         = 1;
-                init_arg.mOutputFormats[0]  = mpRenderTargetColor->getTexture()->getFormat();
-                init_arg.mNumConstantBuffer = 1;
-                init_arg.mpInputLayout      = p_input_layout.get();
-
-                const ShaderArchive::ShaderContainer& shader_container = mpShaderArchive->getShaderContainer(mpShaderArchive->findProgram("Sample"));
-                init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
-                init_arg.mVertexShaderBufferSize = shader_container.mVertexShader.mBufferSize;
-                init_arg.mpPixelShaderBuffer     = shader_container.mPixelShader.mBuffer;
-                init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
-                if (!mpSamplePipeline->initialize(init_arg)) { return; }
-            }
-
             // 定数バッファ
             mpSampleConstantBuffer = make_unique<d3d12::ConstantBuffer>(nullptr);
             {
@@ -197,14 +205,35 @@ void Module::initialize(const InitializeArg& arg)
             }
 
             // デスクリプターテーブル
-            mpSampleDescriptorTable = make_unique<d3d12::DescriptorTable>(nullptr);
+            mpSampleDescriptorHeap = make_unique<d3d12::DescriptorHeap>(nullptr);
             {
                 const IConstantBuffer* p_content_buffers[] = { mpSampleConstantBuffer.get() };
-                IDescriptorTable::InitializeArg init_arg;
-                init_arg.mpGraphics = p_graphics;
+                IDescriptorHeap::InitializeArg init_arg;
+                init_arg.mpGraphics         = p_graphics;
+                init_arg.mConstantRangeBase = 1;
                 init_arg.mNumConstantBuffer = 1;
                 init_arg.mpConstantBuffers  = p_content_buffers;
-                if (!mpSampleDescriptorTable->initialize(init_arg)) { return; }
+                if (!mpSampleDescriptorHeap->initialize(init_arg)) { return; }
+            }
+
+            // パイプライン
+            mpSamplePipeline = make_unique<d3d12::Pipeline>(nullptr);
+            {
+                const IDescriptorHeap* p_heaps[] = { mpEnvDescriptorHeap.get(), mpSampleDescriptorHeap.get() };
+                IPipeline::InitializeArg init_arg;
+                init_arg.mpGraphics         = p_graphics;
+                init_arg.mNumOutput         = 1;
+                init_arg.mOutputFormats[0]  = mpRenderTargetColor->getTexture()->getFormat();
+                init_arg.mNumDescriptorHeap = 2;
+                init_arg.mpDescriptorHeaps  = p_heaps;
+                init_arg.mpInputLayout      = p_input_layout.get();
+
+                const ShaderArchive::ShaderContainer& shader_container = mpShaderArchive->getShaderContainer(mpShaderArchive->findProgram("Sample"));
+                init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
+                init_arg.mVertexShaderBufferSize = shader_container.mVertexShader.mBufferSize;
+                init_arg.mpPixelShaderBuffer     = shader_container.mPixelShader.mBuffer;
+                init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
+                if (!mpSamplePipeline->initialize(init_arg)) { return; }
             }
         }
     }
@@ -268,9 +297,12 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
         arg.mpCommandList->bindFrameBuffer(*mpFrameBuffer);
         arg.mpCommandList->clear(*mpFrameBuffer, ICommandListDirect::ClearFlag::Color | ICommandListDirect::ClearFlag::Depth, MathColor(0.f, 0.f, 0.f, 1.f), 1.f, 0);
 
-        // 仮レンダリング
+        // 環境定数バッファ
         arg.mpCommandList->bindPipeline(*mpSamplePipeline);
-        arg.mpCommandList->setDescriptorTable(0, *mpSampleDescriptorTable);
+        arg.mpCommandList->setDescriptorHeap(0, *mpEnvDescriptorHeap);
+
+        // 仮レンダリング
+        arg.mpCommandList->setDescriptorHeap(1, *mpSampleDescriptorHeap);
         arg.mpCommandList->drawShape(*ShapeContainer::GetInstance().getQuadBuffer());
 
         // バリア
@@ -301,7 +333,7 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
 
         // 画面反映
         arg.mpCommandList->bindPipeline(*mpPresentPipeline);
-        arg.mpCommandList->setDescriptorTable(0, *mpPresentDescriptorTable);
+        arg.mpCommandList->setDescriptorHeap(0, *mpPresentDescriptorHeap);
         arg.mpCommandList->drawShape(*ShapeContainer::GetInstance().getQuadBuffer());
 
         // バリア

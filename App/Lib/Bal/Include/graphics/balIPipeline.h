@@ -12,6 +12,7 @@
 #include <graphics/balITexture.h>
 
 namespace bal { class File; }
+namespace bal { class IDescriptorHeap; }
 namespace bal { class IGraphics; }
 namespace bal { class IInputLayout; }
 
@@ -29,8 +30,8 @@ public:
         Array<ITexture::Format, FrameBuffer::cColorRenderTargetMax> mOutputFormats;
         const IInputLayout*                                         mpInputLayout = nullptr;
 
-        uint32_t       mNumTexture        = 0; //!< テクスチャーの数
-        uint32_t       mNumConstantBuffer = 0; //!< 定数バッファの数
+        uint32_t                mNumDescriptorHeap = 0;       //!< デスクリプターヒープの数
+        const IDescriptorHeap** mpDescriptorHeaps  = nullptr; //!< デスクリプターヒープ
 
         const uint8_t* mpVertexShaderBuffer        = nullptr;
         const uint8_t* mpGeometryShaderBuffer      = nullptr;

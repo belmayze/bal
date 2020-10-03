@@ -40,10 +40,10 @@ public:
 
     /*!
      * デスクリプターテーブルをセットする
-     * @param[in] index            インデックス
-     * @param[in] descriptor_table デスクリプターテーブル
+     * @param[in] index           インデックス
+     * @param[in] descriptor_heap デスクリプターヒープ
      */
-    virtual void setDescriptorTable(uint32_t index, const IDescriptorTable& descriptor_table) override;
+    virtual void setDescriptorHeap(uint32_t index, const IDescriptorHeap& descriptor_heap) override;
 
     /*!
      * シェイプを描画します

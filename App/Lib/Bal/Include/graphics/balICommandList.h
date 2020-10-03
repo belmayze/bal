@@ -7,7 +7,7 @@
  */
 #pragma once
 
-namespace bal { class IDescriptorTable; }
+namespace bal { class IDescriptorHeap; }
 namespace bal { class IShapeBuffer; }
 namespace bal { class IPipeline; }
 
@@ -39,10 +39,10 @@ public:
 
     /*!
      * デスクリプターテーブルをセットする
-     * @param[in] index            インデックス
-     * @param[in] descriptor_table デスクリプターテーブル
+     * @param[in] index           インデックス
+     * @param[in] descriptor_heap デスクリプターヒープ
      */
-    virtual void setDescriptorTable(uint32_t index, const IDescriptorTable& descriptor_table) = 0;
+    virtual void setDescriptorHeap(uint32_t index, const IDescriptorHeap& descriptor_heap) = 0;
 
     /*!
      * シェイプを描画します

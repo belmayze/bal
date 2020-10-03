@@ -7,7 +7,7 @@
  */
 // bal
 #include <graphics/d3d12/balCommandListBundleD3D12.h>
-#include <graphics/d3d12/balDescriptorTableD3D12.h>
+#include <graphics/d3d12/balDescriptorHeapD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <graphics/d3d12/balShapeBufferD3D12.h>
 #include <graphics/d3d12/balPipelineD3D12.h>
@@ -72,12 +72,12 @@ void CommandListBundle::bindPipeline(const IPipeline& pipeline)
 
 // ----------------------------------------------------------------------------
 
-void CommandListBundle::setDescriptorTable(uint32_t index, const IDescriptorTable& descriptor_table)
+void CommandListBundle::setDescriptorHeap(uint32_t index, const IDescriptorHeap& descriptor_heap)
 {
-    const DescriptorTable* p_descriptor_table = static_cast<const DescriptorTable*>(&descriptor_table);
-    ID3D12DescriptorHeap* p_heap = p_descriptor_table->getDesciptorHeap();
+    const DescriptorHeap* p_descriptor_heap = static_cast<const DescriptorHeap*>(&descriptor_heap);
+    ID3D12DescriptorHeap* p_heap = p_descriptor_heap->getDesciptorHeap();
     mpCmdList->SetDescriptorHeaps(1, &p_heap);
-    mpCmdList->SetGraphicsRootDescriptorTable(index, p_descriptor_table->getGpuHandle());
+    mpCmdList->SetGraphicsRootDescriptorTable(index, p_descriptor_heap->getGpuHandle());
 }
 
 // ----------------------------------------------------------------------------

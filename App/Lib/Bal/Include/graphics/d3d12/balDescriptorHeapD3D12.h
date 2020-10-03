@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balDescriptorTable.h
+ * @file   balDescriptorHeap.h
  * @brief  
  * @author belmayze
  *
@@ -7,12 +7,12 @@
  */
 #pragma once
 // bal
-#include <graphics/balIDescriptorTable.h>
+#include <graphics/balIDescriptorHeap.h>
 
 // ----------------------------------------------------------------------------
 namespace bal::d3d12 {
 
-class DescriptorTable : public IDescriptorTable
+class DescriptorHeap : public IDescriptorHeap
 {
 public:
     /*!
@@ -20,6 +20,26 @@ public:
      * @param[in] arg 初期化構造体
      */
     virtual bool initialize(const InitializeArg& arg) override;
+
+    /*!
+     * テクスチャーのレンジベース
+     */
+    virtual uint32_t getTextureRangeBase() const override;
+
+    /*!
+     * テクスチャー枚数
+     */
+    virtual uint32_t getNumTexture() const override;
+
+    /*!
+     * 定数バッファのレンジベース
+     */
+    virtual uint32_t getConstantRangeBase() const override;
+
+    /*!
+     * 定数バッファ数
+     */
+    virtual uint32_t getNumConstantBuffer() const override;
 
 public:
     //! デスクリプターヒープ
@@ -37,6 +57,10 @@ private:
 
 private:
     std::unique_ptr<ID3D12DescriptorHeap, ComDeleter> mpDescriptorHeap;
+    uint32_t                                          mTextureRangeBase  = 0;
+    uint32_t                                          mNumTexture        = 0;
+    uint32_t                                          mConstantRangeBase = 0;
+    uint32_t                                          mNumConstantBuffer = 0;
 };
 
 }

@@ -10,7 +10,7 @@
 #include <engine/module/balIModule.h>
 
 namespace bal { class IConstantBuffer; }
-namespace bal { class IDescriptorTable; }
+namespace bal { class IDescriptorHeap; }
 namespace bal { class IGraphics; }
 namespace bal { class IPipeline; }
 namespace bal { class IRenderTargetColor; }
@@ -72,6 +72,12 @@ private:
         MathMatrix44 mWorldMatrix;
         MathMatrix44 mWorldMatrixForNormal;
     };
+    struct SampleEnvCB
+    {
+        MathMatrix44 mViewMatrix;
+        MathMatrix44 mProjMatrix;
+        MathMatrix44 mProjectionViewMatrix;
+    };
 
 private:
     std::unique_ptr<ICustomModule>      mpCustomModule;
@@ -81,10 +87,13 @@ private:
     std::unique_ptr<ShaderArchive>      mpShaderArchive;
 
     std::unique_ptr<IPipeline>          mpPresentPipeline;
-    std::unique_ptr<IDescriptorTable>   mpPresentDescriptorTable;
+    std::unique_ptr<IDescriptorHeap>    mpPresentDescriptorHeap;
+
+    std::unique_ptr<IConstantBuffer>    mpEnvConstantBuffer;
+    std::unique_ptr<IDescriptorHeap>    mpEnvDescriptorHeap;
 
     std::unique_ptr<IPipeline>          mpSamplePipeline;
-    std::unique_ptr<IDescriptorTable>   mpSampleDescriptorTable;
+    std::unique_ptr<IDescriptorHeap>    mpSampleDescriptorHeap;
     std::unique_ptr<IConstantBuffer>    mpSampleConstantBuffer;
     SampleMeshCB                        mSampleMeshCB;
 

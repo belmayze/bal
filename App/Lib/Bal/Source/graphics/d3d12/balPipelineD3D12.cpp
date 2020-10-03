@@ -7,6 +7,7 @@
  */
 // bal
 #include <container/balArray.h>
+#include <graphics/d3d12/balDescriptorHeapD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <graphics/d3d12/balInputLayoutD3D12.h>
 #include <graphics/d3d12/balPipelineD3D12.h>
@@ -31,21 +32,61 @@ bool Pipeline::initialize(const InitializeArg& arg)
     // 参考: https://sites.google.com/site/monshonosuana/directxno-hanashi-1/directx-145
     Microsoft::WRL::ComPtr<ID3D12RootSignature> p_root_signature;
     {
+        // デスクリプターレンジ（最大数を確保しておく）
+        // 1つのデスクリプターヒープに対して、最大2つまで
+        std::unique_ptr<D3D12_DESCRIPTOR_RANGE1[]> ranges = make_unique<D3D12_DESCRIPTOR_RANGE1[]>(nullptr, arg.mNumDescriptorHeap * 2);
+        uint32_t i_range = 0;
+
+        // デスクリプターテーブル
+        std::unique_ptr<D3D12_ROOT_PARAMETER1[]> params = make_unique<D3D12_ROOT_PARAMETER1[]>(nullptr, arg.mNumDescriptorHeap);
+        for (uint32_t i_heap = 0; i_heap < arg.mNumDescriptorHeap; ++i_heap)
+        {
+            D3D12_ROOT_PARAMETER1* p_param           = &params[i_heap];
+            const IDescriptorHeap* p_descriptor_heap = arg.mpDescriptorHeaps[i_heap];
+
+            // デスクリプターテーブル
+            p_param->ParameterType    = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+            p_param->ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+
+            // デスクリプターレンジはテクスチャーと定数バッファで1つずつ
+            D3D12_DESCRIPTOR_RANGE1* p_range_base         = &ranges[i_range];
+            uint32_t                 num_descriptor_range = 0;
+
+            // 定数バッファのレンジ
+            if (p_descriptor_heap->getNumConstantBuffer() > 0)
+            {
+                D3D12_DESCRIPTOR_RANGE1* p_range = &ranges[i_range++];
+                num_descriptor_range++;
+                p_range->RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+                p_range->NumDescriptors                    = p_descriptor_heap->getNumConstantBuffer();
+                p_range->BaseShaderRegister                = p_descriptor_heap->getConstantRangeBase();
+                p_range->RegisterSpace                     = 0;
+                p_range->Flags                             = D3D12_DESCRIPTOR_RANGE_FLAG_NONE;
+                p_range->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+            }
+            // テクスチャーのレンジ
+            if (p_descriptor_heap->getNumTexture() > 0)
+            {
+                D3D12_DESCRIPTOR_RANGE1* p_range = &ranges[i_range++];
+                num_descriptor_range++;
+                p_range->RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+                p_range->NumDescriptors                    = p_descriptor_heap->getNumTexture();
+                p_range->BaseShaderRegister                = p_descriptor_heap->getTextureRangeBase();
+                p_range->RegisterSpace                     = 0;
+                p_range->Flags                             = D3D12_DESCRIPTOR_RANGE_FLAG_NONE;
+                p_range->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+            }
+            // パラメーター設定
+            p_param->DescriptorTable.NumDescriptorRanges = num_descriptor_range;
+            p_param->DescriptorTable.pDescriptorRanges   = p_range_base;
+        }
+
         // ルートシグネチャ
         D3D12_VERSIONED_ROOT_SIGNATURE_DESC desc = {};
-        desc.Version        = D3D_ROOT_SIGNATURE_VERSION_1_1;
-        desc.Desc_1_1.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-
-        // デスクリプターテーブルのパラメーター
-        D3D12_ROOT_PARAMETER1 param = {};
-        param.ParameterType    = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-        param.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-
-        // デスクリプターレンジの数（とりあえず一つずつ）
-        // @TODO: 寿命などでデスクリプターテーブルを分けれるようにしておく
-        uint32_t num_descriptor_range = 0;
-        if (arg.mNumConstantBuffer != 0) { num_descriptor_range++; }
-        if (arg.mNumTexture != 0)        { num_descriptor_range++; }
+        desc.Version                = D3D_ROOT_SIGNATURE_VERSION_1_1;
+        desc.Desc_1_1.Flags         = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+        desc.Desc_1_1.NumParameters = arg.mNumDescriptorHeap;
+        desc.Desc_1_1.pParameters   = params.get();
 
         // サンプラーは固定で使用する
         // @TODO: 複数使用できるようにしておく
@@ -59,44 +100,6 @@ bool Pipeline::initialize(const InitializeArg& arg)
         sampler_desc.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
         desc.Desc_1_1.NumStaticSamplers = 1;
         desc.Desc_1_1.pStaticSamplers   = &sampler_desc;
-
-        // デスクリプターテーブル
-        std::unique_ptr<D3D12_DESCRIPTOR_RANGE1[]> ranges;
-        if (num_descriptor_range != 0)
-        {
-            ranges = make_unique<D3D12_DESCRIPTOR_RANGE1[]>(nullptr, num_descriptor_range);
-            D3D12_DESCRIPTOR_RANGE1* p_target = ranges.get();
-
-            // @TODO: レジスターを0以外から使えるようにしておく
-            // パイプラインでレジスターを使う場合は設定しておく
-            if (arg.mNumConstantBuffer != 0)
-            {
-                p_target->RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
-                p_target->NumDescriptors                    = arg.mNumConstantBuffer;
-                p_target->BaseShaderRegister                = 0;
-                p_target->RegisterSpace                     = 0;
-                p_target->Flags                             = D3D12_DESCRIPTOR_RANGE_FLAG_NONE;
-                p_target->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-                p_target++;
-            }
-            if (arg.mNumTexture != 0)
-            {
-                p_target->RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-                p_target->NumDescriptors                    = arg.mNumTexture;
-                p_target->BaseShaderRegister                = 0;
-                p_target->RegisterSpace                     = 0;
-                p_target->Flags                             = D3D12_DESCRIPTOR_RANGE_FLAG_NONE;
-                p_target->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-                p_target++;
-            }
-
-            // パラメーター設定
-            param.DescriptorTable.NumDescriptorRanges = num_descriptor_range;
-            param.DescriptorTable.pDescriptorRanges   = ranges.get();
-
-            desc.Desc_1_1.NumParameters = 1;
-            desc.Desc_1_1.pParameters   = &param;
-        }
 
         // 設定をシリアライズして生成
         Microsoft::WRL::ComPtr<ID3DBlob> p_root_signature_serialized;

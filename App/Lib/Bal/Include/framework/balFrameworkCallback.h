@@ -27,7 +27,6 @@ public:
     struct DrawArg
     {
         FrameBuffer*        mpSwapChainFrameBuffer = nullptr;
-        FrameBuffer*        mpDefaultFrameBuffer   = nullptr;
         ICommandListDirect* mpCommandList          = nullptr;
     };
 
