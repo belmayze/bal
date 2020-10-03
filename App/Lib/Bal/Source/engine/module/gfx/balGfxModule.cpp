@@ -21,6 +21,7 @@
 #include <graphics/d3d12/balDescriptorHeapD3D12.h>
 #include <graphics/d3d12/balConstantBufferD3D12.h>
 #include <graphics/d3d12/balInputLayoutD3D12.h>
+#include <graphics/d3d12/balMeshBufferD3D12.h>
 #include <graphics/d3d12/balPipelineD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
 #include <graphics/d3d12/balTextureD3D12.h>
@@ -92,6 +93,47 @@ void Module::initialize(const InitializeArg& arg)
             mpFrameBuffer->setRenderTargetColor(0, mpRenderTargetColor.get());
             mpFrameBuffer->setRenderTargetDepth(mpRenderTargetDepth.get());
             mpFrameBuffer->setResolution(render_buffer_size);
+        }
+    }
+
+    // グリッドとマニピュレーターのメッシュ情報
+    {
+        mpGridMeshBuffer = make_unique<d3d12::MeshBuffer>(nullptr);
+        {
+            // 100m x 100m (1m 単位)
+            std::unique_ptr<DebugMeshVertex[]> vertices = make_unique<DebugMeshVertex[]>(nullptr, (101 + 101) * 2);
+            for (int i_x = 0; i_x <= 100; ++i_x)
+            {
+                vertices[i_x * 2 + 0].mPosition = MathVector3(static_cast<float>(i_x - 50), 0.f,  50.f);
+                vertices[i_x * 2 + 1].mPosition = MathVector3(static_cast<float>(i_x - 50), 0.f, -50.f);
+                vertices[i_x * 2 + 0].mColor    = MathColor(1.f, 1.f, 1.f);
+                vertices[i_x * 2 + 1].mColor    = MathColor(1.f, 1.f, 1.f);
+            }
+            for (int i_z = 0; i_z <= 100; ++i_z)
+            {
+                vertices[(101 + i_z) * 2 + 0].mPosition = MathVector3( 50, 0.f, static_cast<float>(i_z - 50));
+                vertices[(101 + i_z) * 2 + 1].mPosition = MathVector3(-50, 0.f, static_cast<float>(i_z - 50));
+                vertices[(101 + i_z) * 2 + 0].mColor    = MathColor(1.f, 1.f, 1.f);
+                vertices[(101 + i_z) * 2 + 1].mColor    = MathColor(1.f, 1.f, 1.f);
+            }
+            std::unique_ptr<uint16_t[]> indices = make_unique<uint16_t[]>(nullptr, (101 + 101) * 2);
+            for (int i = 0; i < (101 + 101); ++i)
+            {
+                indices[i * 2 + 0] = i * 2 + 0;
+                indices[i * 2 + 1] = i * 2 + 1;
+            }
+
+            IMeshBuffer::InitializeArg init_arg;
+            init_arg.mpGraphics         = p_graphics;
+            init_arg.mPrimitiveTopology = IMeshBuffer::PrimitiveTopology::Lines;
+            init_arg.mpVertexBuffer     = vertices.get();
+            init_arg.mVertexBufferSize  = sizeof(DebugMeshVertex) * (101 + 101) * 2;
+            init_arg.mVertexStride      = sizeof(DebugMeshVertex);
+            init_arg.mpIndexBuffer      = indices.get();
+            init_arg.mIndexBufferSize   = sizeof(uint16_t) * (101 + 101) * 2;
+            init_arg.mIndexCount        = (101 + 101) * 2;
+            init_arg.mIndexBufferFormat = IMeshBuffer::IndexBufferFormat::Uint16;
+            if (!mpGridMeshBuffer->initialize(init_arg)) { return; }
         }
     }
 
@@ -174,6 +216,42 @@ void Module::initialize(const InitializeArg& arg)
                 init_arg.mNumConstantBuffer = 1;
                 init_arg.mpConstantBuffers  = p_content_buffers;
                 if (!mpEnvDescriptorHeap->initialize(init_arg)) { return; }
+            }
+        }
+
+        // デバッグライン描画
+        {
+            // 頂点レイアウト
+            std::unique_ptr<d3d12::InputLayout> p_input_layout = make_unique<d3d12::InputLayout>(nullptr);
+            {
+                std::unique_ptr<IInputLayout::InputLayoutDesc[]> descs = make_unique<IInputLayout::InputLayoutDesc[]>(nullptr, 3);
+                descs[0] = {.mName = "POSITION", .mType = IInputLayout::Type::Vec3, .mOffset = cDebugMeshVertexColorOffset};
+                descs[1] = {.mName = "COLOR",    .mType = IInputLayout::Type::Vec4, .mOffset = cDebugMeshVertexColorOffset};
+
+                IInputLayout::InitializeArg init_arg;
+                init_arg.mpGraphics      = p_graphics;
+                init_arg.mNumInputLayout = 2;
+                init_arg.mpInputLayouts  = descs.get();
+                if (!p_input_layout->initialize(init_arg)) { return; }
+            }
+
+            mpDebugMeshPipeline = make_unique<d3d12::Pipeline>(nullptr);
+            {
+                const IDescriptorHeap* p_heaps[] = { mpEnvDescriptorHeap.get() };
+                IPipeline::InitializeArg init_arg;
+                init_arg.mpGraphics         = p_graphics;
+                init_arg.mNumOutput         = 1;
+                init_arg.mOutputFormats[0]  = mpRenderTargetColor->getTexture()->getFormat();
+                init_arg.mNumDescriptorHeap = 1;
+                init_arg.mpDescriptorHeaps  = p_heaps;
+                init_arg.mpInputLayout      = p_input_layout.get();
+
+                const ShaderArchive::ShaderContainer& shader_container = mpShaderArchive->getShaderContainer(mpShaderArchive->findProgram("DebugLine"));
+                init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
+                init_arg.mVertexShaderBufferSize = shader_container.mVertexShader.mBufferSize;
+                init_arg.mpPixelShaderBuffer     = shader_container.mPixelShader.mBuffer;
+                init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
+                if (!mpDebugMeshPipeline->initialize(init_arg)) { return; }
             }
         }
 
@@ -261,10 +339,9 @@ void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 
         MathVector3 camera_pos = MathVector3(
             Math::Cos(Radian(rotate_value)) * 10.f,
-            0.f,
+            1.f,
             Math::Sin(Radian(rotate_value)) * 10.f
         );
-
 
         SampleEnvCB* p_cb = mpEnvConstantBuffer->getBufferPtr<SampleEnvCB>();
         p_cb->mProjMatrix.setPerspectiveProjectionRH(Radian(50.f), 16.f / 9.f, 0.01f, 1000.f);
@@ -324,6 +401,11 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
         // 仮レンダリング
         arg.mpCommandList->setDescriptorHeap(1, *mpSampleDescriptorHeap);
         arg.mpCommandList->drawMesh(*MeshContainer::GetInstance().getBuffer(MeshContainer::Type::Sphere));
+
+        // グリッド描画
+        //arg.mpCommandList->bindPipeline(*mpDebugMeshPipeline);
+        //arg.mpCommandList->setDescriptorHeap(0, *mpEnvDescriptorHeap);
+        //arg.mpCommandList->drawMesh(*mpGridMeshBuffer);
 
         // バリア
         arg.mpCommandList->resourceBarrier(

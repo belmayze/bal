@@ -12,6 +12,7 @@
 namespace bal { class IConstantBuffer; }
 namespace bal { class IDescriptorHeap; }
 namespace bal { class IGraphics; }
+namespace bal { class IMeshBuffer; }
 namespace bal { class IPipeline; }
 namespace bal { class IRenderTargetColor; }
 namespace bal { class IRenderTargetDepth; }
@@ -83,6 +84,16 @@ private:
     };
 
 private:
+    //! デバッグメッシュの頂点情報
+    struct DebugMeshVertex
+    {
+        MathVector3 mPosition;
+        MathColor   mColor;
+    };
+    constexpr static size_t cDebugMeshVertexPositionOffset = offsetof(DebugMeshVertex, mPosition);
+    constexpr static size_t cDebugMeshVertexColorOffset    = offsetof(DebugMeshVertex, mColor);
+
+private:
     std::unique_ptr<ICustomModule>      mpCustomModule;
     std::unique_ptr<IRenderTargetColor> mpRenderTargetColor;
     std::unique_ptr<IRenderTargetDepth> mpRenderTargetDepth;
@@ -91,6 +102,10 @@ private:
 
     std::unique_ptr<IPipeline>          mpPresentPipeline;
     std::unique_ptr<IDescriptorHeap>    mpPresentDescriptorHeap;
+
+    std::unique_ptr<IPipeline>          mpDebugMeshPipeline;
+    std::unique_ptr<IMeshBuffer>        mpGridMeshBuffer;
+    std::unique_ptr<IMeshBuffer>        mpManipulatorMeshBuffer;
 
     std::unique_ptr<IConstantBuffer>    mpEnvConstantBuffer;
     std::unique_ptr<IDescriptorHeap>    mpEnvDescriptorHeap;

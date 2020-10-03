@@ -92,6 +92,9 @@ void CommandListBundle::drawMesh(const IMeshBuffer& mesh_buffer)
         case IMeshBuffer::PrimitiveTopology::Triangles:
             topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
             break;
+        case IMeshBuffer::PrimitiveTopology::Lines:
+            topology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+            break;
     }
 
     mpCmdList->IASetPrimitiveTopology(topology);

@@ -24,7 +24,8 @@ public:
     //! プリミティブ形状
     enum class PrimitiveTopology
     {
-        Triangles
+        Triangles,
+        Lines
     };
     //! 初期化構造体
     struct InitializeArg
