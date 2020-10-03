@@ -9,7 +9,7 @@
 #include <graphics/d3d12/balCommandListBundleD3D12.h>
 #include <graphics/d3d12/balDescriptorHeapD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
-#include <graphics/d3d12/balShapeBufferD3D12.h>
+#include <graphics/d3d12/balMeshBufferD3D12.h>
 #include <graphics/d3d12/balPipelineD3D12.h>
 
 namespace bal::d3d12 {
@@ -82,15 +82,22 @@ void CommandListBundle::setDescriptorHeap(uint32_t index, const IDescriptorHeap&
 
 // ----------------------------------------------------------------------------
 
-void CommandListBundle::drawShape(const IShapeBuffer& shape_buffer)
+void CommandListBundle::drawMesh(const IMeshBuffer& mesh_buffer)
 {
-    const ShapeBuffer* p_shape_buffer = static_cast<const ShapeBuffer*>(&shape_buffer);
+    const MeshBuffer* p_mesh_buffer = static_cast<const MeshBuffer*>(&mesh_buffer);
     D3D12_PRIMITIVE_TOPOLOGY topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
+    switch (p_mesh_buffer->getPrimitiveTopology())
+    {
+        case IMeshBuffer::PrimitiveTopology::Triangles:
+            topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+            break;
+    }
+
     mpCmdList->IASetPrimitiveTopology(topology);
-    mpCmdList->IASetVertexBuffers(0, 1, p_shape_buffer->getVertexBufferView());
-    mpCmdList->IASetIndexBuffer(p_shape_buffer->getIndexBufferView());
-    mpCmdList->DrawIndexedInstanced(p_shape_buffer->getIndexCount(), 1, 0, 0, 0);
+    mpCmdList->IASetVertexBuffers(0, 1, p_mesh_buffer->getVertexBufferView());
+    mpCmdList->IASetIndexBuffer(p_mesh_buffer->getIndexBufferView());
+    mpCmdList->DrawIndexedInstanced(p_mesh_buffer->getIndexCount(), 1, 0, 0, 0);
 }
 
 // ----------------------------------------------------------------------------

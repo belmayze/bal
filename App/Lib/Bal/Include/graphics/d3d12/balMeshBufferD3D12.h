@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balShapeBufferD3D12.h
+ * @file   balMeshBufferD3D12.h
  * @brief  
  * @author belmayze
  *
@@ -7,12 +7,12 @@
  */
 #pragma once
 // bal
-#include <graphics/balIShapeBuffer.h>
+#include <graphics/balIMeshBuffer.h>
 
 // ----------------------------------------------------------------------------
 namespace bal::d3d12 {
 
-class ShapeBuffer : public IShapeBuffer
+class MeshBuffer : public IMeshBuffer
 {
 public:
     /*!

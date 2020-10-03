@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balIShapeBuffer.h
+ * @file   balIMeshBuffer.h
  * @brief  
  * @author belmayze
  *
@@ -12,7 +12,7 @@ namespace bal { class IGraphics; }
 // ----------------------------------------------------------------------------
 namespace bal {
 
-class IShapeBuffer
+class IMeshBuffer
 {
 public:
     //! インデックスバッファのフォーマット
@@ -42,7 +42,7 @@ public:
 
 public:
     //! デストラクター
-    virtual ~IShapeBuffer() {}
+    virtual ~IMeshBuffer() {}
 
     /*!
      * 初期化の処理を記述します

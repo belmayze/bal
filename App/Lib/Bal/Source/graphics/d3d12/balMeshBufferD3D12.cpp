@@ -7,13 +7,13 @@
  */
 // bal
 #include <graphics/d3d12/balGraphicsD3D12.h>
-#include <graphics/d3d12/balShapeBufferD3D12.h>
+#include <graphics/d3d12/balMeshBufferD3D12.h>
 
 namespace bal::d3d12 {
 
 // ----------------------------------------------------------------------------
 
-bool ShapeBuffer::initialize(const InitializeArg& arg)
+bool MeshBuffer::initialize(const InitializeArg& arg)
 {
     // デバイス
     ID3D12Device6* p_device = reinterpret_cast<Graphics*>(arg.mpGraphics)->getDevice();

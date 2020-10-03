@@ -9,7 +9,7 @@
 #include <engine/balEngine.h>
 #include <engine/module/gfx/balGfxModule.h>
 #include <engine/module/gfx/balIGfxCustomModule.h>
-#include <engine/module/gfx/balGfxShapeContainer.h>
+#include <engine/module/gfx/balGfxMeshContainer.h>
 // gfx
 #include <graphics/balFrameBuffer.h>
 #include <graphics/balICommandListDirect.h>
@@ -111,8 +111,8 @@ void Module::initialize(const InitializeArg& arg)
             std::unique_ptr<d3d12::InputLayout> p_input_layout = make_unique<d3d12::InputLayout>(nullptr);
             {
                 std::unique_ptr<IInputLayout::InputLayoutDesc[]> descs = make_unique<IInputLayout::InputLayoutDesc[]>(nullptr, 2);
-                descs[0] = {.mName = "POSITION", .mType = IInputLayout::Type::Vec3, .mOffset = ShapeContainer::cOffsetPosition};
-                descs[1] = {.mName = "TEXCOORD", .mType = IInputLayout::Type::Vec2, .mOffset = ShapeContainer::cOffsetTexcoord};
+                descs[0] = {.mName = "POSITION", .mType = IInputLayout::Type::Vec3, .mOffset = MeshContainer::cOffsetPosition};
+                descs[1] = {.mName = "TEXCOORD", .mType = IInputLayout::Type::Vec2, .mOffset = MeshContainer::cOffsetTexcoord};
 
                 IInputLayout::InitializeArg init_arg;
                 init_arg.mpGraphics      = p_graphics;
@@ -183,9 +183,9 @@ void Module::initialize(const InitializeArg& arg)
             std::unique_ptr<d3d12::InputLayout> p_input_layout = make_unique<d3d12::InputLayout>(nullptr);
             {
                 std::unique_ptr<IInputLayout::InputLayoutDesc[]> descs = make_unique<IInputLayout::InputLayoutDesc[]>(nullptr, 3);
-                descs[0] = {.mName = "POSITION", .mType = IInputLayout::Type::Vec3, .mOffset = ShapeContainer::cOffsetPosition};
-                descs[1] = {.mName = "NORMAL",   .mType = IInputLayout::Type::Vec3, .mOffset = ShapeContainer::cOffsetNormal  };
-                descs[2] = {.mName = "TEXCOORD", .mType = IInputLayout::Type::Vec2, .mOffset = ShapeContainer::cOffsetTexcoord};
+                descs[0] = {.mName = "POSITION", .mType = IInputLayout::Type::Vec3, .mOffset = MeshContainer::cOffsetPosition};
+                descs[1] = {.mName = "NORMAL",   .mType = IInputLayout::Type::Vec3, .mOffset = MeshContainer::cOffsetNormal  };
+                descs[2] = {.mName = "TEXCOORD", .mType = IInputLayout::Type::Vec2, .mOffset = MeshContainer::cOffsetTexcoord};
 
                 IInputLayout::InitializeArg init_arg;
                 init_arg.mpGraphics      = p_graphics;
@@ -239,8 +239,8 @@ void Module::initialize(const InitializeArg& arg)
     }
 
     // よく使用するシェイプ形状を初期化する
-    ShapeContainer::GetInstance().initialize();
-    ShapeContainer::AddGfxFinalizer();
+    MeshContainer::GetInstance().initialize();
+    MeshContainer::AddGfxFinalizer();
 
     // カスタムモジュールを初期化
     if (mpCustomModule)
@@ -310,7 +310,7 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
 
         // 仮レンダリング
         arg.mpCommandList->setDescriptorHeap(1, *mpSampleDescriptorHeap);
-        arg.mpCommandList->drawShape(*ShapeContainer::GetInstance().getQuadBuffer());
+        arg.mpCommandList->drawMesh(*MeshContainer::GetInstance().getQuadBuffer());
 
         // バリア
         arg.mpCommandList->resourceBarrier(
@@ -341,7 +341,7 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
         // 画面反映
         arg.mpCommandList->bindPipeline(*mpPresentPipeline);
         arg.mpCommandList->setDescriptorHeap(0, *mpPresentDescriptorHeap);
-        arg.mpCommandList->drawShape(*ShapeContainer::GetInstance().getQuadBuffer());
+        arg.mpCommandList->drawMesh(*MeshContainer::GetInstance().getQuadBuffer());
 
         // バリア
         arg.mpCommandList->resourceBarrier(

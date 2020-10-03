@@ -8,7 +8,7 @@
 #pragma once
 
 namespace bal { class IDescriptorHeap; }
-namespace bal { class IShapeBuffer; }
+namespace bal { class IMeshBuffer; }
 namespace bal { class IPipeline; }
 
 // ----------------------------------------------------------------------------
@@ -45,10 +45,10 @@ public:
     virtual void setDescriptorHeap(uint32_t index, const IDescriptorHeap& descriptor_heap) = 0;
 
     /*!
-     * シェイプを描画します
-     * @param[in] shape_buffer シェイプバッファ
+     * メッシュを描画します
+     * @param[in] mesh_buffer メッシュバッファ
      */
-    virtual void drawShape(const IShapeBuffer& shape_buffer) = 0;
+    virtual void drawMesh(const IMeshBuffer& mesh_buffer) = 0;
 };
 
 }

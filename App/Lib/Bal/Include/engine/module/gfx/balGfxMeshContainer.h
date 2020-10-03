@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balGfxShapeContainer.h
+ * @file   balGfxMeshContainer.h
  * @brief  
  * @author belmayze
  *
@@ -7,14 +7,15 @@
  */
 #pragma once
 // bal
+#include <math/balMath.h>
 #include <memory/balSingleton.h>
 
-namespace bal { class IShapeBuffer; }
+namespace bal { class IMeshBuffer; }
 
 // ----------------------------------------------------------------------------
 namespace bal::mod::gfx {
 
-class ShapeContainer : public Singleton<ShapeContainer>
+class MeshContainer : public Singleton<MeshContainer>
 {
 public:
     struct Vertex
@@ -30,10 +31,10 @@ public:
 
 public:
     //! コンストラクター
-    ShapeContainer();
+    MeshContainer();
 
     //! デストラクター
-    virtual ~ShapeContainer();
+    virtual ~MeshContainer();
 
     /*!
      * シェイプを作成します
@@ -41,10 +42,10 @@ public:
     void initialize();
 
     //! 矩形
-    const IShapeBuffer* getQuadBuffer() const { return mpQuadBuffer.get(); }
+    const IMeshBuffer* getQuadBuffer() const { return mpQuadBuffer.get(); }
 
 private:
-    std::unique_ptr<IShapeBuffer> mpQuadBuffer;
+    std::unique_ptr<IMeshBuffer> mpQuadBuffer;
 };
 
 }

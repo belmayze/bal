@@ -47,10 +47,10 @@ public:
     virtual void setDescriptorHeap(uint32_t index, const IDescriptorHeap& descriptor_heap) override;
 
     /*!
-     * モデルを描画します
-     * @param[in] shape_buffer シェイプバッファ
+     * メッシュを描画します
+     * @param[in] mesh_buffer メッシュバッファ
      */
-    virtual void drawShape(const IShapeBuffer& shape_buffer) override;
+    virtual void drawMesh(const IMeshBuffer& mesh_buffer) override;
 
 public:
     //! コマンドリスト

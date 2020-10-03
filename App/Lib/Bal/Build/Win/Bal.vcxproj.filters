@@ -159,17 +159,17 @@
     <ClCompile Include="..\..\Source\engine\module\gfx\balGfxModule.cpp">
       <Filter>engine\module\gfx</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Source\graphics\d3d12\balShapeBufferD3D12.cpp">
-      <Filter>graphics\d3d12</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\Source\engine\module\gfx\balGfxShapeContainer.cpp">
-      <Filter>engine\module\gfx</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Source\memory\balSingletonGfxFinalizer.cpp">
       <Filter>memory</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\graphics\d3d12\balDescriptorHeapD3D12.cpp">
       <Filter>graphics\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\d3d12\balMeshBufferD3D12.cpp">
+      <Filter>graphics\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\engine\module\gfx\balGfxMeshContainer.cpp">
+      <Filter>engine\module\gfx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -395,15 +395,6 @@
     <ClInclude Include="..\..\Include\engine\module\balModuleType.h">
       <Filter>engine\module</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\graphics\balIShapeBuffer.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\graphics\d3d12\balShapeBufferD3D12.h">
-      <Filter>graphics\d3d12</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\engine\module\gfx\balGfxShapeContainer.h">
-      <Filter>engine\module\gfx</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\memory\balSingletonGfxFinalizer.h">
       <Filter>memory</Filter>
     </ClInclude>
@@ -412,6 +403,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\graphics\balIDescriptorHeap.h">
       <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\balIMeshBuffer.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\d3d12\balMeshBufferD3D12.h">
+      <Filter>graphics\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\engine\module\gfx\balGfxMeshContainer.h">
+      <Filter>engine\module\gfx</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
