@@ -59,7 +59,8 @@ struct OUTPUT
 OUTPUT main(VARYING input)
 {
     OUTPUT output;
-    output.Color0 = float4(1.0, 1.0, 1.0, 1.0);
+    float3 vertex_normal = normalize(input.Normal);
+    output.Color0 = float4(vertex_normal * 0.5 + 0.5, 1.0);
     return output;
 }
 
