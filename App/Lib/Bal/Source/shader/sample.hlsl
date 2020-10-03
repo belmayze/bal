@@ -12,6 +12,15 @@ struct VARYING
     float2 Texcoord : TEXCOORD0;
 };
 
+cbuffer EnvConstantBuffer : register(b0)
+{
+    float4x4 ViewMatrix;
+    float4x4 ProjectionMatrix;
+    float4x4 ProjectionViewMatrix;
+    float3   DirectionalLightDir;
+    float3   DirectionalLightColor;
+};
+
 // ----------------------------------------------------------------------------
 #ifdef BAL_VERTEX_SHADER
 
@@ -20,13 +29,6 @@ struct INPUT
     float3 Position : POSITION;
     float3 Normal   : NORMAL;
     float2 Texcoord : TEXCOORD0;
-};
-
-cbuffer EnvConstantBuffer : register(b0)
-{
-    float4x4 ViewMatrix;
-    float4x4 ProjectionMatrix;
-    float4x4 ProjectionViewMatrix;
 };
 
 cbuffer MeshConstantBuffer : register(b1)
@@ -59,8 +61,18 @@ struct OUTPUT
 OUTPUT main(VARYING input)
 {
     OUTPUT output;
-    float3 vertex_normal = normalize(input.Normal);
-    output.Color0 = float4(vertex_normal * 0.5 + 0.5, 1.0);
+
+    // サーフェース
+    float3 albedo       = float3(1.0, 1.0, 1.0);
+    float3 normal_world = normalize(input.Normal);
+
+    // 簡易ライティング
+    float  diffuse_coeff   = saturate(dot(normal_world, DirectionalLightDir));
+    float3 diffuse_direct  = albedo * (DirectionalLightColor * diffuse_coeff);
+
+    float3 diffuse_ambient = albedo * 0.0;
+
+    output.Color0 = float4(diffuse_direct + diffuse_ambient, 1.0);
     return output;
 }
 

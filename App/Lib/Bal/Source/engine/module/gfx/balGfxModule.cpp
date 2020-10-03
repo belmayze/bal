@@ -255,17 +255,30 @@ void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 {
     // 環境定数バッファ
     {
-        SampleEnvCB* p_cb = mpEnvConstantBuffer->getBufferPtr<SampleEnvCB>();
-        p_cb->mProjMatrix.setPerspectiveProjectionRH(Radian(50.f), 16.f / 9.f, 0.01f, 1000.f);
-        p_cb->mViewMatrix.setLookAtRH(MathVector3(10.f, 0.f, 10.f), MathVector3(0.f, 0.f, 0.f), MathVector3(0.f, 1.f, 0.f));
-        p_cb->mProjectionViewMatrix = p_cb->mProjMatrix * p_cb->mViewMatrix;
-    }
-    // 仮
-    {
+        // カメラを仮で回す
         static float rotate_value = 0.f;
         rotate_value += 0.001f;
-        mSampleMeshCB.mWorldMatrix.setRotateZ(bal::Radian(rotate_value));
-        mSampleMeshCB.mWorldMatrixForNormal.setRotateZ(bal::Radian(rotate_value));
+
+        MathVector3 camera_pos = MathVector3(
+            Math::Cos(Radian(rotate_value)) * 10.f,
+            0.f,
+            Math::Sin(Radian(rotate_value)) * 10.f
+        );
+
+
+        SampleEnvCB* p_cb = mpEnvConstantBuffer->getBufferPtr<SampleEnvCB>();
+        p_cb->mProjMatrix.setPerspectiveProjectionRH(Radian(50.f), 16.f / 9.f, 0.01f, 1000.f);
+        p_cb->mViewMatrix.setLookAtRH(camera_pos, MathVector3(0.f, 0.f, 0.f), MathVector3(0.f, 1.f, 0.f));
+        p_cb->mProjectionViewMatrix = p_cb->mProjMatrix * p_cb->mViewMatrix;
+
+        // ライトの仮
+        p_cb->mDirectionalLightDir   = MathVector3(-1.f, -1.f, -1.f).calcNormalize();
+        p_cb->mDirectionalLightColor = MathColor(1.f, 1.f, 1.f);
+    }
+    // モデルのワールド位置は固定
+    {
+        mSampleMeshCB.mWorldMatrix.setIdentity();
+        mSampleMeshCB.mWorldMatrixForNormal.setIdentity();
     }
     // 定数バッファ更新
     {

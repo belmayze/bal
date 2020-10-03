@@ -50,6 +50,11 @@ public:
 
 public:
     /*!
+     * 単位行列に戻します
+     */
+    inline void setIdentity();
+
+    /*!
      * スケールをセットします
      * @param[in] scale スケール値
      */

@@ -77,6 +77,9 @@ private:
         MathMatrix44 mViewMatrix;
         MathMatrix44 mProjMatrix;
         MathMatrix44 mProjectionViewMatrix;
+        MathVector3  mDirectionalLightDir;
+        float        mPadding0;
+        MathColor    mDirectionalLightColor;
     };
 
 private:
