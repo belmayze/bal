@@ -34,7 +34,9 @@ public:
     //! キャスト
     MathWin64Vector3(const MathCommonVector3& v)
     {
-        *this = v;
+        m[0] = v.getX();
+        m[1] = v.getY();
+        m[2] = v.getZ();
     }
 };
 

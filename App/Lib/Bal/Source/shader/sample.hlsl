@@ -22,6 +22,13 @@ struct INPUT
     float2 Texcoord : TEXCOORD0;
 };
 
+cbuffer EnvConstantBuffer : register(b0)
+{
+    float4x4 ViewMatrix;
+    float4x4 ProjectionMatrix;
+    float4x4 ProjectionViewMatrix;
+};
+
 cbuffer MeshConstantBuffer : register(b1)
 {
     float4x4 WorldMatrix;
@@ -32,7 +39,7 @@ VARYING main(INPUT input)
 {
     VARYING output;
 
-    output.Position = mul(float4(input.Position, 1.0), WorldMatrix);
+    output.Position = mul(mul(float4(input.Position, 1.0), WorldMatrix), ProjectionViewMatrix);
     output.Normal   = mul(float4(input.Normal,   0.0), WorldMatrixForNormal).xyz;
     output.Texcoord = input.Texcoord;
 

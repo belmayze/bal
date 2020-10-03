@@ -253,6 +253,13 @@ void Module::initialize(const InitializeArg& arg)
 
 void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 {
+    // 環境定数バッファ
+    {
+        SampleEnvCB* p_cb = mpEnvConstantBuffer->getBufferPtr<SampleEnvCB>();
+        p_cb->mProjMatrix.setPerspectiveProjectionRH(Radian(50.f), 16.f / 9.f, 0.01f, 1000.f);
+        p_cb->mViewMatrix.setLookAtRH(MathVector3(0.f, 0.f, 10.f), MathVector3(0.f, 0.f, 0.f), MathVector3(0.f, 1.f, 0.f));
+        p_cb->mProjectionViewMatrix = p_cb->mProjMatrix * p_cb->mViewMatrix;
+    }
     // 仮
     {
         static float rotate_value = 0.f;
