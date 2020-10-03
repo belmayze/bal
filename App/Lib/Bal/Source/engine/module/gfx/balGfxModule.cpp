@@ -257,7 +257,7 @@ void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
     {
         SampleEnvCB* p_cb = mpEnvConstantBuffer->getBufferPtr<SampleEnvCB>();
         p_cb->mProjMatrix.setPerspectiveProjectionRH(Radian(50.f), 16.f / 9.f, 0.01f, 1000.f);
-        p_cb->mViewMatrix.setLookAtRH(MathVector3(0.f, 0.f, 10.f), MathVector3(0.f, 0.f, 0.f), MathVector3(0.f, 1.f, 0.f));
+        p_cb->mViewMatrix.setLookAtRH(MathVector3(10.f, 0.f, 10.f), MathVector3(0.f, 0.f, 0.f), MathVector3(0.f, 1.f, 0.f));
         p_cb->mProjectionViewMatrix = p_cb->mProjMatrix * p_cb->mViewMatrix;
     }
     // 仮
@@ -310,7 +310,7 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
 
         // 仮レンダリング
         arg.mpCommandList->setDescriptorHeap(1, *mpSampleDescriptorHeap);
-        arg.mpCommandList->drawMesh(*MeshContainer::GetInstance().getQuadBuffer());
+        arg.mpCommandList->drawMesh(*MeshContainer::GetInstance().getBuffer(MeshContainer::Type::Cube));
 
         // バリア
         arg.mpCommandList->resourceBarrier(
@@ -341,7 +341,7 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
         // 画面反映
         arg.mpCommandList->bindPipeline(*mpPresentPipeline);
         arg.mpCommandList->setDescriptorHeap(0, *mpPresentDescriptorHeap);
-        arg.mpCommandList->drawMesh(*MeshContainer::GetInstance().getQuadBuffer());
+        arg.mpCommandList->drawMesh(*MeshContainer::GetInstance().getBuffer(MeshContainer::Type::Quad));
 
         // バリア
         arg.mpCommandList->resourceBarrier(

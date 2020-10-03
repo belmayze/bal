@@ -15,6 +15,10 @@ namespace bal { class IMeshBuffer; }
 // ----------------------------------------------------------------------------
 namespace bal::mod::gfx {
 
+/*!
+ * よく使用するメッシュ情報を入れるコンテナ
+ * すべてのメッシュは -1 ～ 1 までの大きさ 2 です
+ */
 class MeshContainer : public Singleton<MeshContainer>
 {
 public:
@@ -29,6 +33,14 @@ public:
     constexpr static size_t cOffsetNormal   = offsetof(Vertex, mNormal);
     constexpr static size_t cOffsetTexcoord = offsetof(Vertex, mTexcoord);
 
+    enum class Type
+    {
+        Quad,
+        Cube,
+        Sphere,
+    };
+    constexpr static size_t cTypeNum = static_cast<size_t>(Type::Sphere) + 1;
+
 public:
     //! コンストラクター
     MeshContainer();
@@ -42,10 +54,10 @@ public:
     void initialize();
 
     //! 矩形
-    const IMeshBuffer* getQuadBuffer() const { return mpQuadBuffer.get(); }
+    const IMeshBuffer* getBuffer(Type type) const { return mpBuffers[static_cast<int>(type)].get(); }
 
 private:
-    std::unique_ptr<IMeshBuffer> mpQuadBuffer;
+    std::unique_ptr<std::unique_ptr<IMeshBuffer>[]> mpBuffers;
 };
 
 }
