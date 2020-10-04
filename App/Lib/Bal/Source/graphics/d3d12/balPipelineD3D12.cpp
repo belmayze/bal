@@ -131,7 +131,9 @@ bool Pipeline::initialize(const InitializeArg& arg)
 
         // デプス
         D3D12_DEPTH_STENCIL_DESC depth_stencil_desc = {};
-        depth_stencil_desc.DepthEnable = false;
+        depth_stencil_desc.DepthEnable    = arg.mDepthSettings.mEnableTest;
+        depth_stencil_desc.DepthWriteMask = arg.mDepthSettings.mEnableWrite ? D3D12_DEPTH_WRITE_MASK_ALL : D3D12_DEPTH_WRITE_MASK_ZERO;
+        depth_stencil_desc.DepthFunc      = D3D12_COMPARISON_FUNC_LESS;
 
         // パイプライン
         D3D12_GRAPHICS_PIPELINE_STATE_DESC desc = {};
@@ -152,7 +154,16 @@ bool Pipeline::initialize(const InitializeArg& arg)
         desc.BlendState                     = blend_desc;
         desc.DepthStencilState              = depth_stencil_desc;
         desc.SampleMask                     = std::numeric_limits<uint32_t>::max();
-        desc.PrimitiveTopologyType          = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+        switch (arg.mPrimitiveTopology)
+        {
+            case IMeshBuffer::PrimitiveTopology::Triangles:
+                desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+                break;
+            case IMeshBuffer::PrimitiveTopology::Lines:
+                desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+                break;
+        }
 
         // 出力フォーマット
         desc.NumRenderTargets               = arg.mNumOutput;
@@ -160,6 +171,7 @@ bool Pipeline::initialize(const InitializeArg& arg)
         {
             desc.RTVFormats[i_output] = Texture::ConvertFormat(arg.mOutputFormats[i_output]);
         }
+        desc.DSVFormat                      = Texture::ConvertFormat(arg.mDepthFormat);
         desc.SampleDesc.Count               = 1;
 
         if (FAILED(p_device->CreateGraphicsPipelineState(&desc, IID_PPV_ARGS(&p_pipeline_state))))

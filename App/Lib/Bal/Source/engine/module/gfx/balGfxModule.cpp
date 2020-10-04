@@ -224,8 +224,8 @@ void Module::initialize(const InitializeArg& arg)
             // 頂点レイアウト
             std::unique_ptr<d3d12::InputLayout> p_input_layout = make_unique<d3d12::InputLayout>(nullptr);
             {
-                std::unique_ptr<IInputLayout::InputLayoutDesc[]> descs = make_unique<IInputLayout::InputLayoutDesc[]>(nullptr, 3);
-                descs[0] = {.mName = "POSITION", .mType = IInputLayout::Type::Vec3, .mOffset = cDebugMeshVertexColorOffset};
+                std::unique_ptr<IInputLayout::InputLayoutDesc[]> descs = make_unique<IInputLayout::InputLayoutDesc[]>(nullptr, 2);
+                descs[0] = {.mName = "POSITION", .mType = IInputLayout::Type::Vec3, .mOffset = cDebugMeshVertexPositionOffset};
                 descs[1] = {.mName = "COLOR",    .mType = IInputLayout::Type::Vec4, .mOffset = cDebugMeshVertexColorOffset};
 
                 IInputLayout::InitializeArg init_arg;
@@ -245,6 +245,10 @@ void Module::initialize(const InitializeArg& arg)
                 init_arg.mNumDescriptorHeap = 1;
                 init_arg.mpDescriptorHeaps  = p_heaps;
                 init_arg.mpInputLayout      = p_input_layout.get();
+                init_arg.mPrimitiveTopology = IMeshBuffer::PrimitiveTopology::Lines;
+
+                init_arg.mDepthSettings.mEnableTest  = true;
+                init_arg.mDepthSettings.mEnableWrite = false;
 
                 const ShaderArchive::ShaderContainer& shader_container = mpShaderArchive->getShaderContainer(mpShaderArchive->findProgram("DebugLine"));
                 init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
@@ -306,6 +310,9 @@ void Module::initialize(const InitializeArg& arg)
                 init_arg.mpDescriptorHeaps  = p_heaps;
                 init_arg.mpInputLayout      = p_input_layout.get();
 
+                init_arg.mDepthSettings.mEnableTest  = true;
+                init_arg.mDepthSettings.mEnableWrite = true;
+
                 const ShaderArchive::ShaderContainer& shader_container = mpShaderArchive->getShaderContainer(mpShaderArchive->findProgram("Sample"));
                 init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
                 init_arg.mVertexShaderBufferSize = shader_container.mVertexShader.mBufferSize;
@@ -339,7 +346,7 @@ void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 
         MathVector3 camera_pos = MathVector3(
             Math::Cos(Radian(rotate_value)) * 10.f,
-            1.f,
+            -1.f,
             Math::Sin(Radian(rotate_value)) * 10.f
         );
 
@@ -403,9 +410,9 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
         arg.mpCommandList->drawMesh(*MeshContainer::GetInstance().getBuffer(MeshContainer::Type::Sphere));
 
         // グリッド描画
-        //arg.mpCommandList->bindPipeline(*mpDebugMeshPipeline);
-        //arg.mpCommandList->setDescriptorHeap(0, *mpEnvDescriptorHeap);
-        //arg.mpCommandList->drawMesh(*mpGridMeshBuffer);
+        arg.mpCommandList->bindPipeline(*mpDebugMeshPipeline);
+        arg.mpCommandList->setDescriptorHeap(0, *mpEnvDescriptorHeap);
+        arg.mpCommandList->drawMesh(*mpGridMeshBuffer);
 
         // バリア
         arg.mpCommandList->resourceBarrier(

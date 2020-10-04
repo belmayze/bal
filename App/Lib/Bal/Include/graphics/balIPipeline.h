@@ -9,6 +9,7 @@
 // bal
 #include <math/balMath.h>
 #include <graphics/balFrameBuffer.h>
+#include <graphics/balIMeshBuffer.h>
 #include <graphics/balITexture.h>
 
 namespace bal { class File; }
@@ -22,13 +23,23 @@ namespace bal {
 class IPipeline
 {
 public:
+    //! デプス設定
+    struct DepthSettings
+    {
+        bool mEnableTest  = false;
+        bool mEnableWrite = false;
+    };
     //! 初期化構造体
     struct InitializeArg
     {
-        IGraphics*                                                  mpGraphics    = nullptr;
-        uint32_t                                                    mNumOutput    = 0;
+        IGraphics*                                                  mpGraphics         = nullptr;
+        uint32_t                                                    mNumOutput         = 0;
         Array<ITexture::Format, FrameBuffer::cColorRenderTargetMax> mOutputFormats;
-        const IInputLayout*                                         mpInputLayout = nullptr;
+        ITexture::Format                                            mDepthFormat       = ITexture::Format::D32_FLOAT;
+        const IInputLayout*                                         mpInputLayout      = nullptr;
+        IMeshBuffer::PrimitiveTopology                              mPrimitiveTopology = IMeshBuffer::PrimitiveTopology::Triangles;
+
+        DepthSettings           mDepthSettings;
 
         uint32_t                mNumDescriptorHeap = 0;       //!< デスクリプターヒープの数
         const IDescriptorHeap** mpDescriptorHeaps  = nullptr; //!< デスクリプターヒープ
