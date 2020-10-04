@@ -219,7 +219,7 @@ void Graphics::postDraw()
     mpCmdQueue->execute(mpCmdLists[mCurrentBufferIndex], mCurrentBufferIndex);
 
     // 画面の反映
-    mpSwapChain->Present(0, 0);
+    mpSwapChain->Present(1, 0);
 
     // 実行待ち
     if (++mCurrentBufferIndex > (mBufferCount - 1)) { mCurrentBufferIndex = 0; }

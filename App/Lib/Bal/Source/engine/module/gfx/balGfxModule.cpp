@@ -342,7 +342,7 @@ void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
     {
         // カメラを仮で回す
         static float rotate_value = 0.f;
-        rotate_value += 0.001f;
+        rotate_value += 0.01f;
 
         MathVector3 camera_pos = MathVector3(
             Math::Cos(Radian(rotate_value)) * 10.f,
