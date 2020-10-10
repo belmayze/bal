@@ -14,6 +14,7 @@
 #include <container/balString.h>
 #include <memory/balUniquePtr.h>
 // bal::mod
+#include <engine/module/cntl/balCntlModule.h>
 #include <engine/module/gfx/balGfxModule.h>
 
 class Main : public bal::ApplicationBase
@@ -48,12 +49,14 @@ public:
         }
 
         // 必要なモジュールを作成します
-        constexpr size_t cNumModule = 1;
+        constexpr size_t cNumModule = 2;
         bal::Engine::ModuleArray p_modules = bal::make_unique<std::unique_ptr<bal::mod::IModule>[]>(nullptr, cNumModule);
         {
             int module_index = 0;
             // グラフィックス
             p_modules[module_index++] = bal::make_unique<bal::mod::gfx::Module>(nullptr);
+            // コントローラー
+            p_modules[module_index++] = bal::make_unique<bal::mod::cntl::Module>(nullptr);
         }
 
         // エンジン

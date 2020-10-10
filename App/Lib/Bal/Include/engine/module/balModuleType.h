@@ -13,6 +13,8 @@ namespace bal::mod {
 enum class ModuleType
 {
     Graphics,
+    Controller,
+    Other
 };
 
 }

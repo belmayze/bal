@@ -49,6 +49,9 @@
     <Filter Include="engine\module\gfx">
       <UniqueIdentifier>{caf758a7-bcc9-4429-8646-69ae937e5357}</UniqueIdentifier>
     </Filter>
+    <Filter Include="engine\module\cntl">
+      <UniqueIdentifier>{c4a73965-d49c-4ede-9c43-ed794c613184}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\framework\balFramework.cpp">
@@ -170,6 +173,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\engine\module\gfx\balGfxMeshContainer.cpp">
       <Filter>engine\module\gfx</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\engine\module\cntl\balCntlModule.cpp">
+      <Filter>engine\module\cntl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -412,6 +418,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\engine\module\gfx\balGfxMeshContainer.h">
       <Filter>engine\module\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\engine\module\cntl\balCntlModule.h">
+      <Filter>engine\module\cntl</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

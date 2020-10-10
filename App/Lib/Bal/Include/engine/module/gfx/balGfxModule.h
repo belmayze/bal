@@ -1,6 +1,6 @@
 ﻿/*!
  * @file   balGfxModule.h
- * @brief  
+ * @brief  グラフィックスモジュール
  * @author belmayze
  *
  * Copyright (c) 2020 belmayze. All rights reserved.
