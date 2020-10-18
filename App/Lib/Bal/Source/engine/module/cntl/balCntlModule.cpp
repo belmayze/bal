@@ -5,8 +5,6 @@
  *
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
-// Windows
-#include <Xinput.h>
 // bal
 #include <engine/module/cntl/balCntlModule.h>
 
@@ -30,16 +28,12 @@ void Module::setCustomModule(std::unique_ptr<mod::ICustomModule>&& p_custom_modu
 
 void Module::initialize(const InitializeArg& arg)
 {
-    // XInput
-    XInputEnable(TRUE);
 }
 
 // ----------------------------------------------------------------------------
 
 void Module::finalize()
 {
-    // XInput
-    XInputEnable(FALSE);
 }
 
 // ----------------------------------------------------------------------------

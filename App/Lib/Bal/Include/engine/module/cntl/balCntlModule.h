@@ -52,8 +52,6 @@ public:
      * モジュールの種類を取得する
      */
     virtual ModuleType getModuleType() const { return ModuleType::Controller; }
-
-private:
 };
 
 }

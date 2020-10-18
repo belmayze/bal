@@ -65,6 +65,7 @@
 #   include <dxgi1_6.h>
 #   include <tchar.h>
 #   include <wrl.h>
+#   include <Xinput.h>
 #endif
 // 使っていい C++ の include
 #include <array>
