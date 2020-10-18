@@ -336,6 +336,13 @@ void Module::initialize(const InitializeArg& arg)
 
 // ----------------------------------------------------------------------------
 
+void Module::finalize()
+{
+
+}
+
+// ----------------------------------------------------------------------------
+
 void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 {
     // 環境定数バッファ

@@ -43,6 +43,11 @@ public:
     virtual void initialize(const InitializeArg& arg) = 0;
 
     /*!
+     * モジュールの終了処理を行う関数です
+     */
+    virtual void finalize() = 0;
+
+    /*!
      * モジュールの更新を行う関数です
      * @param[in] arg 更新引数
      */
