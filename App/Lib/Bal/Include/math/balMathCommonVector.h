@@ -92,6 +92,12 @@ public:
     inline float getY() const { return m[1]; }
 
     // ------------------------------------------------------------------------
+    // setter
+    // ------------------------------------------------------------------------
+    inline void setX(float x) { m[0] = x; }
+    inline void setY(float y) { m[1] = y; }
+
+    // ------------------------------------------------------------------------
     // operator at
     // ------------------------------------------------------------------------
     inline       float& operator[](int x)       { return m[x]; }
@@ -196,6 +202,13 @@ public:
     inline float getZ() const { return m[2]; }
 
     // ------------------------------------------------------------------------
+    // setter
+    // ------------------------------------------------------------------------
+    inline void setX(float x) { m[0] = x; }
+    inline void setY(float y) { m[1] = y; }
+    inline void setZ(float z) { m[2] = z; }
+
+    // ------------------------------------------------------------------------
     // operator at
     // ------------------------------------------------------------------------
     inline       float& operator[](int x)       { return m[x]; }
@@ -265,6 +278,14 @@ public:
     inline float getY() const { return m[1]; }
     inline float getZ() const { return m[2]; }
     inline float getW() const { return m[3]; }
+
+    // ------------------------------------------------------------------------
+    // setter
+    // ------------------------------------------------------------------------
+    inline void setX(float x) { m[0] = x; }
+    inline void setY(float y) { m[1] = y; }
+    inline void setZ(float z) { m[2] = z; }
+    inline void setW(float w) { m[3] = w; }
 
     // ------------------------------------------------------------------------
     // operator at

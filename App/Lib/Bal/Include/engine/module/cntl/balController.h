@@ -6,6 +6,8 @@
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 #pragma once
+// math
+#include <math/balMath.h>
 
 // ----------------------------------------------------------------------------
 namespace bal::mod::cntl {
@@ -79,21 +81,25 @@ public:
     bool isOnDisconnected() const { return (mPrevStatus != mStatus && mStatus == Status::Disconnected); }
 
     //! ボタンが押されたか取得
-    bool isOnPress(ButtonMask mask) const { return isConnected() ? (mOnPressMask & mask) == mask : false; }
+    bool isOnPress(uint32_t mask) const { return isConnected() ? (mOnPressMask & mask) == mask : false; }
 
     //! ボタンが押されているか取得
-    bool isPressed(ButtonMask mask) const { return isConnected() ? (mPressMask & mask) == mask : false; }
+    bool isPressed(uint32_t mask) const { return isConnected() ? (mPressMask & mask) == mask : false; }
 
     //! ボタンが離されたか取得
-    bool isOnRelease(ButtonMask mask) const { return isConnected() ? (mOnReleaseMask & mask) == mask : false; }
+    bool isOnRelease(uint32_t mask) const { return isConnected() ? (mOnReleaseMask & mask) == mask : false; }
 
 private:
-    uint32_t mIndex         = 0;
-    Status   mPrevStatus    = Status::Disconnected;
-    Status   mStatus        = Status::Disconnected;
-    uint32_t mOnPressMask   = 0;
-    uint32_t mPressMask     = 0;
-    uint32_t mOnReleaseMask = 0;
+    uint32_t    mIndex         = 0;
+    Status      mPrevStatus    = Status::Disconnected;
+    Status      mStatus        = Status::Disconnected;
+    uint32_t    mOnPressMask   = 0;
+    uint32_t    mPressMask     = 0;
+    uint32_t    mOnReleaseMask = 0;
+    float       mLeftTrigger   = 0.f;
+    float       mRightTrigger  = 0.f;
+    MathVector2 mLeftStick;
+    MathVector2 mRightStick;
 };
 
 }

@@ -58,6 +58,63 @@ void Controller::update()
         if ((state.Gamepad.wButtons & XINPUT_GAMEPAD_LEFT_THUMB)     != 0) { mPressMask |= ButtonL3; }
         if ((state.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB)    != 0) { mPressMask |= ButtonR3; }
 
+        // トリガーの状態
+        mLeftTrigger  = static_cast<float>(state.Gamepad.bLeftTrigger)  / 255.f;
+        mRightTrigger = static_cast<float>(state.Gamepad.bRightTrigger) / 255.f;
+        if (state.Gamepad.bLeftTrigger  > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) { mPressMask |= ButtonL2; }
+        if (state.Gamepad.bRightTrigger > XINPUT_GAMEPAD_TRIGGER_THRESHOLD) { mPressMask |= ButtonR2; }
+
+        // スティックの状態
+        if (state.Gamepad.sThumbLX >= 0)
+        {
+            int16_t value = Math::Max(state.Gamepad.sThumbLX - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE, 0);
+            int16_t range = std::numeric_limits<int16_t>::max() - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
+            mLeftStick.setX(static_cast<float>(value) / static_cast<float>(range));
+        }
+        else if (state.Gamepad.sThumbLX < 0)
+        {
+            int16_t value = Math::Min(state.Gamepad.sThumbLX + XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE, 0);
+            int16_t range = -(std::numeric_limits<int16_t>::min() + XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+            mLeftStick.setX(static_cast<float>(value) / static_cast<float>(range));
+        }
+        if (state.Gamepad.sThumbLY >= 0)
+        {
+            int16_t value = Math::Max(state.Gamepad.sThumbLY - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE, 0);
+            int16_t range = std::numeric_limits<int16_t>::max() - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
+            mLeftStick.setY(static_cast<float>(value) / static_cast<float>(range));
+        }
+        else if (state.Gamepad.sThumbLY < 0)
+        {
+            int16_t value = Math::Min(state.Gamepad.sThumbLY + XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE, 0);
+            int16_t range = -(std::numeric_limits<int16_t>::min() + XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
+            mLeftStick.setY(static_cast<float>(value) / static_cast<float>(range));
+        }
+
+        if (state.Gamepad.sThumbRX >= 0)
+        {
+            int16_t value = Math::Max(state.Gamepad.sThumbRX - XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE, 0);
+            int16_t range = std::numeric_limits<int16_t>::max() - XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE;
+            mRightStick.setX(static_cast<float>(value) / static_cast<float>(range));
+        }
+        else if (state.Gamepad.sThumbRX < 0)
+        {
+            int16_t value = Math::Min(state.Gamepad.sThumbRX + XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE, 0);
+            int16_t range = -(std::numeric_limits<int16_t>::min() + XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+            mRightStick.setX(static_cast<float>(value) / static_cast<float>(range));
+        }
+        if (state.Gamepad.sThumbRY >= 0)
+        {
+            int16_t value = Math::Max(state.Gamepad.sThumbRY - XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE, 0);
+            int16_t range = std::numeric_limits<int16_t>::max() - XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE;
+            mRightStick.setY(static_cast<float>(value) / static_cast<float>(range));
+        }
+        else if (state.Gamepad.sThumbRY < 0)
+        {
+            int16_t value = Math::Min(state.Gamepad.sThumbRY + XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE, 0);
+            int16_t range = -(std::numeric_limits<int16_t>::min() + XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
+            mRightStick.setY(static_cast<float>(value) / static_cast<float>(range));
+        }
+
         // 過去の状態を照らし合わせて on 系をチェック
         mOnPressMask   = (prev_status ^ mPressMask) & mPressMask;
         mOnReleaseMask = (prev_status ^ mPressMask) & prev_status;

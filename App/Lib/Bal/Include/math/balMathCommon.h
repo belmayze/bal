@@ -63,6 +63,31 @@ public:
         double t = static_cast<double>(a) / static_cast<double>(times);
         return static_cast<size_t>(std::ceil(t) * times);
     }
+
+    /*!
+     * 最小を返す
+     * @param[in] x0 数値0
+     * @param[in] x1 数値1
+     */
+    template <typename T>
+    static inline T Min(T x0, T x1) { return std::min(x0, x1); }
+
+    /*!
+     * 最大を返す
+     * @param[in] x0 数値0
+     * @param[in] x1 数値1
+     */
+    template <typename T>
+    static inline T Max(T x0, T x1) { return std::max(x0, x1); }
+
+    /*!
+     * クランプされた値を返す
+     * @param[in] x   数値
+     * @param[in] min 最小値
+     * @param[in] max 最大値
+     */
+    template <typename T>
+    static inline T Clamp(T x, T min, T max) { return Min(Max(x, min), max); }
 }; 
 
 }
