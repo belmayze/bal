@@ -16,6 +16,8 @@
 // bal::mod
 #include <engine/module/cntl/balCntlModule.h>
 #include <engine/module/gfx/balGfxModule.h>
+// app
+#include <module/gfx/gfxCustomModule.h>
 
 namespace app {
 
@@ -56,9 +58,15 @@ public:
         {
             int module_index = 0;
             // グラフィックス
-            p_modules[module_index++] = bal::make_unique<bal::mod::gfx::Module>(nullptr);
+            {
+                std::unique_ptr<bal::mod::IModule> p_module = bal::make_unique<bal::mod::gfx::Module>(nullptr);
+                p_module->setCustomModule(bal::make_unique<app::mod::gfx::CustomModule>(nullptr));
+                p_modules[module_index++] = std::move(p_module);
+            }
             // コントローラー
-            p_modules[module_index++] = bal::make_unique<bal::mod::cntl::Module>(nullptr);
+            {
+                p_modules[module_index++] = bal::make_unique<bal::mod::cntl::Module>(nullptr);
+            }
         }
 
         // エンジン

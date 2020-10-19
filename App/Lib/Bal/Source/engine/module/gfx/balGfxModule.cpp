@@ -460,6 +460,12 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
         arg.mpCommandList->setDescriptorHeap(0, *mpEnvDescriptorHeap);
         arg.mpCommandList->drawMesh(*mpGridMeshBuffer);
 
+        // カスタムモジュール
+        if (mpCustomModule)
+        {
+            mpCustomModule->onDraw(arg);
+        }
+
         // バリア
         arg.mpCommandList->resourceBarrier(
             *mpRenderTargetColor->getTexture(),
