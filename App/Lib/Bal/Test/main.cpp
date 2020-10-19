@@ -17,6 +17,8 @@
 #include <engine/module/cntl/balCntlModule.h>
 #include <engine/module/gfx/balGfxModule.h>
 
+namespace app {
+
 class Main : public bal::ApplicationBase
 {
 public:
@@ -74,3 +76,5 @@ public:
 };
 
 Main gMain;
+
+} // app::

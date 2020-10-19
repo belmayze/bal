@@ -144,7 +144,9 @@ inline void MathCommonMatrix44::setLookAtRH(const MathVector3& eye_pt, const Mat
     z = (eye_pt - look_at).calcNormalize(); // 視線ベクトル
     y = up.calcNormalize();
     x = y.calcCross(z);
+    x.setNormalize();
     y = z.calcCross(x); // 上方向ベクトルを再計算
+    y.setNormalize();
 
     // 行列をセットします
     // View 行列は、姿勢ベクトルは逆行列（倒置）になり、移動量は反転する
@@ -194,6 +196,20 @@ inline void MathCommonMatrix44::setRow(int index, const MathVector4& v)
     m[1][index] = v[1];
     m[2][index] = v[2];
     m[3][index] = v[3];
+}
+
+// ------------------------------------------------------------------------
+
+inline MathVector4 MathCommonMatrix44::getCol(int index) const
+{
+    return MathVector4(m[index][0], m[index][1], m[index][2], m[index][3]);
+}
+
+// ------------------------------------------------------------------------
+
+inline MathVector4 MathCommonMatrix44::getRow(int index) const
+{
+    return MathVector4(m[0][index], m[1][index], m[2][index], m[3][index]);
 }
 
 // ------------------------------------------------------------------------

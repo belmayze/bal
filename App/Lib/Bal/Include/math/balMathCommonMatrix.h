@@ -148,6 +148,19 @@ public:
     inline void setRow(int index, const MathVector4& v);
 
 public:
+    /*!
+     * 行ベクトルを取得します
+     * @param[in] index インデックス
+     */
+    inline MathVector4 getCol(int index) const;
+
+    /*!
+     * 列ベクトルを取得します
+     * @param[in] index インデックス
+     */
+    inline MathVector4 getRow(int index) const;
+
+public:
     // ------------------------------------------------------------------------
     // operator -+*/
     // ------------------------------------------------------------------------

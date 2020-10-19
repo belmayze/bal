@@ -326,6 +326,10 @@ void Module::initialize(const InitializeArg& arg)
         }
     }
 
+    // ビュー行列
+    mCameraPosition = MathVector3(0.f, 0.f, 10.f);
+    mViewMatrix.setLookAtRH(mCameraPosition, MathVector3(0.f, 0.f, 0.f), MathVector3(0.f, 1.f, 0.f));
+
     // よく使用するシェイプ形状を初期化する
     MeshContainer::GetInstance().initialize();
     MeshContainer::AddGfxFinalizer();
@@ -350,23 +354,51 @@ void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 {
     // 環境定数バッファ
     {
-        // カメラを仮で回す
-        static float rotate_value = 0.f;
-        const cntl::Controller& controller = cntl::Module::getModule<cntl::Module>()->getController(0);
-        if (controller.isConnected())
+        // カメラの仮制御
         {
-            rotate_value += controller.getLeftStick().getX() * 0.1f;
-        }
+            // 移動軸（カメラ行列は倒置）
+            MathVector3 camera_x = mViewMatrix.getCol(0).getXYZ();
+            MathVector3 camera_y = mViewMatrix.getCol(1).getXYZ();
+            MathVector3 camera_z = mViewMatrix.getCol(2).getXYZ();
 
-        MathVector3 camera_pos = MathVector3(
-            Math::Cos(Radian(rotate_value)) * 10.f,
-            -1.f,
-            Math::Sin(Radian(rotate_value)) * 10.f
-        );
+            // 入力によって移動させる
+            const cntl::Controller& controller = cntl::Module::getModule<cntl::Module>()->getController(0);
+            if (controller.isConnected())
+            {
+                // Z軸ベクトルを入力によって移動させる
+                camera_z -= camera_x * controller.getLeftStick().getX() * 0.05f;
+                camera_z -= camera_y * controller.getLeftStick().getY() * 0.05f;
+                camera_z.setNormalize();
+
+                // XYベクトルを直行させる
+                // Yを固定して捻じれ禁止
+                if (camera_y.getY() + camera_z.getY() * controller.getLeftStick().getY() * 0.05f >= 0.f)
+                {
+                    camera_y = MathVector3(0.f, 1.f, 0.f);
+                }
+                else
+                {
+                    camera_y = MathVector3(0.f, -1.f, 0.f);
+                }
+                camera_x = camera_y.calcCross(camera_z);
+                camera_x.setNormalize();
+                camera_y = camera_z.calcCross(camera_x);
+                camera_y.setNormalize();
+
+                // カメラの位置
+                MathVector3 position = camera_z * 10.f;
+                MathVector3 camera_t(-camera_x.calcDot(position), -camera_y.calcDot(position), -camera_z.calcDot(position));
+
+                // 行列にセット
+                mViewMatrix.setCol(0, MathVector4(camera_x, camera_t.getX()));
+                mViewMatrix.setCol(1, MathVector4(camera_y, camera_t.getY()));
+                mViewMatrix.setCol(2, MathVector4(camera_z, camera_t.getZ()));
+            }
+        }
 
         SampleEnvCB* p_cb = mpEnvConstantBuffer->getBufferPtr<SampleEnvCB>();
         p_cb->mProjMatrix.setPerspectiveProjectionRH(Radian(50.f), 16.f / 9.f, 0.01f, 1000.f);
-        p_cb->mViewMatrix.setLookAtRH(camera_pos, MathVector3(0.f, 0.f, 0.f), MathVector3(0.f, 1.f, 0.f));
+        p_cb->mViewMatrix = mViewMatrix;
         p_cb->mProjectionViewMatrix = p_cb->mProjMatrix * p_cb->mViewMatrix;
 
         // ライトの仮

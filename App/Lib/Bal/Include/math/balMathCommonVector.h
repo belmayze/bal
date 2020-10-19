@@ -278,6 +278,7 @@ public:
     inline float getY() const { return m[1]; }
     inline float getZ() const { return m[2]; }
     inline float getW() const { return m[3]; }
+    inline MathCommonVector3 getXYZ() const { return MathCommonVector3(m[0], m[1], m[2]); }
 
     // ------------------------------------------------------------------------
     // setter

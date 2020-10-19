@@ -120,6 +120,9 @@ private:
     std::unique_ptr<IConstantBuffer>    mpSampleConstantBuffer;
     SampleMeshCB                        mSampleMeshCB;
 
+    MathMatrix44 mViewMatrix;
+    MathVector3  mCameraPosition;
+
 };
 
 }
