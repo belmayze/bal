@@ -9,6 +9,8 @@
 // bal
 #include <engine/module/balIModule.h>
 
+namespace bal::mod::cntl { class Controller; }
+
 // ----------------------------------------------------------------------------
 namespace bal::mod::cntl {
 
@@ -52,6 +54,10 @@ public:
      * モジュールの種類を取得する
      */
     virtual ModuleType getModuleType() const { return ModuleType::Controller; }
+
+private:
+    std::unique_ptr<Controller[]> mpControllers;
+    uint32_t                      mNumController = 0;
 };
 
 }

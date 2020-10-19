@@ -33,6 +33,7 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\engine\balEngine.cpp" />
     <ClCompile Include="..\..\Source\engine\module\cntl\balCntlModule.cpp" />
+    <ClCompile Include="..\..\Source\engine\module\cntl\balController.cpp" />
     <ClCompile Include="..\..\Source\engine\module\gfx\balGfxMeshContainer.cpp" />
     <ClCompile Include="..\..\Source\engine\module\gfx\balGfxModule.cpp" />
     <ClCompile Include="..\..\Source\framework\balFramework.cpp">
@@ -114,6 +115,7 @@
     <ClInclude Include="..\..\Include\engine\module\balIModule.h" />
     <ClInclude Include="..\..\Include\engine\module\balModuleType.h" />
     <ClInclude Include="..\..\Include\engine\module\cntl\balCntlModule.h" />
+    <ClInclude Include="..\..\Include\engine\module\cntl\balController.h" />
     <ClInclude Include="..\..\Include\engine\module\gfx\balGfxMeshContainer.h" />
     <ClInclude Include="..\..\Include\engine\module\gfx\balGfxModule.h" />
     <ClInclude Include="..\..\Include\engine\module\gfx\balIGfxCustomModule.h" />

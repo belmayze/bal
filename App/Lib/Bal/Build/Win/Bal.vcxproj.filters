@@ -177,6 +177,9 @@
     <ClCompile Include="..\..\Source\engine\module\cntl\balCntlModule.cpp">
       <Filter>engine\module\cntl</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\engine\module\cntl\balController.cpp">
+      <Filter>engine\module\cntl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\memory\balSingleton.h">
@@ -420,6 +423,9 @@
       <Filter>engine\module\gfx</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\engine\module\cntl\balCntlModule.h">
+      <Filter>engine\module\cntl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\engine\module\cntl\balController.h">
       <Filter>engine\module\cntl</Filter>
     </ClInclude>
   </ItemGroup>
