@@ -25,6 +25,9 @@
 #include <graphics/d3d12/balPipelineD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
 #include <graphics/d3d12/balTextureD3D12.h>
+// 仮
+#include <engine/module/cntl/balCntlModule.h>
+#include <engine/module/cntl/balController.h>
 
 namespace bal::mod::gfx {
 
@@ -349,7 +352,11 @@ void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
     {
         // カメラを仮で回す
         static float rotate_value = 0.f;
-        rotate_value += 0.01f;
+        const cntl::Controller& controller = cntl::Module::getModule<cntl::Module>()->getController(0);
+        if (controller.isConnected())
+        {
+            rotate_value += controller.getLeftStick().getX() * 0.1f;
+        }
 
         MathVector3 camera_pos = MathVector3(
             Math::Cos(Radian(rotate_value)) * 10.f,

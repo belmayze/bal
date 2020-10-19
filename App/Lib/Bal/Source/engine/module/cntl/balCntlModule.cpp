@@ -68,4 +68,11 @@ void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 
 // ----------------------------------------------------------------------------
 
+const Controller& Module::getController(uint32_t index) const
+{
+    return mpControllers[index];
+}
+
+// ----------------------------------------------------------------------------
+
 }

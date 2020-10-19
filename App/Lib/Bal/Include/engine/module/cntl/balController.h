@@ -89,6 +89,16 @@ public:
     //! ボタンが離されたか取得
     bool isOnRelease(uint32_t mask) const { return isConnected() ? (mOnReleaseMask & mask) == mask : false; }
 
+    //! 左スティック状態
+    const MathVector2& getLeftStick() const { return mLeftStick; }
+
+    //! 右スティック状態
+    const MathVector2& getRightStick() const { return mRightStick; }
+    
+    //! トリガー状態
+    float getLeftTrigger() const { return mLeftTrigger; }
+    float getRightTrigger() const { return mRightTrigger; }
+
 private:
     uint32_t    mIndex         = 0;
     Status      mPrevStatus    = Status::Disconnected;

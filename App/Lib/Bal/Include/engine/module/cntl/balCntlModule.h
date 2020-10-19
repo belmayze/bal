@@ -55,6 +55,10 @@ public:
      */
     virtual ModuleType getModuleType() const { return ModuleType::Controller; }
 
+public:
+    //! コントローラーを取得
+    const Controller& getController(uint32_t index) const;
+
 private:
     std::unique_ptr<Controller[]> mpControllers;
     uint32_t                      mNumController = 0;
