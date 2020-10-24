@@ -16,7 +16,6 @@
 #include <app/balApplicationBase.h>
 #include <framework/balFramework.h>
 #include <framework/balFrameworkCallback.h>
-#include <graphics/d3d12/balGraphicsD3D12.h>
 #include <memory/balSingletonFinalizer.h>
 #include <memory/balSingletonGfxFinalizer.h>
 #include <time/balStopwatch.h>
@@ -164,8 +163,8 @@ void Framework::initialize(const ApiEntry& api_entry, const InitializeArg& arg)
         if (!mHwnd) { return; }
 
         // グラフィックスの初期化
-        mpGraphics = make_unique<d3d12::Graphics>(nullptr);
-        IGraphics::InitializeArg init_arg;
+        mpGraphics = make_unique<Graphics>(nullptr);
+        Graphics::InitializeArg init_arg;
         init_arg.mHwnd             = mHwnd;
         init_arg.mRenderBufferSize = arg.mRenderSize;
         init_arg.mBufferCount      = arg.mRenderBufferCount;

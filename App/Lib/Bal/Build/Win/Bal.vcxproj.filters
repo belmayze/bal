@@ -428,5 +428,8 @@
     <ClInclude Include="..\..\Include\engine\module\cntl\balController.h">
       <Filter>engine\module\cntl</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\balGraphicsDefine.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

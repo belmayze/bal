@@ -71,6 +71,12 @@ public:
      */
     void onDraw(const FrameworkCallback::DrawArg& arg);
 
+public:
+    /*!
+     * デフォルトのレンダリングターゲットを取得します
+     */
+    const IRenderTargetColor& getDefaultRenderTarget() const { return *mpRenderTargetColor; }
+
 private:
     //! Sample Constant Buffer
     struct SampleMeshCB
@@ -114,11 +120,6 @@ private:
 
     std::unique_ptr<IConstantBuffer>    mpEnvConstantBuffer;
     std::unique_ptr<IDescriptorHeap>    mpEnvDescriptorHeap;
-
-    std::unique_ptr<IPipeline>          mpSamplePipeline;
-    std::unique_ptr<IDescriptorHeap>    mpSampleDescriptorHeap;
-    std::unique_ptr<IConstantBuffer>    mpSampleConstantBuffer;
-    SampleMeshCB                        mSampleMeshCB;
 
     MathMatrix44 mViewMatrix;
     MathVector3  mCameraPosition;

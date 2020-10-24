@@ -7,14 +7,6 @@
     <Compile Profile="5_0" />
   </Settings>
   <ProgramArray>
-    <Program Name="Present">
-      <Vertex Source="balPresent.hlsl" />
-      <Pixel Source="balPresent.hlsl" />
-    </Program>
-    <Program Name="DebugLine">
-      <Vertex Source="balDebugLine.hlsl" />
-      <Pixel Source="balDebugLine.hlsl" />
-    </Program>
     <Program Name="Sample">
       <Vertex Source="sample.hlsl" />
       <Pixel Source="sample.hlsl" />

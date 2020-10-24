@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<Shader xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Settings>
+    <IncludeArray>
+      <Include Path=".\" />
+    </IncludeArray>
+    <Compile Profile="5_0" />
+  </Settings>
+  <ProgramArray>
+    <Program Name="Present">
+      <Vertex Source="balPresent.hlsl" />
+      <Pixel Source="balPresent.hlsl" />
+    </Program>
+    <Program Name="DebugLine">
+      <Vertex Source="balDebugLine.hlsl" />
+      <Pixel Source="balDebugLine.hlsl" />
+    </Program>
+  </ProgramArray>
+</Shader>

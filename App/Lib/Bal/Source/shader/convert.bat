@@ -2,7 +2,7 @@
 
 pushd %~dp0
 
-call ..\..\Tool\ShaderConverter\ShaderConverter.exe -i bal_shader.xml -o ..\..\Rom\Contents\Shader\bal_shader.bsa
+call ..\..\Tool\ShaderConverter\ShaderConverter.exe -i balShader.xml -o ..\..\Rom\Contents\Shader\balShader.bsa
 pause
 
 popd

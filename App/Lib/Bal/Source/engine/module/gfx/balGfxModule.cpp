@@ -57,7 +57,7 @@ void Module::initialize(const InitializeArg& arg)
     // HDR 用レンダーバッファ
     {
         // テクスチャーを確保
-        std::unique_ptr<ITexture> p_color_buffer = make_unique<d3d12::Texture>(nullptr);
+        std::unique_ptr<ITexture> p_color_buffer = make_unique<Texture>(nullptr);
         {
             ITexture::InitializeArg init_arg;
             init_arg.mpGraphics = p_graphics;
@@ -66,7 +66,7 @@ void Module::initialize(const InitializeArg& arg)
             init_arg.mSize      = render_buffer_size;
             if (!p_color_buffer->initialize(init_arg)) { return; }
         }
-        std::unique_ptr<ITexture> p_depth_buffer = make_unique<d3d12::Texture>(nullptr);
+        std::unique_ptr<ITexture> p_depth_buffer = make_unique<Texture>(nullptr);
         {
             ITexture::InitializeArg init_arg;
             init_arg.mpGraphics = p_graphics;
@@ -77,13 +77,13 @@ void Module::initialize(const InitializeArg& arg)
         }
 
         // レンダーターゲット
-        mpRenderTargetColor = make_unique<d3d12::RenderTargetColor>(nullptr);
+        mpRenderTargetColor = make_unique<RenderTargetColor>(nullptr);
         {
             IRenderTargetColor::InitializeArg init_arg;
             init_arg.mpGraphics = p_graphics;
             if (!mpRenderTargetColor->initialize(init_arg, std::move(p_color_buffer))) { return; }
         }
-        mpRenderTargetDepth = make_unique<d3d12::RenderTargetDepth>(nullptr);
+        mpRenderTargetDepth = make_unique<RenderTargetDepth>(nullptr);
         {
             IRenderTargetDepth::InitializeArg init_arg;
             init_arg.mpGraphics = p_graphics;
@@ -101,7 +101,7 @@ void Module::initialize(const InitializeArg& arg)
 
     // グリッドとマニピュレーターのメッシュ情報
     {
-        mpGridMeshBuffer = make_unique<d3d12::MeshBuffer>(nullptr);
+        mpGridMeshBuffer = make_unique<MeshBuffer>(nullptr);
         {
             // 100m x 100m (1m 単位)
             std::unique_ptr<DebugMeshVertex[]> vertices = make_unique<DebugMeshVertex[]>(nullptr, (101 + 101) * 2);
@@ -144,7 +144,7 @@ void Module::initialize(const InitializeArg& arg)
     mpShaderArchive = make_unique<ShaderArchive>(nullptr);
     {
         File file;
-        if (!file.loadFromFile("Shader\\bal_shader.bsa")) { return; }
+        if (!file.loadFromFile("Shader\\balShader.bsa")) { return; }
         if (!mpShaderArchive->loadArchiver(std::move(file))) { return; }
     }
 
@@ -153,7 +153,7 @@ void Module::initialize(const InitializeArg& arg)
         // 最終画面反映
         {
             // 頂点レイアウト
-            std::unique_ptr<d3d12::InputLayout> p_input_layout = make_unique<d3d12::InputLayout>(nullptr);
+            std::unique_ptr<InputLayout> p_input_layout = make_unique<InputLayout>(nullptr);
             {
                 std::unique_ptr<IInputLayout::InputLayoutDesc[]> descs = make_unique<IInputLayout::InputLayoutDesc[]>(nullptr, 2);
                 descs[0] = {.mName = "POSITION", .mType = IInputLayout::Type::Vec3, .mOffset = MeshContainer::cOffsetPosition};
@@ -167,7 +167,7 @@ void Module::initialize(const InitializeArg& arg)
             }
 
             // デスクリプターテーブル
-            mpPresentDescriptorHeap = make_unique<d3d12::DescriptorHeap>(nullptr);
+            mpPresentDescriptorHeap = make_unique<DescriptorHeap>(nullptr);
             {
                 const ITexture* p_textures[] = { mpRenderTargetColor->getTexture() };
                 IDescriptorHeap::InitializeArg init_arg;
@@ -178,7 +178,7 @@ void Module::initialize(const InitializeArg& arg)
             }
 
             // パイプライン
-            mpPresentPipeline = make_unique<d3d12::Pipeline>(nullptr);
+            mpPresentPipeline = make_unique<Pipeline>(nullptr);
             {
                 const IDescriptorHeap* p_heaps[] = { mpPresentDescriptorHeap.get() };
                 IPipeline::InitializeArg init_arg;
@@ -201,7 +201,7 @@ void Module::initialize(const InitializeArg& arg)
         // 環境定数バッファ
         {
             // 定数バッファ
-            mpEnvConstantBuffer = make_unique<d3d12::ConstantBuffer>(nullptr);
+            mpEnvConstantBuffer = make_unique<ConstantBuffer>(nullptr);
             {
                 IConstantBuffer::InitializeArg init_arg;
                 init_arg.mpGraphics   = p_graphics;
@@ -211,7 +211,7 @@ void Module::initialize(const InitializeArg& arg)
             }
 
             // デスクリプターテーブル
-            mpEnvDescriptorHeap = make_unique<d3d12::DescriptorHeap>(nullptr);
+            mpEnvDescriptorHeap = make_unique<DescriptorHeap>(nullptr);
             {
                 const IConstantBuffer* p_content_buffers[] = { mpEnvConstantBuffer.get() };
                 IDescriptorHeap::InitializeArg init_arg;
@@ -225,7 +225,7 @@ void Module::initialize(const InitializeArg& arg)
         // デバッグライン描画
         {
             // 頂点レイアウト
-            std::unique_ptr<d3d12::InputLayout> p_input_layout = make_unique<d3d12::InputLayout>(nullptr);
+            std::unique_ptr<InputLayout> p_input_layout = make_unique<InputLayout>(nullptr);
             {
                 std::unique_ptr<IInputLayout::InputLayoutDesc[]> descs = make_unique<IInputLayout::InputLayoutDesc[]>(nullptr, 2);
                 descs[0] = {.mName = "POSITION", .mType = IInputLayout::Type::Vec3, .mOffset = cDebugMeshVertexPositionOffset};
@@ -238,7 +238,7 @@ void Module::initialize(const InitializeArg& arg)
                 if (!p_input_layout->initialize(init_arg)) { return; }
             }
 
-            mpDebugMeshPipeline = make_unique<d3d12::Pipeline>(nullptr);
+            mpDebugMeshPipeline = make_unique<Pipeline>(nullptr);
             {
                 const IDescriptorHeap* p_heaps[] = { mpEnvDescriptorHeap.get() };
                 IPipeline::InitializeArg init_arg;
@@ -261,69 +261,6 @@ void Module::initialize(const InitializeArg& arg)
                 if (!mpDebugMeshPipeline->initialize(init_arg)) { return; }
             }
         }
-
-        // 仮描画
-        {
-            // 頂点レイアウト
-            std::unique_ptr<d3d12::InputLayout> p_input_layout = make_unique<d3d12::InputLayout>(nullptr);
-            {
-                std::unique_ptr<IInputLayout::InputLayoutDesc[]> descs = make_unique<IInputLayout::InputLayoutDesc[]>(nullptr, 3);
-                descs[0] = {.mName = "POSITION", .mType = IInputLayout::Type::Vec3, .mOffset = MeshContainer::cOffsetPosition};
-                descs[1] = {.mName = "NORMAL",   .mType = IInputLayout::Type::Vec3, .mOffset = MeshContainer::cOffsetNormal  };
-                descs[2] = {.mName = "TEXCOORD", .mType = IInputLayout::Type::Vec2, .mOffset = MeshContainer::cOffsetTexcoord};
-
-                IInputLayout::InitializeArg init_arg;
-                init_arg.mpGraphics      = p_graphics;
-                init_arg.mNumInputLayout = 3;
-                init_arg.mpInputLayouts  = descs.get();
-                if (!p_input_layout->initialize(init_arg)) { return; }
-            }
-
-            // 定数バッファ
-            mpSampleConstantBuffer = make_unique<d3d12::ConstantBuffer>(nullptr);
-            {
-                IConstantBuffer::InitializeArg init_arg;
-                init_arg.mpGraphics   = p_graphics;
-                init_arg.mBufferCount = 1;
-                init_arg.mBufferSize  = sizeof(mSampleMeshCB);
-                if (!mpSampleConstantBuffer->initialize(init_arg)) { return; }
-            }
-
-            // デスクリプターテーブル
-            mpSampleDescriptorHeap = make_unique<d3d12::DescriptorHeap>(nullptr);
-            {
-                const IConstantBuffer* p_content_buffers[] = { mpSampleConstantBuffer.get() };
-                IDescriptorHeap::InitializeArg init_arg;
-                init_arg.mpGraphics         = p_graphics;
-                init_arg.mConstantRangeBase = 1;
-                init_arg.mNumConstantBuffer = 1;
-                init_arg.mpConstantBuffers  = p_content_buffers;
-                if (!mpSampleDescriptorHeap->initialize(init_arg)) { return; }
-            }
-
-            // パイプライン
-            mpSamplePipeline = make_unique<d3d12::Pipeline>(nullptr);
-            {
-                const IDescriptorHeap* p_heaps[] = { mpEnvDescriptorHeap.get(), mpSampleDescriptorHeap.get() };
-                IPipeline::InitializeArg init_arg;
-                init_arg.mpGraphics         = p_graphics;
-                init_arg.mNumOutput         = 1;
-                init_arg.mOutputFormats[0]  = mpRenderTargetColor->getTexture()->getFormat();
-                init_arg.mNumDescriptorHeap = 2;
-                init_arg.mpDescriptorHeaps  = p_heaps;
-                init_arg.mpInputLayout      = p_input_layout.get();
-
-                init_arg.mDepthSettings.mEnableTest  = true;
-                init_arg.mDepthSettings.mEnableWrite = true;
-
-                const ShaderArchive::ShaderContainer& shader_container = mpShaderArchive->getShaderContainer(mpShaderArchive->findProgram("Sample"));
-                init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
-                init_arg.mVertexShaderBufferSize = shader_container.mVertexShader.mBufferSize;
-                init_arg.mpPixelShaderBuffer     = shader_container.mPixelShader.mBuffer;
-                init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
-                if (!mpSamplePipeline->initialize(init_arg)) { return; }
-            }
-        }
     }
 
     // ビュー行列
@@ -337,7 +274,7 @@ void Module::initialize(const InitializeArg& arg)
     // カスタムモジュールを初期化
     if (mpCustomModule)
     {
-        mpCustomModule->initialize(arg);
+        mpCustomModule->initialize(arg, *this);
     }
 }
 
@@ -405,22 +342,11 @@ void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
         p_cb->mDirectionalLightDir   = MathVector3(-1.f, -1.f, -1.f).calcNormalize();
         p_cb->mDirectionalLightColor = MathColor(1.f, 1.f, 1.f);
     }
-    // モデルのワールド位置は固定
-    {
-        mSampleMeshCB.mWorldMatrix.setIdentity();
-        mSampleMeshCB.mWorldMatrixForNormal.setIdentity();
-    }
-    // 定数バッファ更新
-    {
-        SampleMeshCB* p_buffer = mpSampleConstantBuffer->getBufferPtr<SampleMeshCB>();
-        p_buffer->mWorldMatrix          = mSampleMeshCB.mWorldMatrix;
-        p_buffer->mWorldMatrixForNormal = mSampleMeshCB.mWorldMatrixForNormal;
-    }
 
     // カスタムモジュール
     if (mpCustomModule)
     {
-        mpCustomModule->onUpdate(arg);
+        mpCustomModule->onUpdate(arg, *this);
     }
 }
 
@@ -447,14 +373,6 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
         arg.mpCommandList->bindFrameBuffer(*mpFrameBuffer);
         arg.mpCommandList->clear(*mpFrameBuffer, ICommandListDirect::ClearFlag::Color | ICommandListDirect::ClearFlag::Depth, MathColor(0.f, 0.f, 0.f, 1.f), 1.f, 0);
 
-        // 環境定数バッファ
-        arg.mpCommandList->bindPipeline(*mpSamplePipeline);
-        arg.mpCommandList->setDescriptorHeap(0, *mpEnvDescriptorHeap);
-
-        // 仮レンダリング
-        arg.mpCommandList->setDescriptorHeap(1, *mpSampleDescriptorHeap);
-        arg.mpCommandList->drawMesh(*MeshContainer::GetInstance().getBuffer(MeshContainer::Type::Sphere));
-
         // グリッド描画
         arg.mpCommandList->bindPipeline(*mpDebugMeshPipeline);
         arg.mpCommandList->setDescriptorHeap(0, *mpEnvDescriptorHeap);
@@ -463,7 +381,7 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
         // カスタムモジュール
         if (mpCustomModule)
         {
-            mpCustomModule->onDraw(arg);
+            mpCustomModule->onDraw(arg, *this);
         }
 
         // バリア

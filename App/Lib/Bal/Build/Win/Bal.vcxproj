@@ -126,6 +126,7 @@
     <ClInclude Include="..\..\Include\framework\balFrameworkCallback.h" />
     <ClInclude Include="..\..\Include\graphics\archiver\balShaderArchive.h" />
     <ClInclude Include="..\..\Include\graphics\balFrameBuffer.h" />
+    <ClInclude Include="..\..\Include\graphics\balGraphicsDefine.h" />
     <ClInclude Include="..\..\Include\graphics\balICommandList.h" />
     <ClInclude Include="..\..\Include\graphics\balICommandListBundle.h" />
     <ClInclude Include="..\..\Include\graphics\balICommandListDirect.h" />

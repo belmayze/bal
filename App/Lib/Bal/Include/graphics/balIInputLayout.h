@@ -8,6 +8,7 @@
 #pragma once
 // bal
 #include <math/balMath.h>
+#include <container/balStringPtr.h>
 
 namespace bal { class IGraphics; }
 

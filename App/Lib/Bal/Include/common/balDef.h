@@ -28,6 +28,15 @@
 #define BAL_PLATFORM_IS_WIN32 (BAL_PLATFORM == BAL_PLATFORM_WIN32)
 #define BAL_PLATFORM_IS_WIN64 (BAL_PLATFORM == BAL_PLATFORM_WIN64)
 
+// ライブラリ
+#define BAL_GRAPHICS_D3D12  (0x0)
+
+#if BAL_PLATFORM_IS_WIN
+#   define BAL_GRAPHICS BAL_GRAPHICS_D3D12
+#endif
+
+#define BAL_GRAPHICS_IS_D3D12 (BAL_GRAPHICS == BAL_GRAPHICS_D3D12)
+
 // ビルドターゲット
 #define BAL_BUILD_DEBUG       (0x00)
 #define BAL_BUILD_DEVELOPMENT (0x10)
@@ -75,3 +84,5 @@
 // bal
 #include <io/balLog.h>
 #include <memory/balUniquePtr.h>
+// gfx
+#include <graphics/balGraphicsDefine.h>

@@ -19,7 +19,7 @@ public:
      * モジュールの描画を行う関数です
      * @param[in] arg 描画引数
      */
-    virtual void onDraw(const FrameworkCallback::DrawArg& arg) = 0;
+    virtual void onDraw(const FrameworkCallback::DrawArg& arg, const IModule& module) = 0;
 };
 
 }
