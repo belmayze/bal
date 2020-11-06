@@ -7,7 +7,8 @@
  */
 #pragma once
 // bal
-#include <engine/module/balIModule.h>
+#include <engine/module/gfx/balGfxPerspectiveCamera.h>
+#include <engine/module/balModuleInstance.h>
 
 namespace bal { class IConstantBuffer; }
 namespace bal { class IDescriptorHeap; }
@@ -23,7 +24,7 @@ namespace bal::mod::gfx { class ICustomModule; }
 // ----------------------------------------------------------------------------
 namespace bal::mod::gfx {
 
-class Module : public IModule
+class Module : public ModuleInstance<Module>
 {
 public:
     /*!
@@ -70,6 +71,13 @@ public:
      * @param[in] arg 描画引数
      */
     void onDraw(const FrameworkCallback::DrawArg& arg);
+
+    /*!
+     * カメラを取得します
+     * @note 変更する場合は onUpdate の UBO 決定までの行ってください
+     */
+    const PerspectiveCamera& getCamera() const { return mCamera; }
+          PerspectiveCamera& getCamera()       { return mCamera; }
 
 public:
     /*!
@@ -121,8 +129,7 @@ private:
     std::unique_ptr<IConstantBuffer>    mpEnvConstantBuffer;
     std::unique_ptr<IDescriptorHeap>    mpEnvDescriptorHeap;
 
-    MathMatrix44 mViewMatrix;
-    MathVector3  mCameraPosition;
+    PerspectiveCamera mCamera;
 
 };
 

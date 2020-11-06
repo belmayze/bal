@@ -69,7 +69,6 @@ private:
     std::unique_ptr<bal::IPipeline>       mpSamplePipeline;
     std::unique_ptr<bal::IDescriptorHeap> mpSampleDescriptorHeap;
     std::unique_ptr<bal::IConstantBuffer> mpSampleConstantBuffer;
-    SampleMeshCB                          mSampleMeshCB;
 
     std::unique_ptr<bal::IConstantBuffer> mpEnvConstantBuffer;
     std::unique_ptr<bal::IDescriptorHeap> mpEnvDescriptorHeap;

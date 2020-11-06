@@ -26,8 +26,8 @@ public:
     };
 
 public:
-    IModule() { sModule = this; }
-    virtual ~IModule() { sModule = nullptr; }
+    IModule() {}
+    virtual ~IModule() {}
 
     /*!
      * カスタムモジュールを登録する
@@ -57,14 +57,6 @@ public:
      * モジュールの種類を取得する
      */
     virtual ModuleType getModuleType() const = 0;
-
-public:
-    //! モジュールを取得
-    template <typename T>
-    static T* getModule() { return static_cast<T*>(sModule); }
-
-private:
-    inline static IModule* sModule = nullptr;
 };
 
 }

@@ -20,6 +20,9 @@ void* BlockBase::alloc(size_t size, size_t alignment)
 
 }
 
+#define BAL_USE_HEAP    (1)
+
+#if BAL_USE_HEAP
 // ヒープ指定なしで確保
 void* operator new(size_t size)
 {
@@ -78,3 +81,39 @@ void operator delete[](void* ptr, bal::heap::BlockBase* p_heap)
     // 前後がフリーの場合は統合する
     p_container->merge();
 }
+#else
+// ヒープ指定なしで確保
+void* operator new(size_t size)
+{
+    return malloc(size);
+}
+void* operator new(size_t size, bal::heap::BlockBase* p_heap)
+{
+    return malloc(size);
+}
+void* operator new[](size_t size)
+{
+    return malloc(size);
+}
+void* operator new[](size_t size, bal::heap::BlockBase* p_heap)
+{
+    return malloc(size);
+}
+// 破棄
+void operator delete(void* ptr)
+{
+    free(ptr);
+}
+void operator delete(void* ptr, bal::heap::BlockBase* p_heap)
+{
+    free(ptr);
+}
+void operator delete[](void* ptr)
+{
+    free(ptr);
+}
+void operator delete[](void* ptr, bal::heap::BlockBase* p_heap)
+{
+    free(ptr);
+}
+#endif

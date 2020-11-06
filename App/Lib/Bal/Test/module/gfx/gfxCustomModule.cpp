@@ -8,6 +8,8 @@
 // bal
 #include <graphics/archiver/balShaderArchive.h>
 #include <io/balFile.h>
+#include <engine/module/cntl/balCntlModule.h>
+#include <engine/module/cntl/balController.h>
 #include <engine/module/gfx/balGfxMeshContainer.h>
 #include <engine/module/gfx/balGfxModule.h>
 #include <engine/balEngine.h>
@@ -90,7 +92,7 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
                 bal::IConstantBuffer::InitializeArg init_arg;
                 init_arg.mpGraphics = p_graphics;
                 init_arg.mBufferCount = 1;
-                init_arg.mBufferSize = sizeof(mSampleMeshCB);
+                init_arg.mBufferSize = sizeof(SampleMeshCB);
                 if (!mpSampleConstantBuffer->initialize(init_arg)) { return; }
             }
 
@@ -136,18 +138,73 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
 
 void CustomModule::onUpdate(const bal::FrameworkCallback::UpdateArg& arg, const bal::mod::IModule& module)
 {
-    // @TODO: カメラ
-
-    // モデルのワールド位置は固定
+    // カメラの仮制御
     {
-        mSampleMeshCB.mWorldMatrix.setIdentity();
-        mSampleMeshCB.mWorldMatrixForNormal.setIdentity();
+        bal::mod::gfx::PerspectiveCamera& camera = bal::mod::gfx::Module::getModule()->getCamera();
+
+        // 移動軸（カメラ行列は倒置）
+        bal::MathVector3 camera_x = camera.getViewMatrix().getCol(0).getXYZ();
+        bal::MathVector3 camera_y = camera.getViewMatrix().getCol(1).getXYZ();
+        bal::MathVector3 camera_z = camera.getViewMatrix().getCol(2).getXYZ();
+
+        // 入力によって移動させる
+        const bal::mod::cntl::Controller& controller = bal::mod::cntl::Module::getModule()->getController(0);
+        if (controller.isConnected())
+        {
+            // Z軸ベクトルを入力によって移動させる
+            camera_z -= camera_x * controller.getLeftStick().getX() * 0.05f;
+            camera_z -= camera_y * controller.getLeftStick().getY() * 0.05f;
+            camera_z.setNormalize();
+
+            // XYベクトルを直行させる
+            // Yを固定して捻じれ禁止
+            if (camera_y.getY() + camera_z.getY() * controller.getLeftStick().getY() * 0.05f >= 0.f)
+            {
+                camera_y = bal::MathVector3(0.f, 1.f, 0.f);
+            }
+            else
+            {
+                camera_y = bal::MathVector3(0.f, -1.f, 0.f);
+            }
+            camera_x = camera_y.calcCross(camera_z);
+            camera_x.setNormalize();
+            camera_y = camera_z.calcCross(camera_x);
+            camera_y.setNormalize();
+
+            // カメラの位置
+            bal::MathVector3 position = camera_z * 10.f;
+            bal::MathVector3 camera_t(-camera_x.calcDot(position), -camera_y.calcDot(position), -camera_z.calcDot(position));
+
+            // 行列を求めてセット
+            bal::MathMatrix44 view_matrix;
+            view_matrix.setCol(0, bal::MathVector4(camera_x, camera_t.getX()));
+            view_matrix.setCol(1, bal::MathVector4(camera_y, camera_t.getY()));
+            view_matrix.setCol(2, bal::MathVector4(camera_z, camera_t.getZ()));
+            camera.setViewMatrix(view_matrix);
+            camera.updateMatrix();
+        }
     }
+
     // 定数バッファ更新
     {
-        SampleMeshCB* p_buffer = mpSampleConstantBuffer->getBufferPtr<SampleMeshCB>();
-        p_buffer->mWorldMatrix = mSampleMeshCB.mWorldMatrix;
-        p_buffer->mWorldMatrixForNormal = mSampleMeshCB.mWorldMatrixForNormal;
+        // モデルのワールド位置は固定
+        SampleMeshCB* p_cb = mpSampleConstantBuffer->getBufferPtr<SampleMeshCB>();
+        p_cb->mWorldMatrix         .setIdentity();
+        p_cb->mWorldMatrixForNormal.setIdentity();
+    }
+    {
+        const bal::mod::gfx::PerspectiveCamera& camera = static_cast<const bal::mod::gfx::Module&>(module).getCamera();
+
+        SampleEnvCB* p_cb = mpEnvConstantBuffer->getBufferPtr<SampleEnvCB>();
+
+        // 行列はカメラから取得
+        p_cb->mProjMatrix           = camera.getProjectionMatrix();
+        p_cb->mViewMatrix           = camera.getViewMatrix();
+        p_cb->mProjectionViewMatrix = camera.getViewProjectionMatrix();
+
+        // ライトは固定
+        p_cb->mDirectionalLightDir   = bal::MathVector3(-1.f, -1.f, -1.f).calcNormalize();
+        p_cb->mDirectionalLightColor = bal::MathColor(1.f, 1.f, 1.f);
     }
 }
 

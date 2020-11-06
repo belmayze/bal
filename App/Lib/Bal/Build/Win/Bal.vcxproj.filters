@@ -180,6 +180,9 @@
     <ClCompile Include="..\..\Source\engine\module\cntl\balController.cpp">
       <Filter>engine\module\cntl</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\engine\module\gfx\balGfxPerspectiveCamera.cpp">
+      <Filter>engine\module\gfx</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\memory\balSingleton.h">
@@ -430,6 +433,12 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\graphics\balGraphicsDefine.h">
       <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\engine\module\gfx\balGfxPerspectiveCamera.h">
+      <Filter>engine\module\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\engine\module\balModuleInstance.h">
+      <Filter>engine\module</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

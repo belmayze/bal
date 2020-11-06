@@ -83,7 +83,7 @@ private:
         mpInstance.reset();
     }
 
-    static inline std::unique_ptr<T> mpInstance;
+    inline static std::unique_ptr<T> mpInstance;
 };
 
 }

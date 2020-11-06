@@ -25,9 +25,6 @@
 #include <graphics/d3d12/balPipelineD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
 #include <graphics/d3d12/balTextureD3D12.h>
-// 仮
-#include <engine/module/cntl/balCntlModule.h>
-#include <engine/module/cntl/balController.h>
 
 namespace bal::mod::gfx {
 
@@ -251,7 +248,7 @@ void Module::initialize(const InitializeArg& arg)
                 init_arg.mPrimitiveTopology = IMeshBuffer::PrimitiveTopology::Lines;
 
                 init_arg.mDepthSettings.mEnableTest  = true;
-                init_arg.mDepthSettings.mEnableWrite = false;
+                init_arg.mDepthSettings.mEnableWrite = true;
 
                 const ShaderArchive::ShaderContainer& shader_container = mpShaderArchive->getShaderContainer(mpShaderArchive->findProgram("DebugLine"));
                 init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
@@ -263,9 +260,16 @@ void Module::initialize(const InitializeArg& arg)
         }
     }
 
-    // ビュー行列
-    mCameraPosition = MathVector3(0.f, 0.f, 10.f);
-    mViewMatrix.setLookAtRH(mCameraPosition, MathVector3(0.f, 0.f, 0.f), MathVector3(0.f, 1.f, 0.f));
+    // カメラにはデフォルトの設定を入れておく
+    {
+        mCamera.setAspect(static_cast<float>(render_buffer_size.getWidth()) / static_cast<float>(render_buffer_size.getHeight()));
+        mCamera.setFovy(Degree(50.f));
+        mCamera.setNearFar(0.01f, 1000.f);
+
+        mCamera.setLookAt(MathVector3(0.f, 0.f, 10.f), MathVector3(0.f, 0.f, 0.f));
+
+        mCamera.updateMatrix();
+    }
 
     // よく使用するシェイプ形状を初期化する
     MeshContainer::GetInstance().initialize();
@@ -289,64 +293,22 @@ void Module::finalize()
 
 void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 {
-    // 環境定数バッファ
-    {
-        // カメラの仮制御
-        {
-            // 移動軸（カメラ行列は倒置）
-            MathVector3 camera_x = mViewMatrix.getCol(0).getXYZ();
-            MathVector3 camera_y = mViewMatrix.getCol(1).getXYZ();
-            MathVector3 camera_z = mViewMatrix.getCol(2).getXYZ();
-
-            // 入力によって移動させる
-            const cntl::Controller& controller = cntl::Module::getModule<cntl::Module>()->getController(0);
-            if (controller.isConnected())
-            {
-                // Z軸ベクトルを入力によって移動させる
-                camera_z -= camera_x * controller.getLeftStick().getX() * 0.05f;
-                camera_z -= camera_y * controller.getLeftStick().getY() * 0.05f;
-                camera_z.setNormalize();
-
-                // XYベクトルを直行させる
-                // Yを固定して捻じれ禁止
-                if (camera_y.getY() + camera_z.getY() * controller.getLeftStick().getY() * 0.05f >= 0.f)
-                {
-                    camera_y = MathVector3(0.f, 1.f, 0.f);
-                }
-                else
-                {
-                    camera_y = MathVector3(0.f, -1.f, 0.f);
-                }
-                camera_x = camera_y.calcCross(camera_z);
-                camera_x.setNormalize();
-                camera_y = camera_z.calcCross(camera_x);
-                camera_y.setNormalize();
-
-                // カメラの位置
-                MathVector3 position = camera_z * 10.f;
-                MathVector3 camera_t(-camera_x.calcDot(position), -camera_y.calcDot(position), -camera_z.calcDot(position));
-
-                // 行列にセット
-                mViewMatrix.setCol(0, MathVector4(camera_x, camera_t.getX()));
-                mViewMatrix.setCol(1, MathVector4(camera_y, camera_t.getY()));
-                mViewMatrix.setCol(2, MathVector4(camera_z, camera_t.getZ()));
-            }
-        }
-
-        SampleEnvCB* p_cb = mpEnvConstantBuffer->getBufferPtr<SampleEnvCB>();
-        p_cb->mProjMatrix.setPerspectiveProjectionRH(Radian(50.f), 16.f / 9.f, 0.01f, 1000.f);
-        p_cb->mViewMatrix = mViewMatrix;
-        p_cb->mProjectionViewMatrix = p_cb->mProjMatrix * p_cb->mViewMatrix;
-
-        // ライトの仮
-        p_cb->mDirectionalLightDir   = MathVector3(-1.f, -1.f, -1.f).calcNormalize();
-        p_cb->mDirectionalLightColor = MathColor(1.f, 1.f, 1.f);
-    }
-
     // カスタムモジュール
     if (mpCustomModule)
     {
         mpCustomModule->onUpdate(arg, *this);
+    }
+
+    // カメラの決定
+    {
+        SampleEnvCB* p_cb = mpEnvConstantBuffer->getBufferPtr<SampleEnvCB>();
+        p_cb->mProjMatrix           = mCamera.getProjectionMatrix();
+        p_cb->mViewMatrix           = mCamera.getViewMatrix();
+        p_cb->mProjectionViewMatrix = mCamera.getViewProjectionMatrix();
+
+        // ライトの仮
+        p_cb->mDirectionalLightDir   = MathVector3(-1.f, -1.f, -1.f).calcNormalize();
+        p_cb->mDirectionalLightColor = MathColor(1.f, 1.f, 1.f);
     }
 }
 

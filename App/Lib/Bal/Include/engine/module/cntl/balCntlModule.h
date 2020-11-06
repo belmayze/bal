@@ -7,14 +7,14 @@
  */
 #pragma once
 // bal
-#include <engine/module/balIModule.h>
+#include <engine/module/balModuleInstance.h>
 
 namespace bal::mod::cntl { class Controller; }
 
 // ----------------------------------------------------------------------------
 namespace bal::mod::cntl {
 
-class Module : public IModule
+class Module : public ModuleInstance<Module>
 {
 public:
     /*!

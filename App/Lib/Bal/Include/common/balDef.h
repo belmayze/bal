@@ -78,6 +78,7 @@
 #endif
 // 使っていい C++ の include
 #include <array>
+#include <bitset>
 #include <cstdint>
 #include <memory>
 #include <tuple>

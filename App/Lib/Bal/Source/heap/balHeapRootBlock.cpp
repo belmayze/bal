@@ -77,6 +77,7 @@ void* RootBlock::allocImpl_(size_t size)
         }
     }
 
+    BAL_ASSERT(0);
     return nullptr;
 }
 
