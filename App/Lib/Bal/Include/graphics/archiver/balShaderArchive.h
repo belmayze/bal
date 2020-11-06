@@ -71,6 +71,9 @@ public:
     };
 
 public:
+    ShaderArchive() {}
+    ~ShaderArchive() {}
+
     /*!
      * アーカイバを読み込みます
      * @param[in] file ファイル

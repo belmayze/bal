@@ -20,7 +20,7 @@ void* BlockBase::alloc(size_t size, size_t alignment)
 
 }
 
-#define BAL_USE_HEAP    (1)
+#define BAL_USE_HEAP    (0)
 
 #if BAL_USE_HEAP
 // ヒープ指定なしで確保
