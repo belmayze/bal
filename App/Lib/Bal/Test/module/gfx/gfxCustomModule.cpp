@@ -152,8 +152,8 @@ void CustomModule::onUpdate(const bal::FrameworkCallback::UpdateArg& arg, const 
         if (controller.isConnected())
         {
             // Z軸ベクトルを入力によって移動させる
-            camera_z -= camera_x * controller.getLeftStick().getX() * 0.05f;
-            camera_z -= camera_y * controller.getLeftStick().getY() * 0.05f;
+            camera_z += camera_x * controller.getLeftStick().getX() * 0.05f;
+            camera_z += camera_y * controller.getLeftStick().getY() * 0.05f;
             camera_z.setNormalize();
 
             // XYベクトルを直行させる
