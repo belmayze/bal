@@ -54,17 +54,6 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
             init_arg.mBufferSize = sizeof(SampleEnvCB);
             if (!mpEnvConstantBuffer->initialize(init_arg)) { return; }
         }
-
-        // デスクリプターテーブル
-        mpEnvDescriptorHeap = bal::make_unique<bal::DescriptorHeap>(nullptr);
-        {
-            const bal::IConstantBuffer* p_content_buffers[] = { mpEnvConstantBuffer.get() };
-            bal::IDescriptorHeap::InitializeArg init_arg;
-            init_arg.mpGraphics = p_graphics;
-            init_arg.mNumConstantBuffer = 1;
-            init_arg.mpConstantBuffers = p_content_buffers;
-            if (!mpEnvDescriptorHeap->initialize(init_arg)) { return; }
-        }
     }
 
     // パイプライン構築
@@ -99,11 +88,11 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
             // デスクリプターテーブル
             mpSampleDescriptorHeap = bal::make_unique<bal::DescriptorHeap>(nullptr);
             {
-                const bal::IConstantBuffer* p_content_buffers[] = { mpSampleConstantBuffer.get() };
+                const bal::IConstantBuffer* p_content_buffers[] = { mpEnvConstantBuffer.get(), mpSampleConstantBuffer.get() };
                 bal::IDescriptorHeap::InitializeArg init_arg;
                 init_arg.mpGraphics = p_graphics;
-                init_arg.mConstantRangeBase = 1;
-                init_arg.mNumConstantBuffer = 1;
+                init_arg.mConstantRangeBase = 0;
+                init_arg.mNumConstantBuffer = 2;
                 init_arg.mpConstantBuffers = p_content_buffers;
                 if (!mpSampleDescriptorHeap->initialize(init_arg)) { return; }
             }
@@ -111,12 +100,12 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
             // パイプライン
             mpSamplePipeline = bal::make_unique<bal::Pipeline>(nullptr);
             {
-                const bal::IDescriptorHeap* p_heaps[] = { mpEnvDescriptorHeap.get(), mpSampleDescriptorHeap.get() };
+                const bal::IDescriptorHeap* p_heaps[] = { mpSampleDescriptorHeap.get() };
                 bal::IPipeline::InitializeArg init_arg;
                 init_arg.mpGraphics         = p_graphics;
                 init_arg.mNumOutput         = 1;
                 init_arg.mOutputFormats[0]  = gfx_module.getDefaultRenderTarget().getTexture()->getFormat();
-                init_arg.mNumDescriptorHeap = 2;
+                init_arg.mNumDescriptorHeap = 1;
                 init_arg.mpDescriptorHeaps  = p_heaps;
                 init_arg.mpInputLayout      = p_input_layout.get();
 
@@ -214,10 +203,10 @@ void CustomModule::onDraw(const bal::FrameworkCallback::DrawArg& arg, const bal:
 {
     // 環境定数バッファ
     arg.mpCommandList->bindPipeline(*mpSamplePipeline);
-    arg.mpCommandList->setDescriptorHeap(0, *mpEnvDescriptorHeap);
+    arg.mpCommandList->setDescriptorHeap(*mpSampleDescriptorHeap);
+    arg.mpCommandList->setDescriptorTable(0, *mpSampleDescriptorHeap);
 
     // 仮レンダリング
-    arg.mpCommandList->setDescriptorHeap(1, *mpSampleDescriptorHeap);
     arg.mpCommandList->drawMesh(*bal::mod::gfx::MeshContainer::GetInstance().getBuffer(bal::mod::gfx::MeshContainer::Type::Sphere));
 }
 

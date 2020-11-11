@@ -11,6 +11,7 @@
 #include <graphics/balViewport.h>
 #include <graphics/d3d12/balCommandListBundleD3D12.h>
 #include <graphics/d3d12/balCommandListDirectD3D12.h>
+#include <graphics/d3d12/balConstantBufferD3D12.h>
 #include <graphics/d3d12/balDescriptorHeapD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <graphics/d3d12/balMeshBufferD3D12.h>
@@ -78,12 +79,27 @@ void CommandListDirect::bindPipeline(const IPipeline& pipeline)
 
 // ----------------------------------------------------------------------------
 
-void CommandListDirect::setDescriptorHeap(uint32_t index, const IDescriptorHeap& descriptor_heap)
+void CommandListDirect::setDescriptorHeap(const IDescriptorHeap& descriptor_heap)
 {
     const DescriptorHeap* p_descriptor_heap = static_cast<const DescriptorHeap*>(&descriptor_heap);
     ID3D12DescriptorHeap* p_heap = p_descriptor_heap->getDesciptorHeap();
     mpCmdList->SetDescriptorHeaps(1, &p_heap);
+}
+
+// ----------------------------------------------------------------------------
+
+void CommandListDirect::setDescriptorTable(uint32_t index, const IDescriptorHeap& descriptor_heap)
+{
+    const DescriptorHeap* p_descriptor_heap = static_cast<const DescriptorHeap*>(&descriptor_heap);
     mpCmdList->SetGraphicsRootDescriptorTable(index, p_descriptor_heap->getGpuHandle());
+}
+
+// ----------------------------------------------------------------------------
+
+void CommandListDirect::setConstantBufferView(uint32_t index, const IConstantBuffer& constant_buffer)
+{
+    const ConstantBuffer* p_constant_buffer = static_cast<const ConstantBuffer*>(&constant_buffer);
+    mpCmdList->SetGraphicsRootConstantBufferView(index, p_constant_buffer->getGPUVirtualAddress());
 }
 
 // ----------------------------------------------------------------------------

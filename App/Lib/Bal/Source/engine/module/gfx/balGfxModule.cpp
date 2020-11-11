@@ -266,7 +266,7 @@ void Module::initialize(const InitializeArg& arg)
         mCamera.setFovy(Degree(50.f));
         mCamera.setNearFar(0.01f, 1000.f);
 
-        mCamera.setLookAt(MathVector3(0.f, 0.f, 10.f), MathVector3(0.f, 0.f, 0.f));
+        mCamera.setLookAt(MathVector3(0.f, 5.f, 10.f), MathVector3(0.f, 0.f, 0.f));
 
         mCamera.updateMatrix();
     }
@@ -337,7 +337,8 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
 
         // グリッド描画
         arg.mpCommandList->bindPipeline(*mpDebugMeshPipeline);
-        arg.mpCommandList->setDescriptorHeap(0, *mpEnvDescriptorHeap);
+        arg.mpCommandList->setDescriptorHeap(*mpEnvDescriptorHeap);
+        arg.mpCommandList->setDescriptorTable(0, *mpEnvDescriptorHeap);
         arg.mpCommandList->drawMesh(*mpGridMeshBuffer);
 
         // カスタムモジュール
@@ -374,7 +375,8 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
 
         // 画面反映
         arg.mpCommandList->bindPipeline(*mpPresentPipeline);
-        arg.mpCommandList->setDescriptorHeap(0, *mpPresentDescriptorHeap);
+        arg.mpCommandList->setDescriptorHeap(*mpPresentDescriptorHeap);
+        arg.mpCommandList->setDescriptorTable(0, *mpPresentDescriptorHeap);
         arg.mpCommandList->drawMesh(*MeshContainer::GetInstance().getBuffer(MeshContainer::Type::Quad));
 
         // バリア

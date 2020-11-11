@@ -67,7 +67,7 @@ OUTPUT main(VARYING input)
     float3 normal_world = normalize(input.Normal);
 
     // 簡易ライティング
-    float  diffuse_coeff   = saturate(dot(normal_world, DirectionalLightDir));
+    float  diffuse_coeff   = saturate(dot(normal_world, -DirectionalLightDir));
     float3 diffuse_direct  = albedo * (DirectionalLightColor * diffuse_coeff);
 
     float3 diffuse_ambient = albedo * 0.0;

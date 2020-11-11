@@ -39,11 +39,24 @@ public:
     virtual void bindPipeline(const IPipeline& pipeline) override;
 
     /*!
-     * デスクリプターテーブルをセットする
-     * @param[in] index           インデックス
+     * デスクリプターヒープをセットする
      * @param[in] descriptor_heap デスクリプターヒープ
      */
-    virtual void setDescriptorHeap(uint32_t index, const IDescriptorHeap& descriptor_heap) override;
+    virtual void setDescriptorHeap(const IDescriptorHeap& descriptor_heap) override;
+
+    /*!
+     * デスクリプターテーブルをセットする
+     * @param[in] index           テーブル番号
+     * @param[in] descriptor_heap デスクリプターヒープ
+     */
+    virtual void setDescriptorTable(uint32_t index, const IDescriptorHeap& descriptor_heap) override;
+
+    /*!
+     * 定数バッファをセットする
+     * @param[in] index           テーブル番号
+     * @param[in] constant_buffer 定数バッファ
+     */
+    virtual void setConstantBufferView(uint32_t index, const IConstantBuffer& constant_buffer) override;
 
     /*!
      * メッシュを描画します

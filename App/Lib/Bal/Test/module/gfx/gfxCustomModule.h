@@ -71,7 +71,6 @@ private:
     std::unique_ptr<bal::IConstantBuffer> mpSampleConstantBuffer;
 
     std::unique_ptr<bal::IConstantBuffer> mpEnvConstantBuffer;
-    std::unique_ptr<bal::IDescriptorHeap> mpEnvDescriptorHeap;
 };
 
 }
