@@ -189,7 +189,7 @@ int Framework::enterApplicationLoop(FrameworkCallback* p_callback)
     {
         // グラフィックスの破棄には順序があるので関数で破棄させる
         SingletonGfxFinalizer::Finalize();
-        mpGraphics->destroy();
+        if (mpGraphics) { mpGraphics->destroy(); }
         return -1;
     }
 
@@ -198,7 +198,7 @@ int Framework::enterApplicationLoop(FrameworkCallback* p_callback)
     {
         // グラフィックスの破棄には順序があるので関数で破棄させる
         SingletonGfxFinalizer::Finalize();
-        mpGraphics->destroy();
+        if (mpGraphics) { mpGraphics->destroy(); }
         return -1;
     }
 

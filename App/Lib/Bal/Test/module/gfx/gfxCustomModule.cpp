@@ -85,7 +85,7 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
                 if (!mpSampleConstantBuffer->initialize(init_arg)) { return; }
             }
 
-            // デスクリプターテーブル
+            // デスクリプターヒープ
             mpSampleDescriptorHeap = bal::make_unique<bal::DescriptorHeap>(nullptr);
             {
                 const bal::IConstantBuffer* p_content_buffers[] = { mpEnvConstantBuffer.get(), mpSampleConstantBuffer.get() };

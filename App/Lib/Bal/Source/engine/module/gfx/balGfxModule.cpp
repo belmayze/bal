@@ -163,7 +163,7 @@ void Module::initialize(const InitializeArg& arg)
                 if (!p_input_layout->initialize(init_arg)) { return; }
             }
 
-            // デスクリプターテーブル
+            // デスクリプターヒープ
             mpPresentDescriptorHeap = make_unique<DescriptorHeap>(nullptr);
             {
                 const ITexture* p_textures[] = { mpRenderTargetColor->getTexture() };
@@ -207,7 +207,7 @@ void Module::initialize(const InitializeArg& arg)
                 if (!mpEnvConstantBuffer->initialize(init_arg)) { return; }
             }
 
-            // デスクリプターテーブル
+            // デスクリプターヒープ
             mpEnvDescriptorHeap = make_unique<DescriptorHeap>(nullptr);
             {
                 const IConstantBuffer* p_content_buffers[] = { mpEnvConstantBuffer.get() };

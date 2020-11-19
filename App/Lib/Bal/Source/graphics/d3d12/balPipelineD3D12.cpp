@@ -26,8 +26,6 @@ bool Pipeline::initialize(const InitializeArg& arg)
     // レイアウト
     const InputLayout* p_input_layout = reinterpret_cast<const InputLayout*>(arg.mpInputLayout);
 
-    // @TODO: いろいろ固定してあるので、変更する
-
     // ルートシグネチャ
     // 参考: https://sites.google.com/site/monshonosuana/directxno-hanashi-1/directx-145
     Microsoft::WRL::ComPtr<ID3D12RootSignature> p_root_signature;

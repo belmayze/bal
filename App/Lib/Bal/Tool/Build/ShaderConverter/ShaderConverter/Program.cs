@@ -272,6 +272,8 @@ namespace ShaderConverter
 
                 process.StartInfo.Arguments = $"-archive-list {archive_args_filepath} -output {options.Output}";
 
+                Console.WriteLine($"Execute: {process.StartInfo.FileName} {process.StartInfo.Arguments}");
+
                 process.Start();
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
