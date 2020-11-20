@@ -28,6 +28,33 @@ class Module : public ModuleInstance<Module>
 {
 public:
     /*!
+     * シーン用のデフォルト定数バッファ構造体
+     * @note 継承して独自の構造体を追加できます
+     */
+    struct SceneConstantBufferBase
+    {
+        // カメラ
+        bal::MathMatrix44      mViewMatrix;
+        bal::MathMatrix44      mProjectionMatrix;
+        // ライト
+        bal::MathCommonVector3 mDirectionalLightDir;
+        float _unused0;
+        bal::MathCommonVector3 mDirectionalLightColor;
+        float _unused1;
+    };
+    /*!
+     * メッシュの定数バッファ構造体
+     * @note 継承して独自の構造体を追加できます
+     */
+    struct MeshConstantBufferBase
+    {
+        // ワールド行列
+        bal::MathMatrix44 mWorldMatrix;
+        bal::MathMatrix44 mNormalWorldMatrix;
+    };
+
+public:
+    /*!
      * コンストラクター
      */
     Module();
@@ -79,28 +106,21 @@ public:
     const PerspectiveCamera& getCamera() const { return mCamera; }
           PerspectiveCamera& getCamera()       { return mCamera; }
 
+    /*!
+     * メッシュ用に確保する定数バッファのサイズを取得します
+     */
+    size_t getMeshConstantBufferSize() const;
+
+    /*!
+     * シーン用定数バッファを取得します
+     */
+    const IConstantBuffer& getSceneConstantBuffer() const { return *mpSceneConstantBuffer; }
+
 public:
     /*!
      * デフォルトのレンダリングターゲットを取得します
      */
     const IRenderTargetColor& getDefaultRenderTarget() const { return *mpRenderTargetColor; }
-
-private:
-    //! Sample Constant Buffer
-    struct SampleMeshCB
-    {
-        MathMatrix44 mWorldMatrix;
-        MathMatrix44 mWorldMatrixForNormal;
-    };
-    struct SampleEnvCB
-    {
-        MathMatrix44 mViewMatrix;
-        MathMatrix44 mProjMatrix;
-        MathMatrix44 mProjectionViewMatrix;
-        MathVector3  mDirectionalLightDir;
-        float        mPadding0;
-        MathColor    mDirectionalLightColor;
-    };
 
 private:
     //! デバッグメッシュの頂点情報
@@ -126,8 +146,8 @@ private:
     std::unique_ptr<IMeshBuffer>        mpGridMeshBuffer;
     std::unique_ptr<IMeshBuffer>        mpManipulatorMeshBuffer;
 
-    std::unique_ptr<IConstantBuffer>    mpEnvConstantBuffer;
-    std::unique_ptr<IDescriptorHeap>    mpEnvDescriptorHeap;
+    std::unique_ptr<IConstantBuffer>    mpSceneConstantBuffer;
+    std::unique_ptr<IDescriptorHeap>    mpSceneDescriptorHeap;
 
     PerspectiveCamera mCamera;
 

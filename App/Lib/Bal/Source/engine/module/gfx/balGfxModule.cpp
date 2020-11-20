@@ -96,6 +96,18 @@ void Module::initialize(const InitializeArg& arg)
         }
     }
 
+    // シーン用定数バッファを生成
+    {
+        mpSceneConstantBuffer = make_unique<ConstantBuffer>(nullptr);
+        {
+            ConstantBuffer::InitializeArg init_arg;
+            init_arg.mpGraphics   = p_graphics;
+            init_arg.mBufferSize  = mpCustomModule ? mpCustomModule->getSceneConstantBufferSize() : sizeof(SceneConstantBufferBase);
+            init_arg.mBufferCount = 1;
+            mpSceneConstantBuffer->initialize(init_arg);
+        }
+    }
+
     // グリッドとマニピュレーターのメッシュ情報
     {
         mpGridMeshBuffer = make_unique<MeshBuffer>(nullptr);
@@ -143,6 +155,18 @@ void Module::initialize(const InitializeArg& arg)
         File file;
         if (!file.loadFromFile("Shader\\balShader.bsa")) { return; }
         if (!mpShaderArchive->loadArchiver(std::move(file))) { return; }
+    }
+
+    // デスクリプターヒープ
+    mpSceneDescriptorHeap = bal::make_unique<bal::DescriptorHeap>(nullptr);
+    {
+        const bal::IConstantBuffer* p_content_buffers[] = {mpSceneConstantBuffer.get()};
+        bal::IDescriptorHeap::InitializeArg init_arg;
+        init_arg.mpGraphics         = p_graphics;
+        init_arg.mConstantRangeBase = 0;
+        init_arg.mNumConstantBuffer = 1;
+        init_arg.mpConstantBuffers  = p_content_buffers;
+        if (!mpSceneDescriptorHeap->initialize(init_arg)) { return; }
     }
 
     // 各種パイプラインの作成
@@ -195,30 +219,6 @@ void Module::initialize(const InitializeArg& arg)
             }
         }
 
-        // 環境定数バッファ
-        {
-            // 定数バッファ
-            mpEnvConstantBuffer = make_unique<ConstantBuffer>(nullptr);
-            {
-                IConstantBuffer::InitializeArg init_arg;
-                init_arg.mpGraphics   = p_graphics;
-                init_arg.mBufferCount = 1;
-                init_arg.mBufferSize  = sizeof(SampleEnvCB);
-                if (!mpEnvConstantBuffer->initialize(init_arg)) { return; }
-            }
-
-            // デスクリプターヒープ
-            mpEnvDescriptorHeap = make_unique<DescriptorHeap>(nullptr);
-            {
-                const IConstantBuffer* p_content_buffers[] = { mpEnvConstantBuffer.get() };
-                IDescriptorHeap::InitializeArg init_arg;
-                init_arg.mpGraphics         = p_graphics;
-                init_arg.mNumConstantBuffer = 1;
-                init_arg.mpConstantBuffers  = p_content_buffers;
-                if (!mpEnvDescriptorHeap->initialize(init_arg)) { return; }
-            }
-        }
-
         // デバッグライン描画
         {
             // 頂点レイアウト
@@ -237,7 +237,7 @@ void Module::initialize(const InitializeArg& arg)
 
             mpDebugMeshPipeline = make_unique<Pipeline>(nullptr);
             {
-                const IDescriptorHeap* p_heaps[] = { mpEnvDescriptorHeap.get() };
+                const IDescriptorHeap* p_heaps[] = {mpSceneDescriptorHeap.get()};
                 IPipeline::InitializeArg init_arg;
                 init_arg.mpGraphics         = p_graphics;
                 init_arg.mNumOutput         = 1;
@@ -301,14 +301,13 @@ void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 
     // カメラの決定
     {
-        SampleEnvCB* p_cb = mpEnvConstantBuffer->getBufferPtr<SampleEnvCB>();
-        p_cb->mProjMatrix           = mCamera.getProjectionMatrix();
-        p_cb->mViewMatrix           = mCamera.getViewMatrix();
-        p_cb->mProjectionViewMatrix = mCamera.getViewProjectionMatrix();
+        SceneConstantBufferBase* p_cb = mpSceneConstantBuffer->getBufferPtr<SceneConstantBufferBase>();
+        p_cb->mProjectionMatrix = mCamera.getProjectionMatrix();
+        p_cb->mViewMatrix       = mCamera.getViewMatrix();
 
         // ライトの仮
         p_cb->mDirectionalLightDir   = MathVector3(-1.f, -1.f, -1.f).calcNormalize();
-        p_cb->mDirectionalLightColor = MathColor(1.f, 1.f, 1.f);
+        p_cb->mDirectionalLightColor = MathVector3(1.f, 1.f, 1.f);
     }
 }
 
@@ -337,8 +336,8 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
 
         // グリッド描画
         arg.mpCommandList->bindPipeline(*mpDebugMeshPipeline);
-        arg.mpCommandList->setDescriptorHeap(*mpEnvDescriptorHeap);
-        arg.mpCommandList->setDescriptorTable(0, *mpEnvDescriptorHeap);
+        arg.mpCommandList->setDescriptorHeap(*mpSceneDescriptorHeap);
+        arg.mpCommandList->setDescriptorTable(0, *mpSceneDescriptorHeap);
         arg.mpCommandList->drawMesh(*mpGridMeshBuffer);
 
         // カスタムモジュール
@@ -386,6 +385,13 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
             ICommandListDirect::ResourceBarrierType::Present
         );
     }
+}
+
+// ----------------------------------------------------------------------------
+
+size_t Module::getMeshConstantBufferSize() const
+{
+    return mpCustomModule ? mpCustomModule->getMeshConstantBufferSize() : sizeof(MeshConstantBufferBase);
 }
 
 // ----------------------------------------------------------------------------

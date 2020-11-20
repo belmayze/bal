@@ -47,30 +47,11 @@ public:
     virtual void onDraw(const bal::FrameworkCallback::DrawArg& arg, const bal::mod::IModule& module) override;
 
 private:
-    //! Sample Constant Buffer
-    struct SampleMeshCB
-    {
-        bal::MathMatrix44 mWorldMatrix;
-        bal::MathMatrix44 mWorldMatrixForNormal;
-    };
-    struct SampleEnvCB
-    {
-        bal::MathMatrix44 mViewMatrix;
-        bal::MathMatrix44 mProjMatrix;
-        bal::MathMatrix44 mProjectionViewMatrix;
-        bal::MathVector3  mDirectionalLightDir;
-        float             mPadding0;
-        bal::MathColor    mDirectionalLightColor;
-    };
-
-private:
     std::unique_ptr<bal::ShaderArchive> mpShaderArchive;
 
     std::unique_ptr<bal::IPipeline>       mpSamplePipeline;
     std::unique_ptr<bal::IDescriptorHeap> mpSampleDescriptorHeap;
     std::unique_ptr<bal::IConstantBuffer> mpSampleConstantBuffer;
-
-    std::unique_ptr<bal::IConstantBuffer> mpEnvConstantBuffer;
 };
 
 }

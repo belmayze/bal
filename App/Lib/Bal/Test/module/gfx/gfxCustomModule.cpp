@@ -43,19 +43,6 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
         if (!mpShaderArchive->loadArchiver(std::move(file))) { return; }
     }
 
-    // 環境定数バッファ
-    {
-        // 定数バッファ
-        mpEnvConstantBuffer = bal::make_unique<bal::ConstantBuffer>(nullptr);
-        {
-            bal::IConstantBuffer::InitializeArg init_arg;
-            init_arg.mpGraphics = p_graphics;
-            init_arg.mBufferCount = 1;
-            init_arg.mBufferSize = sizeof(SampleEnvCB);
-            if (!mpEnvConstantBuffer->initialize(init_arg)) { return; }
-        }
-    }
-
     // パイプライン構築
     {
         // 球体描画
@@ -79,21 +66,21 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
             mpSampleConstantBuffer = bal::make_unique<bal::ConstantBuffer>(nullptr);
             {
                 bal::IConstantBuffer::InitializeArg init_arg;
-                init_arg.mpGraphics = p_graphics;
+                init_arg.mpGraphics   = p_graphics;
                 init_arg.mBufferCount = 1;
-                init_arg.mBufferSize = sizeof(SampleMeshCB);
+                init_arg.mBufferSize  = gfx_module.getMeshConstantBufferSize();
                 if (!mpSampleConstantBuffer->initialize(init_arg)) { return; }
             }
 
             // デスクリプターヒープ
             mpSampleDescriptorHeap = bal::make_unique<bal::DescriptorHeap>(nullptr);
             {
-                const bal::IConstantBuffer* p_content_buffers[] = { mpEnvConstantBuffer.get(), mpSampleConstantBuffer.get() };
+                const bal::IConstantBuffer* p_content_buffers[] = { &gfx_module.getSceneConstantBuffer(), mpSampleConstantBuffer.get() };
                 bal::IDescriptorHeap::InitializeArg init_arg;
                 init_arg.mpGraphics = p_graphics;
                 init_arg.mConstantRangeBase = 0;
                 init_arg.mNumConstantBuffer = 2;
-                init_arg.mpConstantBuffers = p_content_buffers;
+                init_arg.mpConstantBuffers  = p_content_buffers;
                 if (!mpSampleDescriptorHeap->initialize(init_arg)) { return; }
             }
 
@@ -177,23 +164,9 @@ void CustomModule::onUpdate(const bal::FrameworkCallback::UpdateArg& arg, const 
     // 定数バッファ更新
     {
         // モデルのワールド位置は固定
-        SampleMeshCB* p_cb = mpSampleConstantBuffer->getBufferPtr<SampleMeshCB>();
-        p_cb->mWorldMatrix         .setIdentity();
-        p_cb->mWorldMatrixForNormal.setIdentity();
-    }
-    {
-        const bal::mod::gfx::PerspectiveCamera& camera = static_cast<const bal::mod::gfx::Module&>(module).getCamera();
-
-        SampleEnvCB* p_cb = mpEnvConstantBuffer->getBufferPtr<SampleEnvCB>();
-
-        // 行列はカメラから取得
-        p_cb->mProjMatrix           = camera.getProjectionMatrix();
-        p_cb->mViewMatrix           = camera.getViewMatrix();
-        p_cb->mProjectionViewMatrix = camera.getViewProjectionMatrix();
-
-        // ライトは固定
-        p_cb->mDirectionalLightDir   = bal::MathVector3(-1.f, -1.f, -1.f).calcNormalize();
-        p_cb->mDirectionalLightColor = bal::MathColor(1.f, 1.f, 1.f);
+        bal::mod::gfx::Module::MeshConstantBufferBase* p_cb = mpSampleConstantBuffer->getBufferPtr<bal::mod::gfx::Module::MeshConstantBufferBase>();
+        p_cb->mWorldMatrix      .setIdentity();
+        p_cb->mNormalWorldMatrix.setIdentity();
     }
 }
 

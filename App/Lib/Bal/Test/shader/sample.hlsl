@@ -16,7 +16,6 @@ cbuffer EnvConstantBuffer : register(b0)
 {
     float4x4 ViewMatrix;
     float4x4 ProjectionMatrix;
-    float4x4 ProjectionViewMatrix;
     float3   DirectionalLightDir;
     float3   DirectionalLightColor;
 };
@@ -41,7 +40,7 @@ VARYING main(INPUT input)
 {
     VARYING output;
 
-    output.Position = mul(mul(float4(input.Position, 1.0), WorldMatrix), ProjectionViewMatrix);
+    output.Position = mul(mul(mul(float4(input.Position, 1.0), WorldMatrix), ViewMatrix), ProjectionMatrix);
     output.Normal   = mul(float4(input.Normal,   0.0), WorldMatrixForNormal).xyz;
     output.Texcoord = input.Texcoord;
 
