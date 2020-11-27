@@ -183,6 +183,9 @@
     <ClCompile Include="..\..\Source\engine\module\gfx\balGfxPerspectiveCamera.cpp">
       <Filter>engine\module\gfx</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\d3d12\balDescriptorHeapManagerD3D12.cpp">
+      <Filter>graphics\d3d12</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\memory\balSingleton.h">
@@ -439,6 +442,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\engine\module\balModuleInstance.h">
       <Filter>engine\module</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\d3d12\balDescriptorHeapManagerD3D12.h">
+      <Filter>graphics\d3d12</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

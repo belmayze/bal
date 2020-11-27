@@ -11,6 +11,7 @@
 #include <graphics/balFrameBuffer.h>
 #include <graphics/d3d12/balCommandListDirectD3D12.h>
 #include <graphics/d3d12/balCommandQueueD3D12.h>
+#include <graphics/d3d12/balDescriptorHeapManagerD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
 #include <graphics/d3d12/balTextureD3D12.h>
@@ -190,6 +191,14 @@ bool Graphics::initialize(const InitializeArg& arg)
                 mpSwapChainFrameBuffers[i_buffer].setResolution(arg.mRenderBufferSize);
             }
         }
+    }
+
+    // デスクリプターヒープ管理
+    {
+        DescriptorHeapManager& manager = DescriptorHeapManager::GetInstance();
+        DescriptorHeapManager::AddGfxFinalizer();
+        DescriptorHeapManager::InitializeArg init_arg;
+        manager.initialize(init_arg);
     }
 
     // 情報

@@ -50,6 +50,7 @@
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandQueueD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balConstantBufferD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balDescriptorHeapD3D12.cpp" />
+    <ClCompile Include="..\..\Source\graphics\d3d12\balDescriptorHeapManagerD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balGraphicsD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balInputLayoutD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balMeshBufferD3D12.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandQueueD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balConstantBufferD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balDescriptorHeapD3D12.h" />
+    <ClInclude Include="..\..\Include\graphics\d3d12\balDescriptorHeapManagerD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balGraphicsD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balInputLayoutD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balMeshBufferD3D12.h" />
