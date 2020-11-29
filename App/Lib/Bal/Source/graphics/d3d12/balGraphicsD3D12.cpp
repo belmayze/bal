@@ -198,7 +198,11 @@ bool Graphics::initialize(const InitializeArg& arg)
         DescriptorHeapManager& manager = DescriptorHeapManager::GetInstance();
         DescriptorHeapManager::AddGfxFinalizer();
         DescriptorHeapManager::InitializeArg init_arg;
-        manager.initialize(init_arg);
+        init_arg.mpGraphics = this;
+        if (!manager.initialize(init_arg))
+        {
+            return false;
+        }
     }
 
     // 情報

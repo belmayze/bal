@@ -18,7 +18,7 @@ namespace bal::d3d12 {
 bool DescriptorHeap::initialize(const InitializeArg& arg)
 {
     // デバイス
-    ID3D12Device6* p_device = reinterpret_cast<Graphics*>(arg.mpGraphics)->getDevice();
+    ID3D12Device6* p_device = static_cast<Graphics*>(arg.mpGraphics)->getDevice();
 
     // デスクリプターヒープを作成
     Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> p_descriptor_heap;
