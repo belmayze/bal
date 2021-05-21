@@ -8,22 +8,22 @@
 #pragma once
 
 // namespace
-#if BAL_PLATFORM_IS_WIN64
-namespace bal { class MathWin64; }
-namespace bal { class MathWin64Vector2; }
-namespace bal { class MathWin64Vector3; }
-namespace bal { class MathWin64Vector4; }
-namespace bal { class MathWin64Matrix44; }
-namespace bal { class MathWin64Size; }
-namespace bal { class MathWin64Color; }
+#if BAL_ARCH_IS_X64
+namespace bal { class MathX64; }
+namespace bal { class MathX64Vector2; }
+namespace bal { class MathX64Vector3; }
+namespace bal { class MathX64Vector4; }
+namespace bal { class MathX64Matrix44; }
+namespace bal { class MathX64Size; }
+namespace bal { class MathX64Color; }
 
-namespace bal { using Math         = MathWin64;         }
-namespace bal { using MathVector2  = MathWin64Vector2;  }
-namespace bal { using MathVector3  = MathWin64Vector3;  }
-namespace bal { using MathVector4  = MathWin64Vector4;  }
-namespace bal { using MathMatrix44 = MathWin64Matrix44; }
-namespace bal { using MathSize     = MathWin64Size;     }
-namespace bal { using MathColor    = MathWin64Color;    }
+namespace bal { using Math         = MathX64;         }
+namespace bal { using MathVector2  = MathX64Vector2;  }
+namespace bal { using MathVector3  = MathX64Vector3;  }
+namespace bal { using MathVector4  = MathX64Vector4;  }
+namespace bal { using MathMatrix44 = MathX64Matrix44; }
+namespace bal { using MathSize     = MathX64Size;     }
+namespace bal { using MathColor    = MathX64Color;    }
 #else
 namespace bal { class MathCommon; }
 namespace bal { class MathCommonVector2; }
@@ -46,12 +46,12 @@ namespace bal { using MathColor    = MathCommonColor;    }
 #include <math/balDegree.h>
 #include <math/balRadian.h>
 
-#if BAL_PLATFORM_IS_WIN64
-#   include <math/win64/balMathWin64.h>
-#   include <math/win64/balMathWin64Vector.h>
-#   include <math/win64/balMathWin64Matrix.h>
-#   include <math/win64/balMathWin64Size.h>
-#   include <math/win64/balMathWin64Color.h>
+#if BAL_ARCH_IS_X64
+#   include <math/archX64/balMathX64.h>
+#   include <math/archX64/balMathX64Vector.h>
+#   include <math/archX64/balMathX64Matrix.h>
+#   include <math/archX64/balMathX64Size.h>
+#   include <math/archX64/balMathX64Color.h>
 #else
 #   include <math/balMathCommon.h>
 #   include <math/balMathCommonVector.h>

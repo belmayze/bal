@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balMathWin64Matrix_inl.h
+ * @file   balMathX64Matrix_inl.h
  * @brief  
  * @author belmayze
  *
@@ -9,14 +9,14 @@
 // std
 #include <intrin.h>
 // bal
-#include <math/win64/balMathWin64Matrix_inl.h>
+#include <math/archX64/balMathX64Matrix_inl.h>
 
 namespace bal
 {
 
 // ----------------------------------------------------------------------------
 
-inline void MathWin64Matrix44::setTranspose()
+inline void MathX64Matrix44::setTranspose()
 {
     __m128 tmp0, tmp1, tmp2, tmp3;
     tmp0 = _mm_shuffle_ps(*reinterpret_cast<__m128*>(m[0]), *reinterpret_cast<__m128*>(m[1]), _MM_SHUFFLE(1, 0, 1, 0)); // 1010
@@ -42,9 +42,9 @@ inline void MathWin64Matrix44::setTranspose()
 // operator -+*/
 // ------------------------------------------------------------------------
 
-inline MathWin64Matrix44 MathWin64Matrix44::operator*(const MathWin64Matrix44& rhs) const
+inline MathX64Matrix44 MathX64Matrix44::operator*(const MathX64Matrix44& rhs) const
 {
-    MathWin64Matrix44 result;
+    MathX64Matrix44 result;
 
     // 倒置
     __m128 row0, row1, row2, row3;
@@ -88,9 +88,9 @@ inline MathWin64Matrix44 MathWin64Matrix44::operator*(const MathWin64Matrix44& r
 
 // ----------------------------------------------------------------------------
 
-inline MathWin64Vector4 MathWin64Matrix44::operator*(const MathWin64Vector4& rhs) const
+inline MathX64Vector4 MathX64Matrix44::operator*(const MathX64Vector4& rhs) const
 {
-    MathWin64Vector4 result;
+    MathX64Vector4 result;
 
     result[0] = _mm_dp_ps(*reinterpret_cast<const __m128*>(m[0]), *reinterpret_cast<const __m128*>(static_cast<const float*>(rhs)), 0xff).m128_f32[0];
     result[1] = _mm_dp_ps(*reinterpret_cast<const __m128*>(m[1]), *reinterpret_cast<const __m128*>(static_cast<const float*>(rhs)), 0xff).m128_f32[0];

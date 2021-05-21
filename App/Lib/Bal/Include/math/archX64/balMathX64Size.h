@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balMathWin64Size.h
+ * @file   balMathX64Size.h
  * @brief  
  * @author belmayze
  *
@@ -12,14 +12,14 @@
 // ----------------------------------------------------------------------------
 namespace bal {
 
-class MathWin64Size : public MathCommonSize
+class MathX64Size : public MathCommonSize
 {
 public:
     //! コンストラクター
     using MathCommonSize::MathCommonSize;
 
     //! キャスト
-    MathWin64Size(const MathCommonSize& s)
+    MathX64Size(const MathCommonSize& s)
     {
         *this = s;
     }

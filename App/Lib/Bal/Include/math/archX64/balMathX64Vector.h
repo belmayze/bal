@@ -12,27 +12,27 @@
 // ----------------------------------------------------------------------------
 namespace bal {
 
-class MathWin64Vector2 : public MathCommonVector2
+class MathX64Vector2 : public MathCommonVector2
 {
 public:
     //! コンストラクター
     using MathCommonVector2::MathCommonVector2;
 
     //! キャスト
-    MathWin64Vector2(const MathCommonVector2& v)
+    MathX64Vector2(const MathCommonVector2& v)
     {
         *this = v;
     }
 };
 
-class MathWin64Vector3 : public MathCommonVector3
+class MathX64Vector3 : public MathCommonVector3
 {
 public:
     //! コンストラクター
     using MathCommonVector3::MathCommonVector3;
 
     //! キャスト
-    MathWin64Vector3(const MathCommonVector3& v)
+    MathX64Vector3(const MathCommonVector3& v)
     {
         m[0] = v.getX();
         m[1] = v.getY();
@@ -40,14 +40,14 @@ public:
     }
 };
 
-class alignas(16) MathWin64Vector4 : public MathCommonVector4
+class alignas(16) MathX64Vector4 : public MathCommonVector4
 {
 public:
     //! コンストラクター
     using MathCommonVector4::MathCommonVector4;
     
     //! キャスト
-    MathWin64Vector4(const MathCommonVector4& v)
+    MathX64Vector4(const MathCommonVector4& v)
     {
         *this = v;
     }
@@ -55,4 +55,4 @@ public:
 
 }
 
-#include <math/win64/balMathWin64Vector_inl.h>
+#include <math/archX64/balMathX64Vector_inl.h>

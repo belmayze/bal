@@ -187,13 +187,13 @@
     <ClInclude Include="..\..\Include\math\balMathCommonVector.h" />
     <ClInclude Include="..\..\Include\math\balMathCommonVector_inl.h" />
     <ClInclude Include="..\..\Include\math\balRadian.h" />
-    <ClInclude Include="..\..\Include\math\win64\balMathWin64.h" />
-    <ClInclude Include="..\..\Include\math\win64\balMathWin64Color.h" />
-    <ClInclude Include="..\..\Include\math\win64\balMathWin64Matrix.h" />
-    <ClInclude Include="..\..\Include\math\win64\balMathWin64Matrix_inl.h" />
-    <ClInclude Include="..\..\Include\math\win64\balMathWin64Size.h" />
-    <ClInclude Include="..\..\Include\math\win64\balMathWin64Vector.h" />
-    <ClInclude Include="..\..\Include\math\win64\balMathWin64Vector_inl.h" />
+    <ClInclude Include="..\..\Include\math\x64\balMathX64.h" />
+    <ClInclude Include="..\..\Include\math\x64\balMathX64Color.h" />
+    <ClInclude Include="..\..\Include\math\x64\balMathX64Matrix.h" />
+    <ClInclude Include="..\..\Include\math\x64\balMathX64Matrix_inl.h" />
+    <ClInclude Include="..\..\Include\math\x64\balMathX64Size.h" />
+    <ClInclude Include="..\..\Include\math\x64\balMathX64Vector.h" />
+    <ClInclude Include="..\..\Include\math\x64\balMathX64Vector_inl.h" />
     <ClInclude Include="..\..\Include\memory\balMemUtil.h">
       <SubType>
       </SubType>

@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balMathWin64Matrix.h
+ * @file   balMathX64Matrix.h
  * @brief  
  * @author belmayze
  *
@@ -8,12 +8,12 @@
 #pragma once
 // bal
 #include <math/balMathCommonMatrix.h>
-#include <math/win64/balMathWin64Vector.h>
+#include <math/archX64/balMathX64Vector.h>
 
 // ----------------------------------------------------------------------------
 namespace bal {
 
-class alignas(16) MathWin64Matrix44 : public MathCommonMatrix44
+class alignas(16) MathX64Matrix44 : public MathCommonMatrix44
 {
 public:
     //! コンストラクター
@@ -28,11 +28,11 @@ public:
     // operator -+*/
     // ------------------------------------------------------------------------
     /*! 行列同士の乗算 */
-    inline MathWin64Matrix44 operator*(const MathWin64Matrix44& rhs) const;
+    inline MathX64Matrix44 operator*(const MathX64Matrix44& rhs) const;
     /*! ベクトルとの乗算 */
-    inline MathWin64Vector4 operator*(const MathWin64Vector4& rhs) const;
+    inline MathX64Vector4 operator*(const MathX64Vector4& rhs) const;
 }; 
 
 }
 
-#include <math/win64/balMathWin64Matrix_inl.h>
+#include <math/archX64/balMathX64Matrix_inl.h>

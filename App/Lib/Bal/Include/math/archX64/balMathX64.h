@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balMathWin64.h
+ * @file   balMathX64.h
  * @brief  
  * @author belmayze
  *
@@ -12,7 +12,7 @@
 // ----------------------------------------------------------------------------
 namespace bal {
 
-class MathWin64 : public MathCommon
+class MathX64 : public MathCommon
 {
 }; 
 

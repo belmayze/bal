@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balMathWin64Vector_inl.h
+ * @file   balMathX64Vector_inl.h
  * @brief  
  * @author belmayze
  *
@@ -7,7 +7,7 @@
  */
 #pragma once
 // bal
-#include <math/win64/balMathWin64Vector.h>
+#include <math/archX64/balMathX64Vector.h>
 
 namespace bal
 {

@@ -22,9 +22,6 @@
     <Filter Include="container">
       <UniqueIdentifier>{c279ef77-e25e-4d0a-9aad-9319deba30a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="math\win64">
-      <UniqueIdentifier>{26fe1677-ae84-4ac8-b458-71a1662454bb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="time">
       <UniqueIdentifier>{6d511198-11fe-49a5-b889-e597bf75d13f}</UniqueIdentifier>
     </Filter>
@@ -51,6 +48,9 @@
     </Filter>
     <Filter Include="engine\module\cntl">
       <UniqueIdentifier>{c4a73965-d49c-4ede-9c43-ed794c613184}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math\archX64">
+      <UniqueIdentifier>{254c5b8b-4322-461d-9879-9861f53e6e9a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -251,9 +251,6 @@
     <ClInclude Include="..\..\Include\math\balMathCommon.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\math\win64\balMathWin64.h">
-      <Filter>math\win64</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\time\balDateTime.h">
       <Filter>time</Filter>
     </ClInclude>
@@ -262,12 +259,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\math\balMathCommonMatrix.h">
       <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\math\win64\balMathWin64Matrix.h">
-      <Filter>math\win64</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\math\win64\balMathWin64Vector.h">
-      <Filter>math\win64</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\math\balMathCommonVector.h">
       <Filter>math</Filter>
@@ -284,12 +275,6 @@
     <ClInclude Include="..\..\Include\math\balMathCommonVector_inl.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\math\win64\balMathWin64Matrix_inl.h">
-      <Filter>math\win64</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\math\win64\balMathWin64Vector_inl.h">
-      <Filter>math\win64</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\app\balApiEntry.h">
       <Filter>app</Filter>
     </ClInclude>
@@ -298,9 +283,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\math\balMathCommonSize.h">
       <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\math\win64\balMathWin64Size.h">
-      <Filter>math\win64</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\graphics\balIGraphics.h">
       <Filter>graphics</Filter>
@@ -316,9 +298,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\math\balMathCommonColor.h">
       <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\math\win64\balMathWin64Color.h">
-      <Filter>math\win64</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\graphics\d3d12\balGraphicsD3D12.h">
       <Filter>graphics\d3d12</Filter>
@@ -445,6 +424,27 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\graphics\d3d12\balDescriptorHeapManagerD3D12.h">
       <Filter>graphics\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\x64\balMathX64Matrix.h">
+      <Filter>math\archX64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\x64\balMathX64Matrix_inl.h">
+      <Filter>math\archX64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\x64\balMathX64Size.h">
+      <Filter>math\archX64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\x64\balMathX64Vector.h">
+      <Filter>math\archX64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\x64\balMathX64Vector_inl.h">
+      <Filter>math\archX64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\x64\balMathX64.h">
+      <Filter>math\archX64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\math\x64\balMathX64Color.h">
+      <Filter>math\archX64</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

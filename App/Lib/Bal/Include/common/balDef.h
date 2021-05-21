@@ -11,22 +11,36 @@
 
 // ----------------------------------------------------------------------------
 // プラットフォーム
-#define BAL_PLATFORM_WIN32  (0x0)
-#define BAL_PLATFORM_WIN64  (0x1)
+#define BAL_PLATFORM_WIN  (0x0)
 
 #if defined(_WIN32)
-#   if defined(_WIN64)
-#       define BAL_PLATFORM BAL_PLATFORM_WIN64
-#   else
-#       define BAL_PLATFORM BAL_PLATFORM_WIN32
-#   endif
+#   define BAL_PLATFORM BAL_PLATFORM_WIN
 #else
 #   error "Unsupported platform."
 #endif
+#define BAL_PLATFORM_IS_WIN   (BAL_PLATFORM == BAL_PLATFORM_WIN)
 
-#define BAL_PLATFORM_IS_WIN   (BAL_PLATFORM == BAL_PLATFORM_WIN32 || BAL_PLATFORM == BAL_PLATFORM_WIN64)
-#define BAL_PLATFORM_IS_WIN32 (BAL_PLATFORM == BAL_PLATFORM_WIN32)
-#define BAL_PLATFORM_IS_WIN64 (BAL_PLATFORM == BAL_PLATFORM_WIN64)
+// アーキテクチャー
+#define BAL_ARCH_X86    (0x00)
+#define BAL_ARCH_X64    (0x10)
+#define BAL_ARCH_ARM32  (0x20)
+#define BAL_ARCH_ARM64  (0x30)
+
+#if BAL_PLATFORM_IS_WIN
+#   if defined(_M_ARM64)
+#       define BAL_ARCH     BAL_ARCH_ARM64
+#   elif defined(_M_ARM)
+#       define BAL_ARCH     BAL_ARCH_ARM32
+#   elif defined(_M_X64)
+#       define BAL_ARCH     BAL_ARCH_X64
+#   else
+#       define BAL_ARCH     BAL_ARCH_X86
+#   endif
+#endif
+#define BAL_ARCH_IS_X86     (BAL_ARCH == BAL_ARCH_X86)
+#define BAL_ARCH_IS_X64     (BAL_ARCH == BAL_ARCH_X64)
+#define BAL_ARCH_IS_ARM32   (BAL_ARCH == BAL_ARCH_ARM32)
+#define BAL_ARCH_IS_ARM64   (BAL_ARCH == BAL_ARCH_ARM64)
 
 // ライブラリ
 #define BAL_GRAPHICS_D3D12  (0x0)

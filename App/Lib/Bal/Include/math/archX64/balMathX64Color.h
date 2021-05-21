@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balMathWin64Color.h
+ * @file   balMathX64Color.h
  * @brief  
  * @author belmayze
  *
@@ -12,14 +12,14 @@
 // ----------------------------------------------------------------------------
 namespace bal {
 
-class MathWin64Color : public MathCommonColor
+class MathX64Color : public MathCommonColor
 {
 public:
     //! コンストラクター
     using MathCommonColor::MathCommonColor;
 
     //! キャスト
-    MathWin64Color(const MathCommonColor& color)
+    MathX64Color(const MathCommonColor& color)
     {
         *this = color;
     }
