@@ -50,6 +50,12 @@ public:
      */
     virtual void onUpdate(const FrameworkCallback::UpdateArg& arg) override;
 
+    /*!
+     * 描画を行う関数です
+     * @param[in] arg 描画引数
+     */
+    virtual void onDraw(const FrameworkCallback::DrawArg& arg) override {}
+
 public:
     //! コントローラーを取得
     const Controller& getController(uint32_t index) const;

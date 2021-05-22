@@ -87,13 +87,13 @@ public:
      */
     virtual void onUpdate(const FrameworkCallback::UpdateArg& arg) override;
 
-public:
     /*!
      * 描画を行う関数です
      * @param[in] arg 描画引数
      */
-    void onDraw(const FrameworkCallback::DrawArg& arg);
+    virtual void onDraw(const FrameworkCallback::DrawArg& arg) override;
 
+public:
     /*!
      * カメラを取得します
      * @note 変更する場合は onUpdate の UBO 決定までの行ってください

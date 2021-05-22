@@ -68,9 +68,10 @@ void Engine::onUpdate(const UpdateArg& arg)
 
 void Engine::onDraw(const DrawArg& arg)
 {
-    if (mod::gfx::Module* p_module = mod::gfx::Module::getModule())
+    // @TODO: 依存をもとにマルチスレッドで実行
+    for (size_t i_module = 0; i_module < mNumModule; ++i_module)
     {
-        p_module->onDraw(arg);
+        mpModules[i_module]->onDraw(arg);
     }
 }
 

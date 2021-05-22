@@ -51,6 +51,12 @@ public:
      * @param[in] arg 更新引数
      */
     virtual void onUpdate(const FrameworkCallback::UpdateArg& arg) = 0;
+
+    /*!
+     * 描画を行う関数です
+     * @param[in] arg 描画引数
+     */
+    virtual void onDraw(const FrameworkCallback::DrawArg& arg) = 0;
 };
 
 }
