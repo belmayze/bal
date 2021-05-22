@@ -75,7 +75,6 @@ public:
 
 private:
     ModuleArray       mpModules;
-    mod::gfx::Module* mpGraphicsModule = nullptr;
     IGraphics*        mpGraphicsSystem = nullptr;
     size_t            mNumModule = 0;
 };

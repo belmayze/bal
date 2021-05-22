@@ -15,6 +15,7 @@
 #include <memory/balUniquePtr.h>
 // bal::mod
 #include <engine/module/cntl/balCntlModule.h>
+#include <engine/module/debug/balDebugModule.h>
 #include <engine/module/gfx/balGfxModule.h>
 // app
 #include <module/gfx/gfxCustomModule.h>
@@ -53,7 +54,7 @@ public:
         }
 
         // 必要なモジュールを作成します
-        constexpr size_t cNumModule = 2;
+        constexpr size_t cNumModule = 3;
         bal::Engine::ModuleArray p_modules = bal::make_unique<std::unique_ptr<bal::mod::IModule>[]>(nullptr, cNumModule);
         {
             int module_index = 0;
@@ -66,6 +67,10 @@ public:
             // コントローラー
             {
                 p_modules[module_index++] = bal::make_unique<bal::mod::cntl::Module>(nullptr);
+            }
+            // デバッグ
+            {
+                p_modules[module_index++] = bal::make_unique<bal::mod::debug::Module>(nullptr);
             }
         }
 

@@ -52,6 +52,9 @@
     <Filter Include="math\archX64">
       <UniqueIdentifier>{254c5b8b-4322-461d-9879-9861f53e6e9a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="engine\debug">
+      <UniqueIdentifier>{372a733c-82a6-468e-8165-9fb63e455061}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\framework\balFramework.cpp">
@@ -185,6 +188,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\graphics\d3d12\balDescriptorHeapManagerD3D12.cpp">
       <Filter>graphics\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\engine\module\debug\balDebugModule.cpp">
+      <Filter>engine\debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -386,9 +392,6 @@
     <ClInclude Include="..\..\Include\engine\module\gfx\balIGfxCustomModule.h">
       <Filter>engine\module\gfx</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Include\engine\module\balModuleType.h">
-      <Filter>engine\module</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Include\memory\balSingletonGfxFinalizer.h">
       <Filter>memory</Filter>
     </ClInclude>
@@ -445,6 +448,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\math\x64\balMathX64Color.h">
       <Filter>math\archX64</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\engine\module\debug\balDebugModule.h">
+      <Filter>engine\debug</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

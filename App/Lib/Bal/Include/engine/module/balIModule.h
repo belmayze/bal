@@ -7,7 +7,6 @@
  */
 #pragma once
 // bal
-#include <engine/module/balModuleType.h>
 #include <framework/balFrameworkCallback.h>
 
 namespace bal { class Engine; }
@@ -52,11 +51,6 @@ public:
      * @param[in] arg 更新引数
      */
     virtual void onUpdate(const FrameworkCallback::UpdateArg& arg) = 0;
-
-    /*!
-     * モジュールの種類を取得する
-     */
-    virtual ModuleType getModuleType() const = 0;
 };
 
 }

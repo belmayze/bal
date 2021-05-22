@@ -44,12 +44,6 @@ bool Engine::initialize(const InitializeArg& arg, ModuleArray&& p_modules, size_
         for (size_t i_module = 0; i_module < mNumModule; ++i_module)
         {
             mpModules[i_module]->initialize(init_arg);
-
-            // グラフィックスモジュールは描画を行う特殊なモジュールなので検索して保持しておく
-            if (mpModules[i_module]->getModuleType() == mod::ModuleType::Graphics)
-            {
-                mpGraphicsModule = static_cast<mod::gfx::Module*>(mpModules[i_module].get());
-            }
         }
     }
 
@@ -74,9 +68,9 @@ void Engine::onUpdate(const UpdateArg& arg)
 
 void Engine::onDraw(const DrawArg& arg)
 {
-    if (mpGraphicsModule)
+    if (mod::gfx::Module* p_module = mod::gfx::Module::getModule())
     {
-        mpGraphicsModule->onDraw(arg);
+        p_module->onDraw(arg);
     }
 }
 

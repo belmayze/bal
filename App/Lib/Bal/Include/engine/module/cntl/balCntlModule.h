@@ -50,11 +50,6 @@ public:
      */
     virtual void onUpdate(const FrameworkCallback::UpdateArg& arg) override;
 
-    /*!
-     * モジュールの種類を取得する
-     */
-    virtual ModuleType getModuleType() const { return ModuleType::Controller; }
-
 public:
     //! コントローラーを取得
     const Controller& getController(uint32_t index) const;

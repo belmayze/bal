@@ -34,6 +34,7 @@
     <ClCompile Include="..\..\Source\engine\balEngine.cpp" />
     <ClCompile Include="..\..\Source\engine\module\cntl\balCntlModule.cpp" />
     <ClCompile Include="..\..\Source\engine\module\cntl\balController.cpp" />
+    <ClCompile Include="..\..\Source\engine\module\debug\balDebugModule.cpp" />
     <ClCompile Include="..\..\Source\engine\module\gfx\balGfxMeshContainer.cpp" />
     <ClCompile Include="..\..\Source\engine\module\gfx\balGfxModule.cpp" />
     <ClCompile Include="..\..\Source\engine\module\gfx\balGfxPerspectiveCamera.cpp" />
@@ -116,9 +117,9 @@
     <ClInclude Include="..\..\Include\engine\module\balICustomModule.h" />
     <ClInclude Include="..\..\Include\engine\module\balIModule.h" />
     <ClInclude Include="..\..\Include\engine\module\balModuleInstance.h" />
-    <ClInclude Include="..\..\Include\engine\module\balModuleType.h" />
     <ClInclude Include="..\..\Include\engine\module\cntl\balCntlModule.h" />
     <ClInclude Include="..\..\Include\engine\module\cntl\balController.h" />
+    <ClInclude Include="..\..\Include\engine\module\debug\balDebugModule.h" />
     <ClInclude Include="..\..\Include\engine\module\gfx\balGfxMeshContainer.h" />
     <ClInclude Include="..\..\Include\engine\module\gfx\balGfxModule.h" />
     <ClInclude Include="..\..\Include\engine\module\gfx\balGfxPerspectiveCamera.h" />
