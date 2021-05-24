@@ -19,6 +19,7 @@
 #include <engine/module/gfx/balGfxModule.h>
 // app
 #include <module/gfx/gfxCustomModule.h>
+#include <test/testModule.h>
 
 namespace app {
 
@@ -42,6 +43,11 @@ public:
      */
     virtual int main(const bal::ApiEntry& api_entry)
     {
+        // モジュールのテスト
+        {
+            test::Module::exec();
+        }
+
         // フレームワーク
         bal::Framework framework;
         {

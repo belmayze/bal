@@ -15,6 +15,12 @@
     <Filter Include="ソース ファイル\module\gfx">
       <UniqueIdentifier>{9d030634-b7f1-4b42-b7ef-f4d7a1fbaac4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\test">
+      <UniqueIdentifier>{9f2ec818-ea32-44ce-b1ff-65cc1d921ba6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\test\container">
+      <UniqueIdentifier>{0ae6ce70-fcd7-400c-b862-691a3ee631d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Test\main.cpp">
@@ -23,10 +29,22 @@
     <ClCompile Include="..\..\Test\module\gfx\gfxCustomModule.cpp">
       <Filter>ソース ファイル\module\gfx</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Test\test\testModule.cpp">
+      <Filter>ソース ファイル\test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Test\test\container\testList.cpp">
+      <Filter>ソース ファイル\test\container</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Test\module\gfx\gfxCustomModule.h">
       <Filter>ソース ファイル\module\gfx</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Test\test\testModule.h">
+      <Filter>ソース ファイル\test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Test\test\container\testList.h">
+      <Filter>ソース ファイル\test\container</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

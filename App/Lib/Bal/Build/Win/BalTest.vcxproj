@@ -53,9 +53,13 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\..\Test\module\gfx\gfxCustomModule.cpp" />
+    <ClCompile Include="..\..\Test\test\container\testList.cpp" />
+    <ClCompile Include="..\..\Test\test\testModule.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Test\module\gfx\gfxCustomModule.h" />
+    <ClInclude Include="..\..\Test\test\container\testList.h" />
+    <ClInclude Include="..\..\Test\test\testModule.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

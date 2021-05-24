@@ -470,5 +470,11 @@
     <ClInclude Include="..\..\Include\debug\process\balDebugProcessTimeHolder.h">
       <Filter>debug</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\container\balList.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\container\balList_inl.h">
+      <Filter>container</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

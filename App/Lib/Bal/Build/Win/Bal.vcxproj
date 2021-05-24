@@ -98,6 +98,8 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\..\Include\container\balDynamicArray.h" />
+    <ClInclude Include="..\..\Include\container\balList.h" />
+    <ClInclude Include="..\..\Include\container\balList_inl.h" />
     <ClInclude Include="..\..\Include\container\balString.h">
       <SubType>
       </SubType>
