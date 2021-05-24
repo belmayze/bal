@@ -52,7 +52,7 @@
     <Filter Include="math\archX64">
       <UniqueIdentifier>{254c5b8b-4322-461d-9879-9861f53e6e9a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="engine\debug">
+    <Filter Include="engine\module\debug">
       <UniqueIdentifier>{372a733c-82a6-468e-8165-9fb63e455061}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -190,7 +190,7 @@
       <Filter>graphics\d3d12</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Source\engine\module\debug\balDebugModule.cpp">
-      <Filter>engine\debug</Filter>
+      <Filter>engine\module\debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -450,7 +450,7 @@
       <Filter>math\archX64</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Include\engine\module\debug\balDebugModule.h">
-      <Filter>engine\debug</Filter>
+      <Filter>engine\module\debug</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
