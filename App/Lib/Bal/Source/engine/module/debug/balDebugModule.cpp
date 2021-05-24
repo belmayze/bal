@@ -1,5 +1,5 @@
 ﻿/*!
- * @file   balDebugModule.cpp
+ * @file   balDebugProcessTime.cpp
  * @brief  
  * @author belmayze
  *
@@ -7,6 +7,7 @@
  */
 // bal
 #include <engine/module/debug/balDebugModule.h>
+#include <debug/process/balDebugProcessTimeHolder.h>
 
 namespace bal::mod::debug {
 
@@ -28,6 +29,8 @@ void Module::setCustomModule(std::unique_ptr<mod::ICustomModule>&& p_custom_modu
 
 void Module::initialize(const InitializeArg& arg)
 {
+    // 処理負荷計測
+    mpProcessTimeHolder = make_unique<bal::debug::ProcessTimeHolder>(nullptr);
 }
 
 // ----------------------------------------------------------------------------

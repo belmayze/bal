@@ -9,6 +9,8 @@
 // bal
 #include <engine/module/balModuleInstance.h>
 
+namespace bal::debug { class ProcessTimeHolder; }
+
 // ----------------------------------------------------------------------------
 namespace bal::mod::debug {
 
@@ -53,6 +55,13 @@ public:
      * @param[in] arg 描画引数
      */
     virtual void onDraw(const FrameworkCallback::DrawArg& arg) override {}
+
+public:
+    //! ProcessTimeHolder
+    bal::debug::ProcessTimeHolder* getProcessTimeHolder() { return mpProcessTimeHolder.get(); }
+
+private:
+    std::unique_ptr<bal::debug::ProcessTimeHolder> mpProcessTimeHolder;
 };
 
 }

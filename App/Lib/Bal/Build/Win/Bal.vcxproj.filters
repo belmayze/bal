@@ -55,6 +55,9 @@
     <Filter Include="engine\module\debug">
       <UniqueIdentifier>{372a733c-82a6-468e-8165-9fb63e455061}</UniqueIdentifier>
     </Filter>
+    <Filter Include="debug">
+      <UniqueIdentifier>{3ef14a96-fccc-4956-b3bf-d119039aa5fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\framework\balFramework.cpp">
@@ -191,6 +194,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\engine\module\debug\balDebugModule.cpp">
       <Filter>engine\module\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\debug\balDebugProcessTime.cpp">
+      <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\debug\balDebugProcessTimeHolder.cpp">
+      <Filter>debug</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -451,6 +460,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\engine\module\debug\balDebugModule.h">
       <Filter>engine\module\debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\debug\process\balDebugProcessTime.h">
+      <Filter>debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\debug\process\balDebugProcessHandle.h">
+      <Filter>debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\debug\process\balDebugProcessTimeHolder.h">
+      <Filter>debug</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

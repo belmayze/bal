@@ -31,6 +31,8 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="..\..\Source\debug\balDebugProcessTime.cpp" />
+    <ClCompile Include="..\..\Source\debug\balDebugProcessTimeHolder.cpp" />
     <ClCompile Include="..\..\Source\engine\balEngine.cpp" />
     <ClCompile Include="..\..\Source\engine\module\cntl\balCntlModule.cpp" />
     <ClCompile Include="..\..\Source\engine\module\cntl\balController.cpp" />
@@ -113,6 +115,9 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\..\Include\debug\process\balDebugProcessHandle.h" />
+    <ClInclude Include="..\..\Include\debug\process\balDebugProcessTime.h" />
+    <ClInclude Include="..\..\Include\debug\process\balDebugProcessTimeHolder.h" />
     <ClInclude Include="..\..\Include\engine\balEngine.h" />
     <ClInclude Include="..\..\Include\engine\module\balICustomModule.h" />
     <ClInclude Include="..\..\Include\engine\module\balIModule.h" />
