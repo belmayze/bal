@@ -476,5 +476,11 @@
     <ClInclude Include="..\..\Include\container\balList_inl.h">
       <Filter>container</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Include\container\balTreeMap.h">
+      <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\container\balTreeMap_inl.h">
+      <Filter>container</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -35,6 +35,9 @@
     <ClCompile Include="..\..\Test\test\container\testList.cpp">
       <Filter>ソース ファイル\test\container</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Test\test\container\testTreeMap.cpp">
+      <Filter>ソース ファイル\test\container</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Test\module\gfx\gfxCustomModule.h">
@@ -44,6 +47,9 @@
       <Filter>ソース ファイル\test</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Test\test\container\testList.h">
+      <Filter>ソース ファイル\test\container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Test\test\container\testTreeMap.h">
       <Filter>ソース ファイル\test\container</Filter>
     </ClInclude>
   </ItemGroup>

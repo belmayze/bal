@@ -1,6 +1,6 @@
 ﻿/*!
- * @file   testList.h
- * @brief  リストのテスト
+ * @file   testTreeMap.h
+ * @brief  ツリーマップのテスト
  * @author belmayze
  *
  * Copyright (c) 2021 belmayze. All rights reserved.
@@ -10,7 +10,7 @@
 // ----------------------------------------------------------------------------
 namespace app::test {
 
-class List
+class TreeMap
 {
 public:
     //! 実行

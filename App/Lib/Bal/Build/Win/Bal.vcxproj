@@ -117,6 +117,8 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="..\..\Include\container\balTreeMap.h" />
+    <ClInclude Include="..\..\Include\container\balTreeMap_inl.h" />
     <ClInclude Include="..\..\Include\debug\process\balDebugProcessHandle.h" />
     <ClInclude Include="..\..\Include\debug\process\balDebugProcessTime.h" />
     <ClInclude Include="..\..\Include\debug\process\balDebugProcessTimeHolder.h" />

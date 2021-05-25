@@ -3,7 +3,7 @@
  * @brief  
  * @author belmayze
  *
- * Copyright (c) 2020 belmayze. All rights reserved.
+ * Copyright (c) 2021 belmayze. All rights reserved.
  */
 // bal
 #include <container/balList.h>
