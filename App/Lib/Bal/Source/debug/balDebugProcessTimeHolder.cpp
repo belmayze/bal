@@ -30,9 +30,11 @@ void ProcessTimeHolder::clear()
     std::shared_lock lock(mMutexList);
     for (const ProcessHandle::ThreadInfo& info : mThreadInfoList)
     {
-        if (info.mpRootNode)
+        ProcessHandle::TreeMapNode* p_node = info.mpRootNode->getChild();
+        while (p_node != nullptr)
         {
-            mTreeMap.remove(info.mpRootNode->getChild());
+            mTreeMap.remove(p_node);
+            p_node = info.mpRootNode->getChild();
         }
     }
 }

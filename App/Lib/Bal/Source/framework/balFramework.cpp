@@ -14,6 +14,8 @@
 // bal
 #include <app/balApiEntry.h>
 #include <app/balApplicationBase.h>
+#include <debug/process/balDebugProcessTimeHolder.h>
+#include <engine/module/debug/balDebugModule.h>
 #include <framework/balFramework.h>
 #include <framework/balFrameworkCallback.h>
 #include <memory/balSingletonFinalizer.h>
@@ -250,6 +252,13 @@ int Framework::enterApplicationLoop(FrameworkCallback* p_callback)
 
 void Framework::applicationLoop_()
 {
+    // 計測追加
+    debug::ProcessHandle process_handle;
+    if (mod::debug::Module* p_module = mod::debug::Module::GetModule())
+    {
+        process_handle = p_module->getProcessTimeHolder()->addThread("MainThread");
+    }
+
     int frame_count = 0;
     Stopwatch sw_for_frame, sw_for_second;
     sw_for_frame.start();
@@ -306,6 +315,12 @@ void Framework::applicationLoop_()
                 }
             }
         }
+    }
+
+    // 計測終了
+    if (mod::debug::Module* p_module = mod::debug::Module::GetModule())
+    {
+        p_module->getProcessTimeHolder()->end(process_handle, bal::TimeSpan());
     }
 }
 
