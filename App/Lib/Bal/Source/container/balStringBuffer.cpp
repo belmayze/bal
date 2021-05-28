@@ -15,8 +15,8 @@ namespace bal
 
 StringBuffer::StringBuffer(const char* str)
 {
-    calcSize_(str);
-    StringBuffer(str, mSize);
+    size_t length = calcSize_(str);
+    StringBuffer(str, length);
 }
 
 // ----------------------------------------------------------------------------
@@ -31,7 +31,7 @@ StringBuffer::StringBuffer(const char* str, size_t length)
 
 // ----------------------------------------------------------------------------
 
-bool StringBuffer::isEquals(const StringPtr& str) const
+bool StringBuffer::isEquals(const StringBase& str) const
 {
     // 文字列の長さが異なれば絶対違う
     if (mSize != str.size()) { return false; }

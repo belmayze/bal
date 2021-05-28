@@ -20,8 +20,11 @@ class String : public StringBase
 {
     BAL_STATIC_ASSERT(N > 0, "String<N>: N > 0");
 public:
+    /*! 空文字で初期化 */
+    String() { assign(""); }
+
     /*! ポインターからコピー */
-    String(const char* str) { assign(str); }
+    String(const StringBase& str) { assign(str); }
 
     /*! デストラクター */
     virtual ~String() {}
@@ -44,7 +47,7 @@ public:
     /*!
      * 空文字かチェック
      */
-    virtual bool empty() const override { return mStr[0] == '\0'; }
+    virtual bool isEmpty() const override { return mStr[0] == '\0'; }
 
     /*!
      * 文字列を代入する

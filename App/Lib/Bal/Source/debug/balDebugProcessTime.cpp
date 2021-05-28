@@ -16,9 +16,9 @@ namespace bal::debug {
 
 ProcessTime::ProcessTime(const StringPtr& name, ProcessHandle* p_parent)
 {
-    if (mod::debug::Module* p_module = mod::debug::Module::getModule())
+    if (mod::debug::Module* p_module = mod::debug::Module::GetModule())
     {
-        mHandle = p_module->getProcessTimeHolder()->addNode(name, p_parent);
+        mHandle = p_module->getProcessTimeHolder()->addNode(name);
     }
     // 処理計測開始
     mStopwatch.start();
@@ -31,9 +31,9 @@ ProcessTime::~ProcessTime()
     // 処理計測結果を伝える
     mStopwatch.stop();
 
-    if (mod::debug::Module* p_module = mod::debug::Module::getModule())
+    if (mod::debug::Module* p_module = mod::debug::Module::GetModule())
     {
-        p_module->getProcessTimeHolder()->setTime(mHandle, mStopwatch.getDiff());
+        p_module->getProcessTimeHolder()->end(mHandle, mStopwatch.getDiff());
     }
 }
 

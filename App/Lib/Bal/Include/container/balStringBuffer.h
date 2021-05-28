@@ -58,7 +58,7 @@ public:
      * 一致しているかをチェック
      * @param[in] str 対象文字列
      */
-    bool isEquals(const StringPtr& str) const;
+    bool isEquals(const StringBase& str) const;
 
     /*!
      * 文字列を行で分割します
@@ -80,14 +80,16 @@ private:
 
 private:
     /*! 文字列の長さを計算する */
-    constexpr void calcSize_(const char* str)
+    constexpr size_t calcSize_(const char* str)
     {
         const char* p = str;
-        for (int i = 0; i < 1024 * 1024; ++i)
+        constexpr size_t cMaxLength = 1024 * 1024;
+        for (size_t i = 0; i < cMaxLength; ++i)
         {
-            if (*p == '\0') { mSize = i; return; }
+            if (*p == '\0') { return i; }
             ++p;
         }
+        return cMaxLength;
     }
 };
 

@@ -123,7 +123,7 @@ public:
     class const_iterator
     {
     public:
-        const_iterator(Node* p_node) :mpNode(p_node) {}
+        const_iterator(Node* p_node) :mpNode(p_node) { BAL_ASSERT(mpNode != nullptr); }
 
         const T& operator*() const
         {
@@ -173,7 +173,7 @@ public:
     class iterator
     {
     public:
-        iterator(Node* p_node) : mpNode(p_node) {}
+        iterator(Node* p_node) : mpNode(p_node) { BAL_ASSERT(mpNode != nullptr); }
 
         T& operator*() const
         {
@@ -249,12 +249,13 @@ public:
      * @param[in] args コンストラクター引数
      */
     template <class... Args>
-    void emplaceFront(Args&&... args)
+    T& emplaceFront(Args&&... args)
     {
         BAL_ASSERT(mFreeListSize > 0);
         Node* p_node = mpFreeList[--mFreeListSize];
         p_node->construct(std::forward<Args>(args)...);
         mDummyNode.linkNext(p_node);
+        return p_node->getData();
     }
 
     /*!
@@ -262,12 +263,13 @@ public:
      * @param[in] args コンストラクター引数
      */
     template <class... Args>
-    void emplaceBack(Args&&... args)
+    T& emplaceBack(Args&&... args)
     {
         BAL_ASSERT(mFreeListSize > 0);
         Node* p_node = mpFreeList[--mFreeListSize];
         p_node->construct(std::forward<Args>(args)...);
         mDummyNode.linkPrev(p_node);
+        return p_node->getData();
     }
 
     /*!
@@ -323,6 +325,11 @@ public:
      * 要素数を取得する
      */
     size_t size() const { return (maxSize() - mFreeListSize); }
+
+    /*!
+     * 確保できる要素数を取得する
+     */
+    size_t capacity() const { return mFreeListSize; }
 
     /*! 
      * 格納可能な最大の要素数を取得する

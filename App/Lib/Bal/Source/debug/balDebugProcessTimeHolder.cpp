@@ -19,20 +19,84 @@ ProcessTimeHolder::~ProcessTimeHolder()
 {
 }
 // ----------------------------------------------------------------------------
+void ProcessTimeHolder::initialize(const InitializeArg& arg)
+{
+    mTreeMap.initialize(arg.maxNode);
+    mThreadInfoList.initialize(arg.maxThread);
+}
+// ----------------------------------------------------------------------------
 void ProcessTimeHolder::clear()
 {
-    // @TODO: ツリーをクリア
+    std::shared_lock lock(mMutexList);
+    for (const ProcessHandle::ThreadInfo& info : mThreadInfoList)
+    {
+        if (info.mpRootNode)
+        {
+            mTreeMap.remove(info.mpRootNode->getChild());
+        }
+    }
 }
 // ----------------------------------------------------------------------------
-ProcessHandle ProcessTimeHolder::addNode(const StringPtr& name, const ProcessHandle* p_parent)
+ProcessHandle ProcessTimeHolder::addNode(const StringPtr& name)
 {
-    // @TODO: ツリー構造に登録
-    return ProcessHandle();
+    // ツリー構造に登録
+    ProcessHandle handle;
+
+    // 現在のスレッド情報取得
+    ProcessHandle::ThreadInfo* p_thread_info = nullptr;
+    {
+        std::shared_lock lock(mMutexList);
+        for (ProcessHandle::ThreadInfo& info : mThreadInfoList)
+        {
+            if (info.mThreadID == std::this_thread::get_id())
+            {
+                p_thread_info = &info;
+                break;
+            }
+        }
+    }
+    if (!p_thread_info)
+    {
+        std::lock_guard lock(mMutexList);
+        // 再検索
+        for (ProcessHandle::ThreadInfo& info : mThreadInfoList)
+        {
+            if (info.mThreadID == std::this_thread::get_id())
+            {
+                p_thread_info = &info;
+                break;
+            }
+        }
+        if (!p_thread_info)
+        {
+            p_thread_info = &mThreadInfoList.emplaceBack(std::this_thread::get_id());
+
+            std::lock_guard lock(mMutexTreeMap);
+            p_thread_info->mpRootNode = mTreeMap.emplaceChild(mTreeMap.getRootNode(), "Thread", p_thread_info);
+            p_thread_info->mpCurrentNode = p_thread_info->mpRootNode;
+        }
+    }
+
+    // ロック
+    {
+        std::lock_guard lock(mMutexTreeMap);
+
+        if (mTreeMap.capacity() > 0)
+        {
+            handle.mpNode = mTreeMap.emplaceChild(p_thread_info->mpCurrentNode, name, p_thread_info);
+            p_thread_info->mpCurrentNode = handle.mpNode;
+        }
+    }
+    return handle;
 }
 // ----------------------------------------------------------------------------
-void ProcessTimeHolder::setTime(const ProcessHandle& handle, const TimeSpan& diff)
+void ProcessTimeHolder::end(const ProcessHandle& handle, const TimeSpan& diff)
 {
-    // @TODO: ツリーに登録
+    if (handle.mpNode)
+    {
+        handle.mpNode->getData().mDiff = diff;
+        handle.mpNode->getData().mpThreadInfo->mpCurrentNode = handle.mpNode->getData().mpThreadInfo->mpCurrentNode->getParent();
+    }
 }
 // ----------------------------------------------------------------------------
 

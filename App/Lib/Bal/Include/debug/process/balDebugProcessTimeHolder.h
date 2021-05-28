@@ -6,7 +6,13 @@
  * Copyright (c) 2021 belmayze. All rights reserved.
  */
 #pragma once
+// std
+#include <mutex>
+#include <shared_mutex>
 // bal
+#include <container/balList.h>
+#include <container/balTreeMap.h>
+#include <container/balString.h>
 #include <debug/process/balDebugProcessHandle.h>
 
 namespace bal { class StringPtr; }
@@ -17,6 +23,14 @@ namespace bal::debug {
 
 class ProcessTimeHolder
 {
+public:
+    //! 初期化引数
+    struct InitializeArg
+    {
+        size_t maxNode   = 1024;
+        size_t maxThread = 128;
+    };
+
 public:
     /*!
      * コンストラクター
@@ -29,6 +43,12 @@ public:
     virtual ~ProcessTimeHolder();
 
     /*!
+     * 初期化
+     * @param[in] arg 引数
+     */
+    void initialize(const InitializeArg& arg);
+
+    /*!
      * 処理負荷をクリアします
      * @note 1フレームに1回、処理の開始時に呼びます
      */
@@ -36,17 +56,22 @@ public:
 
     /*!
      * ノードを追加します
-     * @param[in] name     計測名
-     * @param[in] p_parent 親ノード
+     * @param[in] name 計測名
      */
-    ProcessHandle addNode(const StringPtr& name, const ProcessHandle* p_parent);
+    ProcessHandle addNode(const StringPtr& name);
 
     /*!
      * 処理負荷を追加します
      * @param[in] handle ハンドル
      * @param[in] diff   処理時間
      */
-    void setTime(const ProcessHandle& handle, const TimeSpan& diff);
+    void end(const ProcessHandle& handle, const TimeSpan& diff);
+
+private:
+    TreeMap<ProcessHandle::Data>    mTreeMap;
+    List<ProcessHandle::ThreadInfo> mThreadInfoList;
+    std::mutex                      mMutexTreeMap;
+    std::shared_mutex               mMutexList;
 };
 
 }

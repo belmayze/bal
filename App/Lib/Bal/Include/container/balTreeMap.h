@@ -20,6 +20,7 @@ namespace bal {
  *                                  | Child[1] |
  *                                  +----------+
  */
+ // @TODO: ルートの場合、親にダミーが入っちゃうので何とかする
 template <typename T>
 class TreeMap
 {
@@ -52,6 +53,10 @@ public:
         //! きょうだいのノードを取得
         Node* getSibling() { return mpSibling; }
         const Node* getSibling() const { return mpSibling; }
+
+        //! 親のノードを取得
+        Node* getParent() { return mpParent; }
+        const Node* getParent() const { return mpParent; }
 
     private:
         //! バッファー確保
@@ -147,10 +152,6 @@ public:
             mpParent = nullptr;
         }
 
-        //! 親のノードを取得
-        Node* getParent() { return mpParent; }
-        const Node* getParent() const { return mpParent; }
-
         //! リンク済みかどうか
         bool isLinked() { return (mpParent != nullptr || mpChild != nullptr || mpSibling != nullptr); }
 
@@ -243,12 +244,17 @@ public:
     /*!
      * 要素数を取得する
      */
-    size_t size() const { return (max_size() - mFreeListSize); }
+    size_t size() const { return (maxSize() - mFreeListSize); }
+
+    /*!
+     * 確保できる要素数を取得する
+     */
+    size_t capacity() const { return mFreeListSize; }
 
     /*! 
      * 格納可能な最大の要素数を取得する
      */
-    size_t max_size() const { return mMaxSize; }
+    size_t maxSize() const { return mMaxSize; }
 
 private:
     Node* addChildImpl_(Node* p_node, const T& t)

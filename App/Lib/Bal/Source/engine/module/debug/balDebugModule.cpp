@@ -30,7 +30,11 @@ void Module::setCustomModule(std::unique_ptr<mod::ICustomModule>&& p_custom_modu
 void Module::initialize(const InitializeArg& arg)
 {
     // 処理負荷計測
-    mpProcessTimeHolder = make_unique<bal::debug::ProcessTimeHolder>(nullptr);
+    {
+        mpProcessTimeHolder = make_unique<bal::debug::ProcessTimeHolder>(nullptr);
+        bal::debug::ProcessTimeHolder::InitializeArg init_arg;
+        mpProcessTimeHolder->initialize(init_arg);
+    }
 }
 
 // ----------------------------------------------------------------------------

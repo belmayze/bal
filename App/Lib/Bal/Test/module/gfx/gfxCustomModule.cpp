@@ -116,7 +116,7 @@ void CustomModule::onUpdate(const bal::FrameworkCallback::UpdateArg& arg, const 
 {
     // カメラの仮制御
     {
-        bal::mod::gfx::PerspectiveCamera& camera = bal::mod::gfx::Module::getModule()->getCamera();
+        bal::mod::gfx::PerspectiveCamera& camera = bal::mod::gfx::Module::GetModule()->getCamera();
 
         // 移動軸（カメラ行列は倒置）
         bal::MathVector3 camera_x = camera.getViewMatrix().getCol(0).getXYZ();
@@ -124,7 +124,7 @@ void CustomModule::onUpdate(const bal::FrameworkCallback::UpdateArg& arg, const 
         bal::MathVector3 camera_z = camera.getViewMatrix().getCol(2).getXYZ();
 
         // 入力によって移動させる
-        const bal::mod::cntl::Controller& controller = bal::mod::cntl::Module::getModule()->getController(0);
+        const bal::mod::cntl::Controller& controller = bal::mod::cntl::Module::GetModule()->getController(0);
         if (controller.isConnected())
         {
             // Z軸ベクトルを入力によって移動させる

@@ -21,7 +21,7 @@ public:
 
 public:
     //! モジュールを取得
-    static T* getModule() { return static_cast<T*>(sModule); }
+    static T* GetModule() { return static_cast<T*>(sModule); }
 
 private:
     inline static ModuleInstance* sModule = nullptr;
