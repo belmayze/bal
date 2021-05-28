@@ -97,7 +97,6 @@ void List<T>::popBack()
     p_node->destruct();
     mpFreeList[mFreeListSize++] = p_node;
 }
-
 // ----------------------------------------------------------------------------
 template <typename T>
 void List<T>::clear()

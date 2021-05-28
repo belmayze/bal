@@ -122,6 +122,8 @@ public:
     //! const イテレーター
     class const_iterator
     {
+        friend List;
+
     public:
         const_iterator(Node* p_node) :mpNode(p_node) { BAL_ASSERT(mpNode != nullptr); }
 
@@ -172,6 +174,8 @@ public:
     //! イテレーター
     class iterator
     {
+        friend List;
+
     public:
         iterator(Node* p_node) : mpNode(p_node) { BAL_ASSERT(mpNode != nullptr); }
 
@@ -281,6 +285,19 @@ public:
      * 末端から削除します
      */
     void popBack();
+
+    /*!
+     * 指定した場所を削除します
+     */
+    iterator erase(iterator position)
+    {
+        Node* p_node = position.mpNode;
+        Node* p_next_node = p_node->getNext();
+        p_node->unlink();
+        p_node->destruct();
+        mpFreeList[mFreeListSize++] = p_node;
+        return iterator(p_next_node);
+    }
 
     /*!
      * 全要素削除
