@@ -39,13 +39,23 @@ public:
             BAL_ASSERT(mpData);
             return *mpData;
         }
+        const T& getData() const
+        {
+            BAL_ASSERT(mpData);
+            return *mpData;
+        }
+
+        //! 子のノードを取得
+        Node* getChild() { return mpChild; }
+        const Node* getChild() const { return mpChild; }
+
+        //! きょうだいのノードを取得
+        Node* getSibling() { return mpSibling; }
+        const Node* getSibling() const { return mpSibling; }
 
     private:
         //! バッファー確保
         void alloc() { mpBuffer = bal::make_unique<uint8_t[]>(nullptr, sizeof(T)); }
-
-        //! ダミー扱い
-        void setDummy() { mpParent = this; mpChild = this; mpSibling = this; }
 
         //! コンストラクターを呼び出す
         template <class... Args>
@@ -139,12 +149,7 @@ public:
 
         //! 親のノードを取得
         Node* getParent() { return mpParent; }
-
-        //! 子のノードを取得
-        Node* getChild() { return mpChild; }
-
-        //! きょうだいのノードを取得
-        Node* getSibling() { return mpSibling; }
+        const Node* getParent() const { return mpParent; }
 
         //! リンク済みかどうか
         bool isLinked() { return (mpParent != nullptr || mpChild != nullptr || mpSibling != nullptr); }
@@ -164,6 +169,9 @@ public:
     //! const イテレーター
 
 public:
+    //! デストラクター
+    ~TreeMap() { clear(); }
+
     /*!
      * 初期化
      * @param[in] max_size 最大サイズ
@@ -184,6 +192,23 @@ public:
      */
     Node* addSibling(Node* p_node, const T& t) { return addSiblingImpl_(p_node, t); }
     Node* addSibling(Node* p_node, T&& t) { return addSiblingImpl_(p_node, std::move(t)); }
+
+    /*!
+     * ノードを削除する
+     * @param[in] p_node 削除するノード
+     */
+    void remove(Node* p_node);
+
+    /*!
+     * 全要素削除
+     */
+    void clear();
+
+    /*!
+     * ルートノードを取得します
+     */
+    Node* getRootNode() { return mDummyNode.getChild(); }
+    const Node* getRootNode() const { return mDummyNode.getChild(); }
 
     /*!
      * コンテナが空かどうかを判定する

@@ -54,8 +54,8 @@ void List::exec()
 
         for (const Data& data : list) { data.print(); }
 
-        BAL_LOG_INFO("==== list::push_front ====\n");
         list.clear();
+        BAL_LOG_INFO("==== list::push_front ====\n");
 
         list.push_front(Data("1"));
         list.push_front(Data("2"));
@@ -70,8 +70,8 @@ void List::exec()
 
         for (const Data& data : list) { data.print(); }
 
+        list.clear();
         BAL_LOG_INFO("==== list::pop_back ====\n");
-        list.clear();
 
         list.push_back(Data("1"));
         list.push_back(Data("2"));
@@ -92,8 +92,8 @@ void List::exec()
 
         for (const Data& data : list) { data.print(); }
 
+        list.clear();
         BAL_LOG_INFO("==== list::pop_front ====\n");
-        list.clear();
 
         list.push_back(Data("1"));
         list.push_back(Data("2"));
@@ -114,8 +114,8 @@ void List::exec()
 
         for (const Data& data : list) { data.print(); }
 
-        BAL_LOG_INFO("==== list::access ====\n");
         list.clear();
+        BAL_LOG_INFO("==== list::access ====\n");
 
         list.push_back(Data("1"));
         list.push_back(Data("2"));

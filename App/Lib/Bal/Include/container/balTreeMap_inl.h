@@ -24,8 +24,37 @@ void TreeMap<T>::initialize(size_t max_size)
     }
     mMaxSize = max_size;
     mFreeListSize = max_size;
+}
+// ----------------------------------------------------------------------------
+template <typename T>
+void TreeMap<T>::remove(Node* p_node)
+{
+    BAL_ASSERT(p_node != nullptr);
 
-    mDummyNode.setDummy();
+    // 子がいればすべて削除する
+    Node* p_child = p_node->getChild();
+    while (p_child != nullptr)
+    {
+        remove(p_child);
+        p_child = p_node->getChild();
+    }
+
+    // 子がいなくなったら自分自身を削除する
+    p_node->unlink();
+    p_node->destruct();
+    mpFreeList[mFreeListSize++] = p_node;
+}
+// ----------------------------------------------------------------------------
+template <typename T>
+void TreeMap<T>::clear()
+{
+    // ダミーノードに刺さっている子すべて削除していく
+    Node* p_child = mDummyNode.getChild();
+    while (p_child != nullptr)
+    {
+        remove(p_child);
+        p_child = mDummyNode.getChild();
+    }
 }
 // ----------------------------------------------------------------------------
 
