@@ -6,8 +6,9 @@
  * Copyright (c) 2021 belmayze. All rights reserved.
  */
 // bal
-#include <engine/module/debug/balDebugModule.h>
+#include <debug/process/balDebugProcessTime.h>
 #include <debug/process/balDebugProcessTimeHolder.h>
+#include <engine/module/debug/balDebugModule.h>
 
 namespace bal::mod::debug {
 
@@ -47,6 +48,7 @@ void Module::finalize()
 
 void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 {
+    bal::debug::ProcessTime debug_process_time("Debug::Module");
 }
 
 // ----------------------------------------------------------------------------

@@ -6,6 +6,7 @@
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
 // bal
+#include <debug/process/balDebugProcessTime.h>
 #include <engine/balEngine.h>
 #include <engine/module/gfx/balGfxModule.h>
 #include <engine/module/gfx/balIGfxCustomModule.h>
@@ -293,6 +294,8 @@ void Module::finalize()
 
 void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 {
+    debug::ProcessTime debug_process_time("Gfx::Module");
+
     // カスタムモジュール
     if (mpCustomModule)
     {

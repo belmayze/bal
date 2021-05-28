@@ -14,7 +14,7 @@ namespace bal::debug {
 
 // ----------------------------------------------------------------------------
 
-ProcessTime::ProcessTime(const StringPtr& name, ProcessHandle* p_parent)
+ProcessTime::ProcessTime(const StringPtr& name)
 {
     if (mod::debug::Module* p_module = mod::debug::Module::GetModule())
     {

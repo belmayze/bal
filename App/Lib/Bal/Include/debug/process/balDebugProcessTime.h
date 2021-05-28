@@ -20,10 +20,9 @@ class ProcessTime
 public:
     /*!
      * コンストラクター
-     * @param[in] name     計測名
-     * @param[in] p_parent 親ハンドル
+     * @param[in] name 計測名
      */
-    ProcessTime(const StringPtr& name, ProcessHandle* p_parent);
+    ProcessTime(const StringPtr& name);
 
     /*!
      * デストラクター
