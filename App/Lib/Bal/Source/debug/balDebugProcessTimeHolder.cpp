@@ -37,6 +37,35 @@ void ProcessTimeHolder::clear()
     }
 }
 // ----------------------------------------------------------------------------
+ProcessHandle ProcessTimeHolder::addThread(const StringPtr& name)
+{
+    // ツリー構造に登録
+    ProcessHandle handle;
+
+    {
+        // すでにツリーがあれば削除する
+        std::lock_guard lock1(mMutexList);
+        for (auto it = mThreadInfoList.begin(); it != mThreadInfoList.end(); ++it)
+        {
+            if (it->mThreadID == std::this_thread::get_id())
+            {
+                mThreadInfoList.erase(it);
+                break;
+            }
+        }
+
+        // 再登録する
+        ProcessHandle::ThreadInfo* p_thread_info = &mThreadInfoList.emplaceBack(std::this_thread::get_id());
+
+        std::lock_guard lock2(mMutexTreeMap);
+        p_thread_info->mpRootNode = mTreeMap.emplaceChild(mTreeMap.getRootNode(), name, p_thread_info);
+        p_thread_info->mpCurrentNode = p_thread_info->mpRootNode;
+
+        handle.mpNode = p_thread_info->mpRootNode;
+    }
+    return handle;
+}
+// ----------------------------------------------------------------------------
 ProcessHandle ProcessTimeHolder::addNode(const StringPtr& name)
 {
     // ツリー構造に登録
@@ -57,7 +86,7 @@ ProcessHandle ProcessTimeHolder::addNode(const StringPtr& name)
     }
     if (!p_thread_info)
     {
-        std::lock_guard lock(mMutexList);
+        std::lock_guard lock1(mMutexList);
         // 再検索
         for (ProcessHandle::ThreadInfo& info : mThreadInfoList)
         {
@@ -71,7 +100,7 @@ ProcessHandle ProcessTimeHolder::addNode(const StringPtr& name)
         {
             p_thread_info = &mThreadInfoList.emplaceBack(std::this_thread::get_id());
 
-            std::lock_guard lock(mMutexTreeMap);
+            std::lock_guard lock2(mMutexTreeMap);
             p_thread_info->mpRootNode = mTreeMap.emplaceChild(mTreeMap.getRootNode(), "Thread", p_thread_info);
             p_thread_info->mpCurrentNode = p_thread_info->mpRootNode;
         }

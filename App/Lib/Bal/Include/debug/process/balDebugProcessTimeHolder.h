@@ -55,6 +55,12 @@ public:
     void clear();
 
     /*!
+     * スレッドを追加します
+     * @param[in] name スレッド名
+     */
+    ProcessHandle addThread(const StringPtr& name);
+
+    /*!
      * ノードを追加します
      * @param[in] name 計測名
      */
