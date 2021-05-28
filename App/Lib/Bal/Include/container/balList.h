@@ -234,25 +234,51 @@ public:
      * 先頭に追加します
      * @param[in] t オブジェクト
      */
-    void push_front(const T& t);
-    void push_front(T&& t);
+    void pushFront(const T& t);
+    void pushFront(T&& t);
 
     /*!
      * 末端に追加します
      * @param[in] t オブジェクト
      */
-    void push_back(const T& t);
-    void push_back(T&& t);
+    void pushBack(const T& t);
+    void pushBack(T&& t);
+    
+    /*!
+     * 直接構築で先頭に追加します
+     * @param[in] args コンストラクター引数
+     */
+    template <class... Args>
+    void emplaceFront(Args&&... args)
+    {
+        BAL_ASSERT(mFreeListSize > 0);
+        Node* p_node = mpFreeList[--mFreeListSize];
+        p_node->construct(std::forward<Args>(args)...);
+        mDummyNode.linkNext(p_node);
+    }
+
+    /*!
+     * 直接構築で末端に追加します
+     * @param[in] args コンストラクター引数
+     */
+    template <class... Args>
+    void emplaceBack(Args&&... args)
+    {
+        BAL_ASSERT(mFreeListSize > 0);
+        Node* p_node = mpFreeList[--mFreeListSize];
+        p_node->construct(std::forward<Args>(args)...);
+        mDummyNode.linkPrev(p_node);
+    }
 
     /*!
      * 先頭から削除します
      */
-    void pop_front();
+    void popFront();
 
     /*!
      * 末端から削除します
      */
-    void pop_back();
+    void popBack();
 
     /*!
      * 全要素削除
@@ -296,12 +322,12 @@ public:
     /*!
      * 要素数を取得する
      */
-    size_t size() const { return (max_size() - mFreeListSize); }
+    size_t size() const { return (maxSize() - mFreeListSize); }
 
     /*! 
      * 格納可能な最大の要素数を取得する
      */
-    size_t max_size() const { return mMaxSize; }
+    size_t maxSize() const { return mMaxSize; }
 
 private:
     Node                     mDummyNode;

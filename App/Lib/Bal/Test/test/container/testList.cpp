@@ -41,96 +41,111 @@ void List::exec()
         bal::List<Data> list;
         list.initialize(10);
 
-        list.push_back(Data("1"));
-        list.push_back(Data("2"));
-        list.push_back(Data("3"));
-        list.push_back(Data("4"));
-        list.push_back(Data("5"));
-        list.push_back(Data("6"));
-        list.push_back(Data("7"));
-        list.push_back(Data("8"));
-        list.push_back(Data("9"));
-        list.push_back(Data("10"));
+        list.pushBack(Data("1"));
+        list.pushBack(Data("2"));
+        list.pushBack(Data("3"));
+        list.pushBack(Data("4"));
+        list.pushBack(Data("5"));
+        list.pushBack(Data("6"));
+        list.pushBack(Data("7"));
+        list.pushBack(Data("8"));
+        list.pushBack(Data("9"));
+        list.pushBack(Data("10"));
 
         for (const Data& data : list) { data.print(); }
 
         list.clear();
         BAL_LOG_INFO("==== list::push_front ====\n");
 
-        list.push_front(Data("1"));
-        list.push_front(Data("2"));
-        list.push_front(Data("3"));
-        list.push_front(Data("4"));
-        list.push_front(Data("5"));
-        list.push_front(Data("6"));
-        list.push_front(Data("7"));
-        list.push_front(Data("8"));
-        list.push_front(Data("9"));
-        list.push_front(Data("10"));
+        list.pushFront(Data("1"));
+        list.pushFront(Data("2"));
+        list.pushFront(Data("3"));
+        list.pushFront(Data("4"));
+        list.pushFront(Data("5"));
+        list.pushFront(Data("6"));
+        list.pushFront(Data("7"));
+        list.pushFront(Data("8"));
+        list.pushFront(Data("9"));
+        list.pushFront(Data("10"));
 
         for (const Data& data : list) { data.print(); }
 
         list.clear();
         BAL_LOG_INFO("==== list::pop_back ====\n");
 
-        list.push_back(Data("1"));
-        list.push_back(Data("2"));
-        list.push_back(Data("3"));
-        list.push_back(Data("4"));
-        list.push_back(Data("5"));
-        list.push_back(Data("6"));
-        list.push_back(Data("7"));
-        list.push_back(Data("8"));
-        list.push_back(Data("9"));
-        list.push_back(Data("10"));
+        list.pushBack(Data("1"));
+        list.pushBack(Data("2"));
+        list.pushBack(Data("3"));
+        list.pushBack(Data("4"));
+        list.pushBack(Data("5"));
+        list.pushBack(Data("6"));
+        list.pushBack(Data("7"));
+        list.pushBack(Data("8"));
+        list.pushBack(Data("9"));
+        list.pushBack(Data("10"));
 
-        list.pop_back();
-        list.pop_back();
-        list.pop_back();
-        list.pop_back();
-        list.pop_back();
+        list.popBack();
+        list.popBack();
+        list.popBack();
+        list.popBack();
+        list.popBack();
 
         for (const Data& data : list) { data.print(); }
 
         list.clear();
         BAL_LOG_INFO("==== list::pop_front ====\n");
 
-        list.push_back(Data("1"));
-        list.push_back(Data("2"));
-        list.push_back(Data("3"));
-        list.push_back(Data("4"));
-        list.push_back(Data("5"));
-        list.push_back(Data("6"));
-        list.push_back(Data("7"));
-        list.push_back(Data("8"));
-        list.push_back(Data("9"));
-        list.push_back(Data("10"));
+        list.pushBack(Data("1"));
+        list.pushBack(Data("2"));
+        list.pushBack(Data("3"));
+        list.pushBack(Data("4"));
+        list.pushBack(Data("5"));
+        list.pushBack(Data("6"));
+        list.pushBack(Data("7"));
+        list.pushBack(Data("8"));
+        list.pushBack(Data("9"));
+        list.pushBack(Data("10"));
 
-        list.pop_front();
-        list.pop_front();
-        list.pop_front();
-        list.pop_front();
-        list.pop_front();
+        list.popFront();
+        list.popFront();
+        list.popFront();
+        list.popFront();
+        list.popFront();
 
         for (const Data& data : list) { data.print(); }
 
         list.clear();
         BAL_LOG_INFO("==== list::access ====\n");
 
-        list.push_back(Data("1"));
-        list.push_back(Data("2"));
-        list.push_back(Data("3"));
-        list.push_back(Data("4"));
-        list.push_back(Data("5"));
-        list.push_back(Data("6"));
-        list.push_back(Data("7"));
-        list.push_back(Data("8"));
-        list.push_back(Data("9"));
-        list.push_back(Data("10"));
+        list.pushBack(Data("1"));
+        list.pushBack(Data("2"));
+        list.pushBack(Data("3"));
+        list.pushBack(Data("4"));
+        list.pushBack(Data("5"));
+        list.pushBack(Data("6"));
+        list.pushBack(Data("7"));
+        list.pushBack(Data("8"));
+        list.pushBack(Data("9"));
+        list.pushBack(Data("10"));
 
         list.front().print();
         list.back().print();
 
+        list.clear();
+        BAL_LOG_INFO("==== list::emplace ====\n");
+
+        list.emplaceBack("6");
+        list.emplaceBack("7");
+        list.emplaceBack("8");
+        list.emplaceBack("9");
+        list.emplaceBack("10");
+        list.emplaceFront("5");
+        list.emplaceFront("4");
+        list.emplaceFront("3");
+        list.emplaceFront("2");
+        list.emplaceFront("1");
+
+        for (const Data& data : list) { data.print(); }
     }
 }
 

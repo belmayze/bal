@@ -30,7 +30,7 @@ void List<T>::initialize(size_t max_size)
 
 // ----------------------------------------------------------------------------
 template <typename T>
-void List<T>::push_front(const T& t)
+void List<T>::pushFront(const T& t)
 {
     BAL_ASSERT(mFreeListSize > 0);
 
@@ -41,7 +41,7 @@ void List<T>::push_front(const T& t)
     mDummyNode.linkNext(p_node);
 }
 template <typename T>
-void List<T>::push_front(T&& t)
+void List<T>::pushFront(T&& t)
 {
     BAL_ASSERT(mFreeListSize > 0);
 
@@ -54,7 +54,7 @@ void List<T>::push_front(T&& t)
 
 // ----------------------------------------------------------------------------
 template <typename T>
-void List<T>::push_back(const T& t)
+void List<T>::pushBack(const T& t)
 {
     BAL_ASSERT(mFreeListSize > 0);
 
@@ -65,7 +65,7 @@ void List<T>::push_back(const T& t)
     mDummyNode.linkPrev(p_node);
 }
 template <typename T>
-void List<T>::push_back(T&& t)
+void List<T>::pushBack(T&& t)
 {
     BAL_ASSERT(mFreeListSize > 0);
 
@@ -77,7 +77,7 @@ void List<T>::push_back(T&& t)
 }
 // ----------------------------------------------------------------------------
 template <typename T>
-void List<T>::pop_front()
+void List<T>::popFront()
 {
     BAL_ASSERT(!empty());
 
@@ -88,7 +88,7 @@ void List<T>::pop_front()
 }
 // ----------------------------------------------------------------------------
 template <typename T>
-void List<T>::pop_back()
+void List<T>::popBack()
 {
     BAL_ASSERT(!empty());
 
@@ -104,7 +104,7 @@ void List<T>::clear()
 {
     while (!empty())
     {
-        pop_back();
+        popBack();
     }
 }
 // ----------------------------------------------------------------------------

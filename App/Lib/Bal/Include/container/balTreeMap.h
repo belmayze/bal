@@ -166,9 +166,6 @@ public:
     };
 
 public:
-    //! const イテレーター
-
-public:
     //! デストラクター
     ~TreeMap() { clear(); }
 
@@ -192,6 +189,34 @@ public:
      */
     Node* addSibling(Node* p_node, const T& t) { return addSiblingImpl_(p_node, t); }
     Node* addSibling(Node* p_node, T&& t) { return addSiblingImpl_(p_node, std::move(t)); }
+
+    /*!
+     * 直接構築で先頭に追加します
+     * @param[in] args コンストラクター引数
+     */
+    template <class... Args>
+    Node* emplaceChild(Node* p_node, Args&&... args)
+    {
+        BAL_ASSERT(mFreeListSize > 0);
+        Node* p = mpFreeList[--mFreeListSize];
+        p->construct(std::forward<Args>(args)...);
+        (p_node ? p_node : &mDummyNode)->linkChild(p);
+        return p;
+    }
+
+    /*!
+     * 直接構築で末端に追加します
+     * @param[in] args コンストラクター引数
+     */
+    template <class... Args>
+    Node* emplaceSibling(Node* p_node, Args&&... args)
+    {
+        BAL_ASSERT(mFreeListSize > 0);
+        Node* p = mpFreeList[--mFreeListSize];
+        p->construct(std::forward<Args>(args)...);
+        (p_node ? p_node : &mDummyNode)->linkSibling(p);
+        return p;
+    }
 
     /*!
      * ノードを削除する
