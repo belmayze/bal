@@ -7,6 +7,9 @@
  */
 // bal
 #include <debug/process/balDebugProcessTimeHolder.h>
+#include <engine/balEngine.h>
+#include <engine/module/gfx/balGfxModule.h>
+#include <graphics/archiver/balShaderArchive.h>
 
 namespace bal::debug {
 
@@ -23,6 +26,48 @@ void ProcessTimeHolder::initialize(const InitializeArg& arg)
 {
     mTreeMap.initialize(arg.maxNode);
     mThreadInfoList.initialize(arg.maxThread);
+
+    // gfx
+    {
+        // グラフィックス
+        IGraphics* p_graphics = Engine::GetInstance().getGraphicsSystem();
+        mod::gfx::Module* p_gfx_module = mod::gfx::Module::GetModule();
+
+        if (p_gfx_module)
+        {
+            // 頂点レイアウト
+            std::unique_ptr<InputLayout> p_input_layout = make_unique<InputLayout>(nullptr);
+            {
+                std::unique_ptr<IInputLayout::InputLayoutDesc[]> descs = make_unique<IInputLayout::InputLayoutDesc[]>(nullptr, 2);
+                descs[0] = { .mName = "POSITION", .mType = IInputLayout::Type::Vec3, .mOffset = offsetof(Vertex, mPosition) };
+                descs[1] = { .mName = "Color",    .mType = IInputLayout::Type::Vec4, .mOffset = offsetof(Vertex, mColor) };
+
+                IInputLayout::InitializeArg init_arg;
+                init_arg.mpGraphics = p_graphics;
+                init_arg.mNumInputLayout = 2;
+                init_arg.mpInputLayouts = descs.get();
+                if (!p_input_layout->initialize(init_arg)) { return; }
+            }
+            // パイプライン
+            mpGfxPipeline = make_unique<Pipeline>(nullptr);
+            {
+                IPipeline::InitializeArg init_arg;
+                init_arg.mpGraphics = p_graphics;
+                init_arg.mNumOutput = 1;
+                init_arg.mOutputFormats[0] = p_gfx_module->getDefaultRenderTarget().getTexture()->getFormat();
+                init_arg.mpInputLayout = p_input_layout.get();
+
+                const ShaderArchive::ShaderContainer& shader_container = p_gfx_module->getShaderArchive().getShaderContainer(
+                    p_gfx_module->getShaderArchive().findProgram("ProcessTimer")
+                );
+                init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
+                init_arg.mVertexShaderBufferSize = shader_container.mVertexShader.mBufferSize;
+                init_arg.mpPixelShaderBuffer     = shader_container.mPixelShader.mBuffer;
+                init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
+                if (!mpGfxPipeline->initialize(init_arg)) { return; }
+            }
+        }
+    }
 }
 // ----------------------------------------------------------------------------
 void ProcessTimeHolder::clear()
@@ -128,6 +173,16 @@ void ProcessTimeHolder::end(const ProcessHandle& handle, const TimeSpan& diff)
         handle.mpNode->getData().mDiff = diff;
         handle.mpNode->getData().mpThreadInfo->mpCurrentNode = handle.mpNode->getData().mpThreadInfo->mpCurrentNode->getParent();
     }
+}
+// ----------------------------------------------------------------------------
+void ProcessTimeHolder::update(const FrameworkCallback::UpdateArg& arg)
+{
+
+}
+// ----------------------------------------------------------------------------
+void ProcessTimeHolder::draw(const bal::FrameworkCallback::DrawArg& arg)
+{
+    arg.mpCommandList->bindPipeline(*mpGfxPipeline);
 }
 // ----------------------------------------------------------------------------
 

@@ -15,5 +15,9 @@
       <Vertex Source="balDebugLine.hlsl" />
       <Pixel Source="balDebugLine.hlsl" />
     </Program>
+    <Program Name="ProcessTimer">
+      <Vertex Source="balProcessTimer.hlsl" />
+      <Pixel Source="balProcessTimer.hlsl" />
+    </Program>
   </ProgramArray>
 </Shader>

@@ -53,4 +53,11 @@ void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 
 // ----------------------------------------------------------------------------
 
+void Module::onDraw(const FrameworkCallback::DrawArg& arg)
+{
+    mpProcessTimeHolder->draw(arg);
+}
+
+// ----------------------------------------------------------------------------
+
 }

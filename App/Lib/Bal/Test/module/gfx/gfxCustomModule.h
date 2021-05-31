@@ -32,19 +32,19 @@ public:
     /*!
      * モジュールの初期化を行う関数です
      */
-    virtual void initialize(const bal::mod::IModule::InitializeArg& arg, const bal::mod::IModule& module) override;
+    virtual void initialize(const bal::mod::IModule::InitializeArg& arg, const bal::mod::IModule& mod) override;
 
     /*!
      * モジュールの更新を行う関数です
      * @param[in] arg 更新引数
      */
-    virtual void onUpdate(const bal::FrameworkCallback::UpdateArg& arg, const bal::mod::IModule& module) override;
+    virtual void onUpdate(const bal::FrameworkCallback::UpdateArg& arg, const bal::mod::IModule& mod) override;
 
     /*!
      * モジュールの描画を行う関数です
      * @param[in] arg 描画引数
      */
-    virtual void onDraw(const bal::FrameworkCallback::DrawArg& arg, const bal::mod::IModule& module) override;
+    virtual void onDraw(const bal::FrameworkCallback::DrawArg& arg, const bal::mod::IModule& mod) override;
 
 private:
     std::unique_ptr<bal::ShaderArchive> mpShaderArchive;

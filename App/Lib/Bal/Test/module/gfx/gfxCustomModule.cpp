@@ -28,12 +28,12 @@ CustomModule::~CustomModule() {}
 
 // ----------------------------------------------------------------------------
 
-void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const bal::mod::IModule& module)
+void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const bal::mod::IModule& mod)
 {
     // グラフィックスシステム
     bal::IGraphics* p_graphics = bal::Engine::GetInstance().getGraphicsSystem();
     // グラフィックスモジュール
-    const bal::mod::gfx::Module& gfx_module = *static_cast<const bal::mod::gfx::Module*>(&module);
+    const bal::mod::gfx::Module& gfx_module = *static_cast<const bal::mod::gfx::Module*>(&mod);
 
     // シェーダー読み込み
     mpShaderArchive = bal::make_unique<bal::ShaderArchive>(nullptr);
@@ -112,7 +112,7 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
 
 // ----------------------------------------------------------------------------
 
-void CustomModule::onUpdate(const bal::FrameworkCallback::UpdateArg& arg, const bal::mod::IModule& module)
+void CustomModule::onUpdate(const bal::FrameworkCallback::UpdateArg& arg, const bal::mod::IModule& mod)
 {
     // カメラの仮制御
     {
@@ -172,7 +172,7 @@ void CustomModule::onUpdate(const bal::FrameworkCallback::UpdateArg& arg, const 
 
 // ----------------------------------------------------------------------------
 
-void CustomModule::onDraw(const bal::FrameworkCallback::DrawArg& arg, const bal::mod::IModule& module)
+void CustomModule::onDraw(const bal::FrameworkCallback::DrawArg& arg, const bal::mod::IModule& mod)
 {
     // 環境定数バッファ
     arg.mpCommandList->bindPipeline(*mpSamplePipeline);

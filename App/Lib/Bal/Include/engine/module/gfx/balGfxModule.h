@@ -96,10 +96,15 @@ public:
 public:
     /*!
      * カメラを取得します
-     * @note 変更する場合は onUpdate の UBO 決定までの行ってください
+     * @note 変更する場合は onUpdate の UBO 決定までに行ってください
      */
     const PerspectiveCamera& getCamera() const { return mCamera; }
           PerspectiveCamera& getCamera()       { return mCamera; }
+
+    /*!
+     * bal 用のシェーダーを取得します
+     */
+    const ShaderArchive& getShaderArchive() const { BAL_ASSERT(mpShaderArchive.get() != nullptr); return *mpShaderArchive; }
 
     /*!
      * メッシュ用に確保する定数バッファのサイズを取得します

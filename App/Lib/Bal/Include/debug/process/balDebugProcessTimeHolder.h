@@ -14,7 +14,11 @@
 #include <container/balTreeMap.h>
 #include <container/balString.h>
 #include <debug/process/balDebugProcessHandle.h>
+#include <framework/balFrameworkCallback.h>
 
+namespace bal { class IConstantBuffer; }
+namespace bal { class IDescriptorHeap; }
+namespace bal { class IPipeline; }
 namespace bal { class StringPtr; }
 namespace bal { class TimeSpan; }
 
@@ -73,11 +77,33 @@ public:
      */
     void end(const ProcessHandle& handle, const TimeSpan& diff);
 
+    /*!
+     * 更新
+     * @param[in] arg 引数
+     */
+    void update(const FrameworkCallback::UpdateArg& arg);
+
+    /*!
+     * 描画
+     * @param[in] arg 引数
+     */
+    void draw(const FrameworkCallback::DrawArg& arg);
+
+private:
+    //! 頂点情報
+    struct Vertex
+    {
+        MathVector3 mPosition;
+        MathColor   mColor;
+    };
+
 private:
     TreeMap<ProcessHandle::Data>    mTreeMap;
     List<ProcessHandle::ThreadInfo> mThreadInfoList;
     std::mutex                      mMutexTreeMap;
     std::shared_mutex               mMutexList;
+
+    std::unique_ptr<bal::IPipeline> mpGfxPipeline;
 };
 
 }

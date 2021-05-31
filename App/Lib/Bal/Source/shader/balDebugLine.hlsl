@@ -1,5 +1,5 @@
 /*!
- * @file   balPresent.hlsl
+ * @file   balDebugLine.hlsl
  * @brief
  * @author belmayze
  *
