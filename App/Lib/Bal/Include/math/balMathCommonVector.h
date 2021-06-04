@@ -92,10 +92,10 @@ public:
     inline float getY() const { return m[1]; }
 
     // ------------------------------------------------------------------------
-    // setter
+    // reference
     // ------------------------------------------------------------------------
-    inline void setX(float x) { m[0] = x; }
-    inline void setY(float y) { m[1] = y; }
+    inline float& x() { return m[0]; }
+    inline float& y() { return m[1]; }
 
     // ------------------------------------------------------------------------
     // operator at
@@ -202,11 +202,11 @@ public:
     inline float getZ() const { return m[2]; }
 
     // ------------------------------------------------------------------------
-    // setter
+    // reference
     // ------------------------------------------------------------------------
-    inline void setX(float x) { m[0] = x; }
-    inline void setY(float y) { m[1] = y; }
-    inline void setZ(float z) { m[2] = z; }
+    inline float& x() { return m[0]; }
+    inline float& y() { return m[1]; }
+    inline float& z() { return m[2]; }
 
     // ------------------------------------------------------------------------
     // operator at
@@ -281,12 +281,12 @@ public:
     inline MathCommonVector3 getXYZ() const { return MathCommonVector3(m[0], m[1], m[2]); }
 
     // ------------------------------------------------------------------------
-    // setter
+    // reference
     // ------------------------------------------------------------------------
-    inline void setX(float x) { m[0] = x; }
-    inline void setY(float y) { m[1] = y; }
-    inline void setZ(float z) { m[2] = z; }
-    inline void setW(float w) { m[3] = w; }
+    inline float& x() { return m[0]; }
+    inline float& y() { return m[1]; }
+    inline float& z() { return m[2]; }
+    inline float& w() { return m[3]; }
 
     // ------------------------------------------------------------------------
     // operator at

@@ -70,6 +70,11 @@ public:
      */
     virtual FrameBuffer* getSwapChainFrameBuffer() override;
 
+    /*!
+     * スワップチェーンのフォーマットを取得する
+     */
+    virtual ITexture::Format getSwapChainColorFormat() override;
+
 private:
     // Com の deleter
     struct ComDeleter

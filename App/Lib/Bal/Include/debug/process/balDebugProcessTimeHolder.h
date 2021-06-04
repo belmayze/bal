@@ -66,9 +66,10 @@ public:
 
     /*!
      * ノードを追加します
-     * @param[in] name 計測名
+     * @param[in] name  計測名
+     * @param[in] color 描画色
      */
-    ProcessHandle addNode(const StringPtr& name);
+    ProcessHandle addNode(const StringPtr& name, const MathColor& color);
 
     /*!
      * 処理負荷を追加します
@@ -96,14 +97,32 @@ private:
         MathVector3 mPosition;
         MathColor   mColor;
     };
+    //! 定数バッファ
+    struct ConstantBufferData
+    {
+        MathVector2 mPosition;
+        MathVector2 mSize;
+        MathColor   mColor;
+    };
+    //! 計測結果情報
+    struct ProcessTimeInfo
+    {
+        String<128> mName;
+        TimeSpan    mDiff;
+        MathColor   mColor;
+    };
 
 private:
     TreeMap<ProcessHandle::Data>    mTreeMap;
+    TreeMap<ProcessTimeInfo>        mTreeMapInfo;
     List<ProcessHandle::ThreadInfo> mThreadInfoList;
     std::mutex                      mMutexTreeMap;
     std::shared_mutex               mMutexList;
 
-    std::unique_ptr<bal::IPipeline> mpGfxPipeline;
+    uint32_t                         mNumDraw = 0;
+    std::unique_ptr<IPipeline>       mpGfxPipeline;
+    std::unique_ptr<IConstantBuffer> mpGfxConstantBuffer;
+    std::unique_ptr<IDescriptorHeap> mpGfxDescriptorHeap;
 };
 
 }

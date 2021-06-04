@@ -14,11 +14,11 @@ namespace bal::debug {
 
 // ----------------------------------------------------------------------------
 
-ProcessTime::ProcessTime(const StringPtr& name)
+ProcessTime::ProcessTime(const StringPtr& name, const MathColor& color)
 {
     if (mod::debug::Module* p_module = mod::debug::Module::GetModule())
     {
-        mHandle = p_module->getProcessTimeHolder()->addNode(name);
+        mHandle = p_module->getProcessTimeHolder()->addNode(name, color);
     }
     // 処理計測開始
     mStopwatch.start();

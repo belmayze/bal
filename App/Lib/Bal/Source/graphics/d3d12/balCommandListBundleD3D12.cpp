@@ -98,7 +98,7 @@ void CommandListBundle::setConstantBufferView(uint32_t index, const IConstantBuf
 
 // ----------------------------------------------------------------------------
 
-void CommandListBundle::drawMesh(const IMeshBuffer& mesh_buffer)
+void CommandListBundle::drawMesh(const IMeshBuffer& mesh_buffer, uint32_t instance_count)
 {
     const MeshBuffer* p_mesh_buffer = static_cast<const MeshBuffer*>(&mesh_buffer);
     D3D12_PRIMITIVE_TOPOLOGY topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
@@ -116,7 +116,7 @@ void CommandListBundle::drawMesh(const IMeshBuffer& mesh_buffer)
     mpCmdList->IASetPrimitiveTopology(topology);
     mpCmdList->IASetVertexBuffers(0, 1, p_mesh_buffer->getVertexBufferView());
     mpCmdList->IASetIndexBuffer(p_mesh_buffer->getIndexBufferView());
-    mpCmdList->DrawIndexedInstanced(p_mesh_buffer->getIndexCount(), 1, 0, 0, 0);
+    mpCmdList->DrawIndexedInstanced(p_mesh_buffer->getIndexCount(), instance_count, 0, 0, 0);
 }
 
 // ----------------------------------------------------------------------------

@@ -37,10 +37,11 @@ private:
     //! データ
     struct Data
     {
-        Data(const StringPtr& name, ThreadInfo* p_info) :mName(name), mpThreadInfo(p_info) {}
+        Data(const StringPtr& name, const MathColor& color, ThreadInfo* p_info) :mName(name), mColor(color), mpThreadInfo(p_info) {}
 
         String<128> mName;
         TimeSpan    mDiff;
+        MathColor   mColor;
         ThreadInfo* mpThreadInfo;
     };
 

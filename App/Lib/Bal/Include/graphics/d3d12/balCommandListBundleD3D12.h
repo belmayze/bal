@@ -61,9 +61,10 @@ public:
 
     /*!
      * メッシュを描画します
-     * @param[in] mesh_buffer メッシュバッファ
+     * @param[in] mesh_buffer    メッシュバッファ
+     * @param[in] instance_count インスタンス数
      */
-    virtual void drawMesh(const IMeshBuffer& mesh_buffer) override;
+    virtual void drawMesh(const IMeshBuffer& mesh_buffer, uint32_t instance_count) override;
 
 public:
     //! コマンドリスト

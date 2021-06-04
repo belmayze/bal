@@ -93,6 +93,11 @@ public:
      */
     virtual void onDraw(const FrameworkCallback::DrawArg& arg) override;
 
+    /*!
+     * 最終的に画面に反映させます
+     */
+    void onPresent(const FrameworkCallback::DrawArg& arg);
+
 public:
     /*!
      * カメラを取得します
@@ -122,6 +127,11 @@ public:
      */
     const IRenderTargetColor& getDefaultRenderTarget() const { return *mpRenderTargetColor; }
 
+    /*!
+     * 最終レンダリングターゲットを取得します
+     */
+    const IRenderTargetColor& getFinalRenderTarget() const { return *mpFinalRenderTargetColor; }
+
 private:
     //! デバッグメッシュの頂点情報
     struct DebugMeshVertex
@@ -136,11 +146,16 @@ private:
     std::unique_ptr<ICustomModule>      mpCustomModule;
     std::unique_ptr<IRenderTargetColor> mpRenderTargetColor;
     std::unique_ptr<IRenderTargetDepth> mpRenderTargetDepth;
+    std::unique_ptr<IRenderTargetColor> mpFinalRenderTargetColor;
     std::unique_ptr<FrameBuffer>        mpFrameBuffer;
+    std::unique_ptr<FrameBuffer>        mpFinalFrameBuffer;
     std::unique_ptr<ShaderArchive>      mpShaderArchive;
 
     std::unique_ptr<IPipeline>          mpPresentPipeline;
     std::unique_ptr<IDescriptorHeap>    mpPresentDescriptorHeap;
+
+    std::unique_ptr<IPipeline>          mpCopyPipeline;
+    std::unique_ptr<IDescriptorHeap>    mpCopyDescriptorHeap;
 
     std::unique_ptr<IPipeline>          mpDebugMeshPipeline;
     std::unique_ptr<IMeshBuffer>        mpGridMeshBuffer;

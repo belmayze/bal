@@ -48,7 +48,8 @@ void Module::finalize()
 
 void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 {
-    bal::debug::ProcessTime debug_process_time("Debug::Module");
+    bal::debug::ProcessTime debug_process_time("Debug::Module", MathColor(0.f, 0.f, 1.f));
+    mpProcessTimeHolder->update(arg);
 }
 
 // ----------------------------------------------------------------------------

@@ -69,7 +69,7 @@ OUTPUT main(VARYING input)
     float  diffuse_coeff   = saturate(dot(normal_world, -DirectionalLightDir));
     float3 diffuse_direct  = albedo * (DirectionalLightColor * diffuse_coeff);
 
-    float3 diffuse_ambient = albedo * 0.0;
+    float3 diffuse_ambient = albedo * 0.01;
 
     output.Color0 = float4(diffuse_direct + diffuse_ambient, 1.0);
     return output;

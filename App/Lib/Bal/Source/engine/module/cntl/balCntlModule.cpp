@@ -52,7 +52,7 @@ void Module::finalize()
 
 void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 {
-    debug::ProcessTime debug_process_time("Ctrl::Module");
+    debug::ProcessTime debug_process_time("Ctrl::Module", MathColor(1.f, 1.f, 0.f));
 
     // COM
     if (FAILED(CoInitialize(nullptr)))

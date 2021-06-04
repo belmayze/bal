@@ -31,22 +31,15 @@
 namespace bal::mod::gfx {
 
 // ----------------------------------------------------------------------------
-
 Module::Module() {}
-
 // ----------------------------------------------------------------------------
-
 Module::~Module() {}
-
 // ----------------------------------------------------------------------------
-
 void Module::setCustomModule(std::unique_ptr<mod::ICustomModule>&& p_custom_module)
 {
     mpCustomModule.reset(static_cast<ICustomModule*>(p_custom_module.release()));
 }
-
 // ----------------------------------------------------------------------------
-
 void Module::initialize(const InitializeArg& arg)
 {
     // グラフィックスシステム
@@ -95,6 +88,34 @@ void Module::initialize(const InitializeArg& arg)
             mpFrameBuffer->setRenderTargetColor(0, mpRenderTargetColor.get());
             mpFrameBuffer->setRenderTargetDepth(mpRenderTargetDepth.get());
             mpFrameBuffer->setResolution(render_buffer_size);
+        }
+    }
+    // コピー用レンダーバッファ
+    {
+        // テクスチャーを確保
+        std::unique_ptr<ITexture> p_color_buffer = make_unique<Texture>(nullptr);
+        {
+            ITexture::InitializeArg init_arg;
+            init_arg.mpGraphics = p_graphics;
+            init_arg.mDimension = ITexture::Dimension::Texture2D;
+            init_arg.mFormat    = p_graphics->getSwapChainColorFormat();
+            init_arg.mSize      = render_buffer_size;
+            if (!p_color_buffer->initialize(init_arg)) { return; }
+        }
+        
+        // レンダーターゲット
+        mpFinalRenderTargetColor = make_unique<RenderTargetColor>(nullptr);
+        {
+            IRenderTargetColor::InitializeArg init_arg;
+            init_arg.mpGraphics = p_graphics;
+            if (!mpFinalRenderTargetColor->initialize(init_arg, std::move(p_color_buffer))) { return; }
+        }
+
+        // フレームバッファ
+        mpFinalFrameBuffer = make_unique<FrameBuffer>(nullptr);
+        {
+            mpFinalFrameBuffer->setRenderTargetColor(0, mpFinalRenderTargetColor.get());
+            mpFinalFrameBuffer->setResolution(render_buffer_size);
         }
     }
 
@@ -207,7 +228,7 @@ void Module::initialize(const InitializeArg& arg)
                 IPipeline::InitializeArg init_arg;
                 init_arg.mpGraphics         = p_graphics;
                 init_arg.mNumOutput         = 1;
-                init_arg.mOutputFormats[0]  = p_graphics->getSwapChainFrameBuffer()->getRenderTargetColors()[0]->getTexture()->getFormat();
+                init_arg.mOutputFormats[0]  = mpFinalRenderTargetColor->getTexture()->getFormat();
                 init_arg.mNumDescriptorHeap = 1;
                 init_arg.mpDescriptorHeaps  = p_heaps;
                 init_arg.mpInputLayout      = p_input_layout.get();
@@ -218,6 +239,54 @@ void Module::initialize(const InitializeArg& arg)
                 init_arg.mpPixelShaderBuffer     = shader_container.mPixelShader.mBuffer;
                 init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
                 if (!mpPresentPipeline->initialize(init_arg)) { return; }
+            }
+        }
+
+        // コピー
+        {
+            // 頂点レイアウト
+            std::unique_ptr<InputLayout> p_input_layout = make_unique<InputLayout>(nullptr);
+            {
+                std::unique_ptr<IInputLayout::InputLayoutDesc[]> descs = make_unique<IInputLayout::InputLayoutDesc[]>(nullptr, 2);
+                descs[0] = {.mName = "POSITION", .mType = IInputLayout::Type::Vec3, .mOffset = MeshContainer::cOffsetPosition};
+                descs[1] = {.mName = "TEXCOORD", .mType = IInputLayout::Type::Vec2, .mOffset = MeshContainer::cOffsetTexcoord};
+
+                IInputLayout::InitializeArg init_arg;
+                init_arg.mpGraphics      = p_graphics;
+                init_arg.mNumInputLayout = 2;
+                init_arg.mpInputLayouts  = descs.get();
+                if (!p_input_layout->initialize(init_arg)) { return; }
+            }
+
+            // デスクリプターヒープ
+            mpCopyDescriptorHeap = make_unique<DescriptorHeap>(nullptr);
+            {
+                const ITexture* p_textures[] = { mpFinalRenderTargetColor->getTexture() };
+                IDescriptorHeap::InitializeArg init_arg;
+                init_arg.mpGraphics  = p_graphics;
+                init_arg.mNumTexture = 1;
+                init_arg.mpTextures  = p_textures;
+                if (!mpCopyDescriptorHeap->initialize(init_arg)) { return; }
+            }
+
+            // パイプライン
+            mpCopyPipeline = make_unique<Pipeline>(nullptr);
+            {
+                const IDescriptorHeap* p_heaps[] = { mpCopyDescriptorHeap.get() };
+                IPipeline::InitializeArg init_arg;
+                init_arg.mpGraphics         = p_graphics;
+                init_arg.mNumOutput         = 1;
+                init_arg.mOutputFormats[0]  = p_graphics->getSwapChainFrameBuffer()->getRenderTargetColors()[0]->getTexture()->getFormat();
+                init_arg.mNumDescriptorHeap = 1;
+                init_arg.mpDescriptorHeaps  = p_heaps;
+                init_arg.mpInputLayout      = p_input_layout.get();
+
+                const ShaderArchive::ShaderContainer& shader_container = mpShaderArchive->getShaderContainer(mpShaderArchive->findProgram("Copy"));
+                init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
+                init_arg.mVertexShaderBufferSize = shader_container.mVertexShader.mBufferSize;
+                init_arg.mpPixelShaderBuffer     = shader_container.mPixelShader.mBuffer;
+                init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
+                if (!mpCopyPipeline->initialize(init_arg)) { return; }
             }
         }
 
@@ -283,19 +352,15 @@ void Module::initialize(const InitializeArg& arg)
         mpCustomModule->initialize(arg, *this);
     }
 }
-
 // ----------------------------------------------------------------------------
-
 void Module::finalize()
 {
 
 }
-
 // ----------------------------------------------------------------------------
-
 void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
 {
-    bal::debug::ProcessTime debug_process_time("Gfx::Module");
+    bal::debug::ProcessTime debug_process_time("Gfx::Module", MathColor(1.f, 0.647f, 0.f));
 
     // カスタムモジュール
     if (mpCustomModule)
@@ -314,14 +379,17 @@ void Module::onUpdate(const FrameworkCallback::UpdateArg& arg)
         p_cb->mDirectionalLightColor = MathVector3(1.f, 1.f, 1.f);
     }
 }
-
 // ----------------------------------------------------------------------------
-
 void Module::onDraw(const FrameworkCallback::DrawArg& arg)
 {
     // レンダリング用バッファに切り替え
     {
         // バリア
+        arg.mpCommandList->resourceBarrier(
+            *mpFinalRenderTargetColor->getTexture(),
+            ICommandListDirect::ResourceBarrierType::GenericRead,
+            ICommandListDirect::ResourceBarrierType::RenderTargetColor
+        );
         arg.mpCommandList->resourceBarrier(
             *mpRenderTargetColor->getTexture(),
             ICommandListDirect::ResourceBarrierType::GenericRead,
@@ -363,9 +431,30 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
         );
     }
 
-    // レンダリング用を書き出し
+    // HDR -> sRGB
+    {
+        // フレームバッファ切り替え
+        arg.mpCommandList->setViewport(Viewport(*mpFinalFrameBuffer));
+        arg.mpCommandList->bindFrameBuffer(*mpFinalFrameBuffer);
+
+        // 画面反映
+        arg.mpCommandList->bindPipeline(*mpPresentPipeline);
+        arg.mpCommandList->setDescriptorHeap(*mpPresentDescriptorHeap);
+        arg.mpCommandList->setDescriptorTable(0, *mpPresentDescriptorHeap);
+        arg.mpCommandList->drawMesh(*MeshContainer::GetInstance().getBuffer(MeshContainer::Type::Quad));
+    }
+}
+// ----------------------------------------------------------------------------
+void Module::onPresent(const FrameworkCallback::DrawArg& arg)
+{
+    // コピー
     {
         // バリア
+        arg.mpCommandList->resourceBarrier(
+            *mpFinalRenderTargetColor->getTexture(),
+            ICommandListDirect::ResourceBarrierType::RenderTargetColor,
+            ICommandListDirect::ResourceBarrierType::GenericRead
+        );
         arg.mpCommandList->resourceBarrier(
             *arg.mpSwapChainFrameBuffer->getRenderTargetColors()[0]->getTexture(),
             ICommandListDirect::ResourceBarrierType::Present,
@@ -376,10 +465,10 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
         arg.mpCommandList->setViewport(Viewport(*arg.mpSwapChainFrameBuffer));
         arg.mpCommandList->bindFrameBuffer(*arg.mpSwapChainFrameBuffer);
 
-        // 画面反映
-        arg.mpCommandList->bindPipeline(*mpPresentPipeline);
-        arg.mpCommandList->setDescriptorHeap(*mpPresentDescriptorHeap);
-        arg.mpCommandList->setDescriptorTable(0, *mpPresentDescriptorHeap);
+        // コピー
+        arg.mpCommandList->bindPipeline(*mpCopyPipeline);
+        arg.mpCommandList->setDescriptorHeap(*mpCopyDescriptorHeap);
+        arg.mpCommandList->setDescriptorTable(0, *mpCopyDescriptorHeap);
         arg.mpCommandList->drawMesh(*MeshContainer::GetInstance().getBuffer(MeshContainer::Type::Quad));
 
         // バリア
@@ -390,14 +479,11 @@ void Module::onDraw(const FrameworkCallback::DrawArg& arg)
         );
     }
 }
-
 // ----------------------------------------------------------------------------
-
 size_t Module::getMeshConstantBufferSize() const
 {
     return mpCustomModule ? mpCustomModule->getMeshConstantBufferSize() : sizeof(MeshConstantBufferBase);
 }
-
 // ----------------------------------------------------------------------------
 
 }

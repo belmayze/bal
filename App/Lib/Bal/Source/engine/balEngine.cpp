@@ -84,6 +84,12 @@ void Engine::onDraw(const DrawArg& arg)
     {
         mpModules[i_module]->onDraw(arg);
     }
+
+    // 最終反映
+    if (mod::gfx::Module* p_module = mod::gfx::Module::GetModule())
+    {
+        p_module->onPresent(arg);
+    }
 }
 
 // ----------------------------------------------------------------------------

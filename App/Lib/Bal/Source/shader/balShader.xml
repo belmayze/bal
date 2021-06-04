@@ -7,6 +7,10 @@
     <Compile Profile="5_0" />
   </Settings>
   <ProgramArray>
+    <Program Name="Copy">
+      <Vertex Source="balCopy.hlsl" />
+      <Pixel Source="balCopy.hlsl" />
+    </Program>
     <Program Name="Present">
       <Vertex Source="balPresent.hlsl" />
       <Pixel Source="balPresent.hlsl" />

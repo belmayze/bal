@@ -18,10 +18,10 @@ class MathCommonColor
 {
 public:
     //! コンストラクター
-    MathCommonColor() {}
+    constexpr MathCommonColor() {}
 
     //! コンストラクター
-    MathCommonColor(float r, float g, float b, float a = 1.f)
+    constexpr MathCommonColor(float r, float g, float b, float a = 1.f)
     {
         mColor[0] = r; mColor[1] = g; mColor[2] = b; mColor[3] = a;
     }

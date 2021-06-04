@@ -19,15 +19,10 @@
 namespace bal::d3d12 {
 
 // ----------------------------------------------------------------------------
-
 Graphics::Graphics() {}
-
 // ----------------------------------------------------------------------------
-
 Graphics::~Graphics() {}
-
 // ----------------------------------------------------------------------------
-
 bool Graphics::initialize(const InitializeArg& arg)
 {
     // フラグ
@@ -159,6 +154,9 @@ bool Graphics::initialize(const InitializeArg& arg)
         {
             return false;
         }
+
+        // sRGB
+        p_swap_chain->SetColorSpace1(DXGI_COLOR_SPACE_RGB_FULL_G22_NONE_P709);
     }
 
     // スワップバッファのテクスチャーをレンダーターゲット化
@@ -213,18 +211,14 @@ bool Graphics::initialize(const InitializeArg& arg)
 
     return true;
 }
-
 // ----------------------------------------------------------------------------
-
 void Graphics::preDraw()
 {
     // バッファー切り替え
     mpCmdQueue->waitExecuted(mCurrentBufferIndex);
     mpCmdLists[mCurrentBufferIndex].reset();
 }
-
 // ----------------------------------------------------------------------------
-
 void Graphics::postDraw()
 {
     // コマンドリストを閉じて実行
@@ -237,16 +231,12 @@ void Graphics::postDraw()
     // 実行待ち
     if (++mCurrentBufferIndex > (mBufferCount - 1)) { mCurrentBufferIndex = 0; }
 }
-
 // ----------------------------------------------------------------------------
-
 void Graphics::waitGPU()
 {
     mpCmdQueue->waitExecutedAll();
 }
-
 // ----------------------------------------------------------------------------
-
 bool Graphics::destroy()
 {
     // バッファ破棄
@@ -261,21 +251,22 @@ bool Graphics::destroy()
 
     return true;
 }
-
 // ----------------------------------------------------------------------------
 
 ICommandListDirect* Graphics::getCommandList()
 {
     return &mpCmdLists[mCurrentBufferIndex];
 }
-
 // ----------------------------------------------------------------------------
-
 FrameBuffer* Graphics::getSwapChainFrameBuffer()
 {
     return &mpSwapChainFrameBuffers[mCurrentBufferIndex];
 }
-
+// ----------------------------------------------------------------------------
+ITexture::Format Graphics::getSwapChainColorFormat()
+{
+    return mpSwapChainRenderTargets[0].getTexture()->getFormat();
+}
 // ----------------------------------------------------------------------------
 
 }

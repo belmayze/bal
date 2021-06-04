@@ -20,9 +20,10 @@ class ProcessTime
 public:
     /*!
      * コンストラクター
-     * @param[in] name 計測名
+     * @param[in] name  計測名
+     * @param[in] color 描画色
      */
-    ProcessTime(const StringPtr& name);
+    ProcessTime(const StringPtr& name, const MathColor& color);
 
     /*!
      * デストラクター

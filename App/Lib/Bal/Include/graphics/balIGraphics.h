@@ -7,6 +7,7 @@
  */
 #pragma once
 // bal
+#include <graphics/balITexture.h>
 #include <math/balMath.h>
 
 namespace bal { class FrameBuffer; }
@@ -62,6 +63,11 @@ public:
      * スワップチェーンのフレームバッファを取得する
      */
     virtual FrameBuffer* getSwapChainFrameBuffer() = 0;
+
+    /*!
+     * スワップチェーンのフォーマットを取得する
+     */
+    virtual ITexture::Format getSwapChainColorFormat() = 0;
 };
 
 }

@@ -167,6 +167,8 @@ public:
     };
 
 public:
+    TreeMap() {}
+
     //! デストラクター
     ~TreeMap() { clear(); }
 

@@ -69,50 +69,50 @@ void Controller::update()
         {
             int16_t value = Math::Max(state.Gamepad.sThumbLX - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE, 0);
             int16_t range = std::numeric_limits<int16_t>::max() - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
-            mLeftStick.setX(static_cast<float>(value) / static_cast<float>(range));
+            mLeftStick.x() = static_cast<float>(value) / static_cast<float>(range);
         }
         else if (state.Gamepad.sThumbLX < 0)
         {
             int16_t value = Math::Min(state.Gamepad.sThumbLX + XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE, 0);
             int16_t range = -(std::numeric_limits<int16_t>::min() + XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
-            mLeftStick.setX(static_cast<float>(value) / static_cast<float>(range));
+            mLeftStick.x() = static_cast<float>(value) / static_cast<float>(range);
         }
         if (state.Gamepad.sThumbLY >= 0)
         {
             int16_t value = Math::Max(state.Gamepad.sThumbLY - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE, 0);
             int16_t range = std::numeric_limits<int16_t>::max() - XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE;
-            mLeftStick.setY(static_cast<float>(value) / static_cast<float>(range));
+            mLeftStick.y() = static_cast<float>(value) / static_cast<float>(range);
         }
         else if (state.Gamepad.sThumbLY < 0)
         {
             int16_t value = Math::Min(state.Gamepad.sThumbLY + XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE, 0);
             int16_t range = -(std::numeric_limits<int16_t>::min() + XINPUT_GAMEPAD_LEFT_THUMB_DEADZONE);
-            mLeftStick.setY(static_cast<float>(value) / static_cast<float>(range));
+            mLeftStick.y() = static_cast<float>(value) / static_cast<float>(range);
         }
 
         if (state.Gamepad.sThumbRX >= 0)
         {
             int16_t value = Math::Max(state.Gamepad.sThumbRX - XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE, 0);
             int16_t range = std::numeric_limits<int16_t>::max() - XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE;
-            mRightStick.setX(static_cast<float>(value) / static_cast<float>(range));
+            mRightStick.x() = static_cast<float>(value) / static_cast<float>(range);
         }
         else if (state.Gamepad.sThumbRX < 0)
         {
             int16_t value = Math::Min(state.Gamepad.sThumbRX + XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE, 0);
             int16_t range = -(std::numeric_limits<int16_t>::min() + XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
-            mRightStick.setX(static_cast<float>(value) / static_cast<float>(range));
+            mRightStick.x() = static_cast<float>(value) / static_cast<float>(range);
         }
         if (state.Gamepad.sThumbRY >= 0)
         {
             int16_t value = Math::Max(state.Gamepad.sThumbRY - XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE, 0);
             int16_t range = std::numeric_limits<int16_t>::max() - XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE;
-            mRightStick.setY(static_cast<float>(value) / static_cast<float>(range));
+            mRightStick.y() = static_cast<float>(value) / static_cast<float>(range);
         }
         else if (state.Gamepad.sThumbRY < 0)
         {
             int16_t value = Math::Min(state.Gamepad.sThumbRY + XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE, 0);
             int16_t range = -(std::numeric_limits<int16_t>::min() + XINPUT_GAMEPAD_RIGHT_THUMB_DEADZONE);
-            mRightStick.setY(static_cast<float>(value) / static_cast<float>(range));
+            mRightStick.y() = static_cast<float>(value) / static_cast<float>(range);
         }
 
         // 過去の状態を照らし合わせて on 系をチェック
