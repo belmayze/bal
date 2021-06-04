@@ -134,6 +134,9 @@ namespace ShaderConverter
                 // <ProgramName> -vs <Filename> -ps <Filename>
                 StreamWriter stream = new StreamWriter(archive_args_filepath, false);
 
+                // エラーファイル一覧
+                List<string> errorFiles = new List<string>();
+
                 // シェーダーをコンバート
                 foreach (XmlData.Program program in shader_container.Programs)
                 {
@@ -150,7 +153,7 @@ namespace ShaderConverter
                     process.StartInfo.RedirectStandardOutput = true;
                     process.StartInfo.RedirectStandardError  = true;
 
-                    process.OutputDataReceived += StandardOutput_;
+                    //process.OutputDataReceived += StandardOutput_;
                     process.ErrorDataReceived  += StandardError_;
 
                     if (program.VertexShader != null)
@@ -163,7 +166,10 @@ namespace ShaderConverter
                         List<string> defines = new List<string>();
                         defines.Add("BAL_VERTEX_SHADER=1");
 
-                        ConvertImpl_(process, input_path, output_path, profile_name, defines);
+                        if (ConvertImpl_(process, input_path, output_path, profile_name, defines) != 0)
+                        {
+                            errorFiles.Add(input_path);
+                        }
                     }
                     if (program.GeometryShader != null)
                     {
@@ -175,7 +181,10 @@ namespace ShaderConverter
                         List<string> defines = new List<string>();
                         defines.Add("BAL_GEOMETRY_SHADER=1");
 
-                        ConvertImpl_(process, input_path, output_path, profile_name, defines);
+                        if (ConvertImpl_(process, input_path, output_path, profile_name, defines) != 0)
+                        {
+                            errorFiles.Add(input_path);
+                        }
                     }
                     if (program.PixelShader != null)
                     {
@@ -187,7 +196,10 @@ namespace ShaderConverter
                         List<string> defines = new List<string>();
                         defines.Add("BAL_PIXEL_SHADER=1");
 
-                        ConvertImpl_(process, input_path, output_path, profile_name, defines);
+                        if (ConvertImpl_(process, input_path, output_path, profile_name, defines) != 0)
+                        {
+                            errorFiles.Add(input_path);
+                        }
                     }
                     if (program.ComputeShader != null)
                     {
@@ -199,7 +211,10 @@ namespace ShaderConverter
                         List<string> defines = new List<string>();
                         defines.Add("BAL_COMPUTE_SHADER=1");
 
-                        ConvertImpl_(process, input_path, output_path, profile_name, defines);
+                        if (ConvertImpl_(process, input_path, output_path, profile_name, defines) != 0)
+                        {
+                            errorFiles.Add(input_path);
+                        }
                     }
                     if (program.DomainShader != null)
                     {
@@ -211,7 +226,10 @@ namespace ShaderConverter
                         List<string> defines = new List<string>();
                         defines.Add("BAL_DOMAIN_SHADER=1");
 
-                        ConvertImpl_(process, input_path, output_path, profile_name, defines);
+                        if (ConvertImpl_(process, input_path, output_path, profile_name, defines) != 0)
+                        {
+                            errorFiles.Add(input_path);
+                        }
                     }
                     if (program.HullShader != null)
                     {
@@ -223,7 +241,10 @@ namespace ShaderConverter
                         List<string> defines = new List<string>();
                         defines.Add("BAL_HULL_SHADER=1");
 
-                        ConvertImpl_(process, input_path, output_path, profile_name, defines);
+                        if (ConvertImpl_(process, input_path, output_path, profile_name, defines) != 0)
+                        {
+                            errorFiles.Add(input_path);
+                        }
                     }
 /*                    if (program.AmplificationShader != null)
                     {
@@ -235,7 +256,10 @@ namespace ShaderConverter
                         List<string> defines = new List<string>();
                         defines.Add("BAL_AMPLIFICATION_SHADER=1");
 
-                        ConvertImpl_(process, input_path, output_path, profile_name, defines);
+                        if (ConvertImpl_(process, input_path, output_path, profile_name, defines) != 0)
+                        {
+                            errorFiles.Add(input_path);
+                        }
                     }
                     if (program.MeshShader != null)
                     {
@@ -247,15 +271,29 @@ namespace ShaderConverter
                         List<string> defines = new List<string>();
                         defines.Add("BAL_MESH_SHADER=1");
 
-                        ConvertImpl_(process, input_path, output_path, profile_name, defines);
+                        if (ConvertImpl_(process, input_path, output_path, profile_name, defines) != 0)
+                        {
+                            errorFiles.Add(input_path);
+                        }
                     }
 */
                     stream.WriteLine(archive_args);
                 }
                 stream.Close();
+
+                // コンバート失敗したらそのまま終了
+                if (errorFiles.Count != 0)
+                {
+                    foreach (string filepath in errorFiles)
+                    {
+                        Console.Error.WriteLine($"コンバート失敗: {filepath}");
+                    }
+                    return 1;
+                }
             }
 
             // アーカイブ
+            int exit_code = 0;
             {
                 Process process = new Process();
 
@@ -278,9 +316,11 @@ namespace ShaderConverter
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
                 process.WaitForExit();
+
+                exit_code = process.ExitCode;
             }
 
-            return 0;
+            return exit_code;
         }
 
         static void StandardOutput_(object sender, DataReceivedEventArgs args)
@@ -292,7 +332,7 @@ namespace ShaderConverter
             Console.Error.WriteLine(args.Data);
         }
 
-        static void ConvertImpl_(Process process, string input_path, string output_path, string profile_name, List<string> defines)
+        static int ConvertImpl_(Process process, string input_path, string output_path, string profile_name, List<string> defines)
         {
             process.StartInfo.Arguments = $"{input_path} /T {profile_name} /E main /Fo {output_path}";
 
@@ -301,7 +341,7 @@ namespace ShaderConverter
                 process.StartInfo.Arguments += $" /D {define}";
             }
 
-            Console.Out.WriteLine($"Convert Shader. [args={process.StartInfo.Arguments}]");
+            Console.Out.WriteLine($"シェーダーコンバート中: {input_path}");
 
             process.Start();
             process.BeginOutputReadLine();
@@ -309,6 +349,8 @@ namespace ShaderConverter
             process.WaitForExit();
             process.CancelOutputRead();
             process.CancelErrorRead();
+
+            return process.ExitCode;
         }
     }
 }
