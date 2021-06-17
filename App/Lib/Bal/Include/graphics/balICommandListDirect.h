@@ -86,6 +86,18 @@ public:
      * @param[in] cmd_bundle バンドル
      */
     virtual void executeBundle(const ICommandListBundle& cmd_bundle) = 0;
+
+    /*!
+     * イベントの開始
+     * @param[in] color  計測色
+     * @param[in] string 計測名
+     */
+    virtual void beginEvent(uint64_t color, const StringPtr& string) = 0;
+
+    /*!
+     * イベントの終了
+     */
+    virtual void endEvent() = 0;
 };
 
 }

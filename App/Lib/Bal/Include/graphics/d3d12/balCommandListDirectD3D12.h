@@ -102,6 +102,18 @@ public:
      */
     virtual void executeBundle(const ICommandListBundle& cmd_bundle) override;
 
+    /*!
+     * イベントの開始
+     * @param[in] color  計測色
+     * @param[in] string 計測名
+     */
+    virtual void beginEvent(uint64_t color, const StringPtr& string) override;
+
+    /*!
+     * イベントの終了
+     */
+    virtual void endEvent() override;
+
 public:
     //! コマンドリスト
     ID3D12CommandList* getCommandList() const { return mpCmdList.get(); }

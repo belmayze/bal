@@ -5,6 +5,8 @@
  *
  * Copyright (c) 2020 belmayze. All rights reserved.
  */
+// windows
+#include <pix.h>
 // bal
 #include <container/balArray.h>
 #include <graphics/balFrameBuffer.h>
@@ -213,6 +215,20 @@ void CommandListDirect::executeBundle(const ICommandListBundle& cmd_bundle)
 {
     const CommandListBundle* p_bundle = reinterpret_cast<const CommandListBundle*>(&cmd_bundle);
     mpCmdList->ExecuteBundle(p_bundle->getCommandList());
+}
+
+// ----------------------------------------------------------------------------
+
+void CommandListDirect::beginEvent(uint64_t color, const StringPtr& string)
+{
+    PIXBeginEvent(mpCmdList.get(), color, string.c_str());
+}
+
+// ----------------------------------------------------------------------------
+
+void CommandListDirect::endEvent()
+{
+    PIXEndEvent(mpCmdList.get());
 }
 
 // ----------------------------------------------------------------------------

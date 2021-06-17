@@ -174,6 +174,8 @@ void CustomModule::onUpdate(const bal::FrameworkCallback::UpdateArg& arg, const 
 
 void CustomModule::onDraw(const bal::FrameworkCallback::DrawArg& arg, const bal::mod::IModule& mod)
 {
+    arg.mpCommandList->beginEvent(0xFFFFFFFF, "DrawSphere");
+
     // 環境定数バッファ
     arg.mpCommandList->bindPipeline(*mpSamplePipeline);
     arg.mpCommandList->setDescriptorHeap(*mpSampleDescriptorHeap);
@@ -181,6 +183,8 @@ void CustomModule::onDraw(const bal::FrameworkCallback::DrawArg& arg, const bal:
 
     // 仮レンダリング
     arg.mpCommandList->drawMesh(*bal::mod::gfx::MeshContainer::GetInstance().getBuffer(bal::mod::gfx::MeshContainer::Type::Sphere));
+
+    arg.mpCommandList->endEvent();
 }
 
 // ----------------------------------------------------------------------------
