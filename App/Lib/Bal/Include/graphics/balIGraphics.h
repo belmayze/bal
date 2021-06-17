@@ -44,6 +44,11 @@ public:
     virtual void postDraw() = 0;
 
     /*!
+     * 画面の反映
+     */
+    virtual void present(bool is_sync) = 0;
+
+    /*!
      * GPUの実行終了を待機する
      */
     virtual void waitGPU() = 0;

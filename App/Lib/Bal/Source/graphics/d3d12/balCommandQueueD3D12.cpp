@@ -78,14 +78,15 @@ void CommandQueue::execute(const ICommandListDirect& cmd_list, uint32_t buffer_i
 
 void CommandQueue::waitExecuted(uint32_t buffer_index)
 {
+    HANDLE handle = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+    mpFences[buffer_index]->SetEventOnCompletion(1, handle);
+
     // フェンスが 1 になってない場合は待機する
     if (mpFences[buffer_index]->GetCompletedValue() < 1)
     {
-        HANDLE handle = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-        mpFences[buffer_index]->SetEventOnCompletion(1, handle);
         WaitForSingleObject(handle, INFINITE);
-        CloseHandle(handle);
     }
+    CloseHandle(handle);
 }
 
 // ----------------------------------------------------------------------------

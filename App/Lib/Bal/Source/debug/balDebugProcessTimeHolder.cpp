@@ -221,7 +221,19 @@ ProcessHandle ProcessTimeHolder::addNode(const StringPtr& name, const MathColor&
 
         if (mTreeMap.capacity() > 0)
         {
-            handle.mpNode = mTreeMap.emplaceChild(p_thread_info->mpCurrentNode, name, color, p_thread_info);
+            if (p_thread_info->mpCurrentNode->getChild())
+            {
+                ProcessHandle::TreeMapNode* p_node = p_thread_info->mpCurrentNode->getChild();
+                while (p_node->getSibling())
+                {
+                    p_node = p_node->getSibling();
+                }
+                handle.mpNode = mTreeMap.emplaceSibling(p_node, name, color, p_thread_info);
+            }
+            else
+            {
+                handle.mpNode = mTreeMap.emplaceChild(p_thread_info->mpCurrentNode, name, color, p_thread_info);
+            }
             p_thread_info->mpCurrentNode = handle.mpNode;
         }
     }

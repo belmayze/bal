@@ -225,11 +225,14 @@ void Graphics::postDraw()
     mpCmdLists[mCurrentBufferIndex].close();
     mpCmdQueue->execute(mpCmdLists[mCurrentBufferIndex], mCurrentBufferIndex);
 
-    // 画面の反映
-    mpSwapChain->Present(1, 0);
-
     // 実行待ち
     if (++mCurrentBufferIndex > (mBufferCount - 1)) { mCurrentBufferIndex = 0; }
+}
+// ----------------------------------------------------------------------------
+void Graphics::present(bool is_sync)
+{
+    // 画面の反映
+    mpSwapChain->Present(is_sync ? 1 : 0, 0);
 }
 // ----------------------------------------------------------------------------
 void Graphics::waitGPU()

@@ -44,6 +44,11 @@ public:
     virtual void postDraw() override;
 
     /*!
+     * 画面の反映
+     */
+    virtual void present(bool is_sync) override;
+
+    /*!
      * GPUの実行終了を待機する
      */
     virtual void waitGPU() override;

@@ -14,6 +14,7 @@
 // bal
 #include <app/balApiEntry.h>
 #include <app/balApplicationBase.h>
+#include <debug/process/balDebugProcessTime.h>
 #include <debug/process/balDebugProcessTimeHolder.h>
 #include <engine/module/debug/balDebugModule.h>
 #include <framework/balFramework.h>
@@ -277,17 +278,25 @@ void Framework::applicationLoop_()
 
         // 描画コールバック
         {
-            // グラフィックスの前処理
-            mpGraphics->preDraw();
+            {
+                //debug::ProcessTime debug_process_time("Wait", MathColor(0.2f, 0.2f, 0.2f));
+                // コマンドの実行待ち
+                mpGraphics->preDraw();
+            }
+            {
+                debug::ProcessTime debug_process_time("Draw", MathColor(1.f, 0.f, 0.f));
+                // コールバック
+                FrameworkCallback::DrawArg draw_arg;
+                draw_arg.mpSwapChainFrameBuffer = mpGraphics->getSwapChainFrameBuffer();
+                draw_arg.mpCommandList          = mpGraphics->getCommandList();
+                mpCallback->onDraw(draw_arg);
 
-            // コールバック
-            FrameworkCallback::DrawArg draw_arg;
-            draw_arg.mpSwapChainFrameBuffer = mpGraphics->getSwapChainFrameBuffer();
-            draw_arg.mpCommandList          = mpGraphics->getCommandList();
-            mpCallback->onDraw(draw_arg);
+                // グラフィックスの後処理
+                mpGraphics->postDraw();
 
-            // グラフィックスの後処理
-            mpGraphics->postDraw();
+                // 画面反映
+                mpGraphics->present(true);
+            }
         }
 
         // フレームレート計算

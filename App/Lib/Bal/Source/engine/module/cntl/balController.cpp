@@ -31,7 +31,8 @@ void Controller::initialize(const InitializeArg& arg)
 void Controller::update()
 {
     // 状態取得
-    XINPUT_STATE state;
+    XINPUT_STATE state{};
+    // @TODO: 未接続の場合、チェックするのは重いので別スレッドで回した方がいいかも
     DWORD result = XInputGetState(mIndex, &state);
     if (result == ERROR_SUCCESS)
     {
