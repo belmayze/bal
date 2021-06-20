@@ -26,68 +26,65 @@ Bitmap::~Bitmap()
 // ----------------------------------------------------------------------------
 void Bitmap::drawSetup(const StringPtr& str)
 {
-    // テクスチャーの構成
-    //
-    // [  0x20～  0x7F] ASCII
-    // [  0x80～  0xDF] 半角カナ（0x80～0x9Fは空白）
-    // [0x8140～0x816F] JIS
-    // [0x8170～0x819F] JIS
-    // [0x81A0～0x81CF] JIS
-    // [0x81D0～0x81FF] JIS
-    // [0x8240～0x826F] JIS
-    // ...
-    // ...
-    // [0x9FD0～0x9FFF] JIS
-    // [0xE040～0xE06F] JIS
-    // [0xE070～0xE09F] JIS
-    // [0xE0A0～0xE0CF] JIS
-    // [0xE0D0～0xE0FF] JIS
-    // [0xE140～0xE16F] JIS
-    // ...
-    // ...
-    // [0xFCD0～0xFCFF] JIS
+    int row_index, col_index;
+    float space = 1.f;
 
+    // テクスチャーの構成
+    // [0x20～0x7F] ASCII
+    // [0xA0～0xE0] 半角
+    // [0x8140～]
+    // ...
+    // [0x84FF]
     // SJIS 規格
     for (size_t i_str = 0; i_str < str.length(); ++i_str)
     {
-        // 0x81～0x9F, 0xE0～0xFF だとマルチバイト文字
-        if ((0x81 <= str.c_str()[i_str] && str.c_str()[i_str] <= 0x9F) ||
-            (0xE0 <= str.c_str()[i_str] && str.c_str()[i_str] <= 0xFF))
-        {
-            char low = str.c_str()[i_str];
-            ++i_str;
-            // マルチバイトなのに次はNULL文字なら壊れている
-            if (str.c_str()[i_str] == 0x0)
-            {
+        uint32_t c0 = str.c_str()[i_str];
 
-            }
-            else if (str.c_str()[i_str] < 0x40)
+        // 0x81～0x9F, 0xE0～0xFF だとマルチバイト文字
+        if ((0x81 <= c0 && c0 <= 0x9F) ||
+            (0xE0 <= c0 && c0 <= 0xFF))
+        {
+            i_str++;
+            uint32_t c1 = str.c_str()[i_str];
+
+            // マルチバイトなのに次はNULL文字なら壊れている
+            if (c1 < 0x40)
             {
-                // 0x00～0x3F は予約領域
+                // 0x00～0x3F は未使用領域
             }
-            else if (str.c_str()[i_str] != 0x0)
+            else if (c0 == 0x81 && c1 == 0x40)
             {
-                char high = str.c_str()[i_str];
+                // 全角スペース
+            }
+            else
+            {
+                // 全角 @TODO:
             }
         }
         // NULL文字
-        else if (str.c_str()[i_str] == 0x0)
+        else if (c0 == 0x0)
         {
         }
-        // 表示不可文字
-        else if (str.c_str()[i_str] < 0x20)
+        // 制御文字
+        else if (c0 < 0x20)
         {
+            // @TODO: \n \t など
         }
         // ASCII
         else
         {
-            // 全角スペース
-            if (str.c_str()[i_str] == 0x80)
+            space = 0.5f;
+
+            // 半角スペース
+            if (c0 == 0x20)
             {
             }
             // 半角
             else
             {
+                // 0x80、0xA0 などはそのまま使用しても半角スペースにできるので計算する
+                row_index = (c0 - 0x20) / 0x80;
+                col_index = (c0 - 0x20) % 0x80;
             }
         }
     }
