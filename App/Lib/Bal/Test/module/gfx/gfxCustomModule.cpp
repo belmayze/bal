@@ -13,6 +13,7 @@
 #include <engine/module/gfx/balGfxMeshContainer.h>
 #include <engine/module/gfx/balGfxModule.h>
 #include <engine/balEngine.h>
+#include <font/balBitmapFont.h>
 // app
 #include <module/gfx/gfxCustomModule.h>
 
@@ -107,6 +108,12 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
                 if (!mpSamplePipeline->initialize(init_arg)) { return; }
             }
         }
+    }
+
+    // bitmap
+    {
+        bal::font::Bitmap bitmap;
+        bitmap.drawSetup("Hello ハロー 松竹梅");
     }
 }
 

@@ -58,6 +58,9 @@
     <Filter Include="debug">
       <UniqueIdentifier>{3ef14a96-fccc-4956-b3bf-d119039aa5fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="font">
+      <UniqueIdentifier>{9b756876-4487-4664-8c64-12370042788e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\framework\balFramework.cpp">
@@ -200,6 +203,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\debug\balDebugProcessTimeHolder.cpp">
       <Filter>debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\font\balBitmapFont.cpp">
+      <Filter>font</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -481,6 +487,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\container\balTreeMap_inl.h">
       <Filter>container</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\font\balBitmapFont.h">
+      <Filter>font</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

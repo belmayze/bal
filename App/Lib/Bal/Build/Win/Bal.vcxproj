@@ -40,6 +40,7 @@
     <ClCompile Include="..\..\Source\engine\module\gfx\balGfxMeshContainer.cpp" />
     <ClCompile Include="..\..\Source\engine\module\gfx\balGfxModule.cpp" />
     <ClCompile Include="..\..\Source\engine\module\gfx\balGfxPerspectiveCamera.cpp" />
+    <ClCompile Include="..\..\Source\font\balBitmapFont.cpp" />
     <ClCompile Include="..\..\Source\framework\balFramework.cpp">
       <SubType>
       </SubType>
@@ -133,6 +134,7 @@
     <ClInclude Include="..\..\Include\engine\module\gfx\balGfxModule.h" />
     <ClInclude Include="..\..\Include\engine\module\gfx\balGfxPerspectiveCamera.h" />
     <ClInclude Include="..\..\Include\engine\module\gfx\balIGfxCustomModule.h" />
+    <ClInclude Include="..\..\Include\font\balBitmapFont.h" />
     <ClInclude Include="..\..\Include\framework\balFramework.h">
       <SubType>
       </SubType>
