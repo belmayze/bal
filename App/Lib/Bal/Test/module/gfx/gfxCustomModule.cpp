@@ -113,7 +113,7 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
     // bitmap
     {
         bal::font::Bitmap bitmap;
-        bitmap.drawSetup("Hello ハロー 松竹梅");
+        bitmap.drawSetup("Hello ハロー　松竹梅");
     }
 }
 

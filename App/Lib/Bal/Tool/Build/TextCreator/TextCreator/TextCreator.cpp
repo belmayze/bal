@@ -147,19 +147,12 @@ int main()
                     if (i == 0x7F || i == 0xBF || i == 0xFF) { file << std::endl; }
                 }
             }
-            // 0xE040～0xEFFF
-            for (int j = 0xE0; j < 0xF0; ++j)
+            // 0xE040～0xEAFF
+            for (int j = 0xE0; j < 0xEB; ++j)
             {
-                if (j == 0xEB || j == 0xEC || j == 0xED || j == 0xEF)
-                {
-                    // 未使用
-                    break;
-                }
-
                 for (int i = 0x40; i < 0x100; ++i)
                 {
                     if ((j == 0xEA && 0xA5 <= i && i <= 0xFF) || // 第二水準終了
-                        (j == 0xEE && 0xED <= i && i <= 0xEE) || // 第三水準終了
                         (i == 0x7F) ||            // すべてで下2桁の0x7Fは未使用
                         (0xFD <= i && i <= 0xFF)) // すべてで下2桁の0xFD～0xFFは未使用
                     {
@@ -172,6 +165,11 @@ int main()
                     if (i == 0x7F || i == 0xBF || i == 0xFF) { file << std::endl; }
                 }
             }
+            // 0xEB40～0xEBFF（未使用）
+            // 0xEC40～0xECFF（未使用）
+            // 0xED40～0xEDFF（未使用）
+            // 0xEE40～0xEEFF（未使用）
+            // 0xEF40～0xEFFF（未使用）
             // 0xF040～0xF0FF（未使用）
             // 0xF140～0xF1FF（未使用）
             // 0xF240～0xF2FF（未使用）
@@ -187,7 +185,7 @@ int main()
             {
                 for (int i = 0x40; i < 0x100; ++i)
                 {
-                    if ((j == 0xFC && 0x40 <= i && i <= 0xFF) || // 終了
+                    if ((j == 0xFC && 0x4C <= i && i <= 0xFF) || // 終了
                         (i == 0x7F) ||            // すべてで下2桁の0x7Fは未使用
                         (0xFD <= i && i <= 0xFF)) // すべてで下2桁の0xFD～0xFFは未使用
                     {
