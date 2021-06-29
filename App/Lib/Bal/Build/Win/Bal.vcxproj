@@ -46,10 +46,12 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="..\..\Source\graphics\archiver\balShaderArchive.cpp" />
+    <ClCompile Include="..\..\Source\graphics\archiver\balTextureResource.cpp" />
     <ClCompile Include="..\..\Source\graphics\balFrameBuffer.cpp" />
     <ClCompile Include="..\..\Source\graphics\balIRenderTarget.cpp" />
     <ClCompile Include="..\..\Source\graphics\balViewport.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandListBundleD3D12.cpp" />
+    <ClCompile Include="..\..\Source\graphics\d3d12\balCommandListCopyD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandListDirectD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandQueueD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balConstantBufferD3D12.cpp" />
@@ -60,6 +62,7 @@
     <ClCompile Include="..\..\Source\graphics\d3d12\balMeshBufferD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balPipelineD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balRenderTargetD3D12.cpp" />
+    <ClCompile Include="..\..\Source\graphics\d3d12\balResourceUpdaterD3D12.cpp" />
     <ClCompile Include="..\..\Source\graphics\d3d12\balTextureD3D12.cpp" />
     <ClCompile Include="..\..\Source\heap\balHeapBlock.cpp" />
     <ClCompile Include="..\..\Source\heap\balHeapBlockBase.cpp" />
@@ -140,7 +143,9 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="..\..\Include\framework\balFrameworkCallback.h" />
+    <ClInclude Include="..\..\Include\graphics\archiver\balDds.h" />
     <ClInclude Include="..\..\Include\graphics\archiver\balShaderArchive.h" />
+    <ClInclude Include="..\..\Include\graphics\archiver\balTextureResource.h" />
     <ClInclude Include="..\..\Include\graphics\balFrameBuffer.h" />
     <ClInclude Include="..\..\Include\graphics\balGraphicsDefine.h" />
     <ClInclude Include="..\..\Include\graphics\balICommandList.h" />
@@ -157,6 +162,7 @@
     <ClInclude Include="..\..\Include\graphics\balITexture.h" />
     <ClInclude Include="..\..\Include\graphics\balViewport.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandListBundleD3D12.h" />
+    <ClInclude Include="..\..\Include\graphics\d3d12\balCommandListCopyD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandListDirectD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandQueueD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balConstantBufferD3D12.h" />
@@ -167,6 +173,7 @@
     <ClInclude Include="..\..\Include\graphics\d3d12\balMeshBufferD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balPipelineD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balRenderTargetD3D12.h" />
+    <ClInclude Include="..\..\Include\graphics\d3d12\balResourceUpdaterD3D12.h" />
     <ClInclude Include="..\..\Include\graphics\d3d12\balTextureD3D12.h" />
     <ClInclude Include="..\..\Include\heap\balHeapBlock.h" />
     <ClInclude Include="..\..\Include\heap\balHeapBlockBase.h" />

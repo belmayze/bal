@@ -13,7 +13,9 @@
 namespace bal { class FrameBuffer; }
 namespace bal::d3d12 { class CommandQueue; }
 namespace bal::d3d12 { class CommandListDirect; }
+namespace bal::d3d12 { class CommandListCopy; }
 namespace bal::d3d12 { class RenderTargetColor; }
+namespace bal::d3d12 { class ResourceUpdater; }
 
 // ----------------------------------------------------------------------------
 namespace bal::d3d12 {
@@ -64,6 +66,12 @@ public:
      */
     ID3D12Device6* getDevice() const { return mpDevice.get(); }
 
+    /*!
+     * コピー処理を実行する
+     * @param[in] cmd_list コマンドリスト
+     */
+    void executeCopyCommand(CommandListCopy& cmd_list);
+
 public:
     /*!
      * コマンドリストを取得する
@@ -80,6 +88,11 @@ public:
      */
     virtual ITexture::Format getSwapChainColorFormat() override;
 
+    /*!
+     * リソースアップデータを取得する
+     */
+    ResourceUpdater* getResourceUpdater() { return mpResourceUpdater.get(); }
+
 private:
     // Com の deleter
     struct ComDeleter
@@ -93,11 +106,14 @@ private:
     std::unique_ptr<IDXGISwapChain3, ComDeleter>     mpSwapChain;
     std::unique_ptr<CommandListDirect[]>             mpCmdLists;
     std::unique_ptr<CommandQueue>                    mpCmdQueue;
+    std::unique_ptr<CommandQueue>                    mpCopyCmdQueue;
+    std::unique_ptr<ResourceUpdater>                 mpResourceUpdater;
 
     std::unique_ptr<RenderTargetColor[]>             mpSwapChainRenderTargets;
     std::unique_ptr<FrameBuffer[]>                   mpSwapChainFrameBuffers;
 
     UINT                                             mCurrentBufferIndex = 0;
+    std::atomic_uint64_t                             mCopyCommandCounter = 1;
 };
 
 }

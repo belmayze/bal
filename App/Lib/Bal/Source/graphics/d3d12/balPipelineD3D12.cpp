@@ -49,19 +49,7 @@ bool Pipeline::initialize(const InitializeArg& arg)
             // デスクリプターレンジはテクスチャーと定数バッファで1つずつ
             D3D12_DESCRIPTOR_RANGE1* p_range_base         = &ranges[i_range];
             uint32_t                 num_descriptor_range = 0;
-
-            // 定数バッファのレンジ
-            if (p_descriptor_heap->getNumConstantBuffer() > 0)
-            {
-                D3D12_DESCRIPTOR_RANGE1* p_range = &ranges[i_range++];
-                num_descriptor_range++;
-                p_range->RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
-                p_range->NumDescriptors                    = p_descriptor_heap->getNumConstantBuffer();
-                p_range->BaseShaderRegister                = p_descriptor_heap->getConstantRangeBase();
-                p_range->RegisterSpace                     = 0;
-                p_range->Flags                             = D3D12_DESCRIPTOR_RANGE_FLAG_NONE;
-                p_range->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-            }
+            
             // テクスチャーのレンジ
             if (p_descriptor_heap->getNumTexture() > 0)
             {
@@ -70,6 +58,18 @@ bool Pipeline::initialize(const InitializeArg& arg)
                 p_range->RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
                 p_range->NumDescriptors                    = p_descriptor_heap->getNumTexture();
                 p_range->BaseShaderRegister                = p_descriptor_heap->getTextureRangeBase();
+                p_range->RegisterSpace                     = 0;
+                p_range->Flags                             = D3D12_DESCRIPTOR_RANGE_FLAG_NONE;
+                p_range->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+            }
+            // 定数バッファのレンジ
+            if (p_descriptor_heap->getNumConstantBuffer() > 0)
+            {
+                D3D12_DESCRIPTOR_RANGE1* p_range = &ranges[i_range++];
+                num_descriptor_range++;
+                p_range->RangeType                         = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+                p_range->NumDescriptors                    = p_descriptor_heap->getNumConstantBuffer();
+                p_range->BaseShaderRegister                = p_descriptor_heap->getConstantRangeBase();
                 p_range->RegisterSpace                     = 0;
                 p_range->Flags                             = D3D12_DESCRIPTOR_RANGE_FLAG_NONE;
                 p_range->OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;

@@ -7,6 +7,7 @@
  */
 // bal
 #include <graphics/archiver/balShaderArchive.h>
+#include <graphics/archiver/balTextureResource.h>
 #include <io/balFile.h>
 #include <engine/module/cntl/balCntlModule.h>
 #include <engine/module/cntl/balController.h>
@@ -43,6 +44,13 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
         if (!file.loadFromFile("Shader\\testShader.bsa")) { return; }
         if (!mpShaderArchive->loadArchiver(std::move(file))) { return; }
     }
+    // テクスチャー読み込み
+    mpTextureResource = bal::make_unique<bal::TextureResource>(nullptr);
+    {
+        bal::File file;
+        if (!file.loadFromFile("Texture\\Font_jis_font.dds")) { return; }
+        if (!mpTextureResource->load(std::move(file))) { return; }
+    }
 
     // パイプライン構築
     {
@@ -73,15 +81,32 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
                 if (!mpSampleConstantBuffer->initialize(init_arg)) { return; }
             }
 
+            // テクスチャー
+            mpSampleTexture = bal::make_unique<bal::Texture>(nullptr);
+            {
+                bal::ITexture::InitializeArg init_arg;
+                init_arg.mpGraphics = p_graphics;
+                init_arg.mDimension = mpTextureResource->getDimension();
+                init_arg.mFormat    = mpTextureResource->getFormat();
+                init_arg.mArrayNum  = 1;
+                init_arg.mMipNum    = 1;
+                init_arg.mSize      = bal::MathSize(mpTextureResource->getWidth(), mpTextureResource->getHeight());
+                init_arg.mpBuffer   = mpTextureResource->getDataPtr();
+                mpSampleTexture->initialize(init_arg);
+            }
+
             // デスクリプターヒープ
             mpSampleDescriptorHeap = bal::make_unique<bal::DescriptorHeap>(nullptr);
             {
                 const bal::IConstantBuffer* p_content_buffers[] = { &gfx_module.getSceneConstantBuffer(), mpSampleConstantBuffer.get() };
+                const bal::ITexture*        p_textures[] = { mpSampleTexture.get() };
                 bal::IDescriptorHeap::InitializeArg init_arg;
-                init_arg.mpGraphics = p_graphics;
+                init_arg.mpGraphics         = p_graphics;
                 init_arg.mConstantRangeBase = 0;
                 init_arg.mNumConstantBuffer = 2;
                 init_arg.mpConstantBuffers  = p_content_buffers;
+                init_arg.mNumTexture        = 1;
+                init_arg.mpTextures         = p_textures;
                 if (!mpSampleDescriptorHeap->initialize(init_arg)) { return; }
             }
 
@@ -109,12 +134,6 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
             }
         }
     }
-
-    // bitmap
-    {
-        bal::font::Bitmap bitmap;
-        bitmap.drawSetup("Hello ハロー　松竹梅");
-    }
 }
 
 // ----------------------------------------------------------------------------
@@ -139,6 +158,10 @@ void CustomModule::onUpdate(const bal::FrameworkCallback::UpdateArg& arg, const 
             camera_z += camera_y * controller.getLeftStick().getY() * 0.05f;
             camera_z.setNormalize();
 
+            // カメラとの距離
+            mCameraLength -= controller.getRightStick().getY() * 0.1f;
+            mCameraLength = bal::Math::Clamp(mCameraLength, 0.1f, 100.f);
+
             // XYベクトルを直行させる
             // Yを固定して捻じれ禁止
             if (camera_y.getY() + camera_z.getY() * controller.getLeftStick().getY() * 0.05f >= 0.f)
@@ -155,7 +178,7 @@ void CustomModule::onUpdate(const bal::FrameworkCallback::UpdateArg& arg, const 
             camera_y.setNormalize();
 
             // カメラの位置
-            bal::MathVector3 position = camera_z * 10.f;
+            bal::MathVector3 position = camera_z * mCameraLength;
             bal::MathVector3 camera_t(-camera_x.calcDot(position), -camera_y.calcDot(position), -camera_z.calcDot(position));
 
             // 行列を求めてセット

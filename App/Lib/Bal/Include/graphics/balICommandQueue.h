@@ -20,7 +20,8 @@ public:
     enum class Type
     {
         Graphics, //!< グラフィックス用
-        Compute   //!< 非同期コンピュート用
+        Compute,  //!< 非同期コンピュート用
+        Copy      //!< コピー用
     };
 
     // 初期化構造体

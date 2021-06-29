@@ -207,6 +207,15 @@
     <ClCompile Include="..\..\Source\font\balBitmapFont.cpp">
       <Filter>font</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\archiver\balTextureResource.cpp">
+      <Filter>graphics\archiver</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\d3d12\balResourceUpdaterD3D12.cpp">
+      <Filter>graphics\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\graphics\d3d12\balCommandListCopyD3D12.cpp">
+      <Filter>graphics\d3d12</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\memory\balSingleton.h">
@@ -490,6 +499,18 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\font\balBitmapFont.h">
       <Filter>font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\archiver\balTextureResource.h">
+      <Filter>graphics\archiver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\archiver\balDds.h">
+      <Filter>graphics\archiver</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\d3d12\balResourceUpdaterD3D12.h">
+      <Filter>graphics\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\graphics\d3d12\balCommandListCopyD3D12.h">
+      <Filter>graphics\d3d12</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -42,6 +42,8 @@ public:
 public:
     //! コマンドキュー
     ID3D12CommandQueue* getCommandQueue() const { return mpCmdQueue.get(); }
+    //! フェンス
+    ID3D12Fence* getFence(uint32_t buffer_index) const { return mpFences[buffer_index].get(); }
 
 private:
     // Com の deleter

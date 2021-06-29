@@ -43,6 +43,10 @@ public:
 public:
     //! フォーマットを変換します
     static DXGI_FORMAT ConvertFormat(Format format);
+    static Format ConvertFormatDxgi(DXGI_FORMAT format);
+
+    //! 圧縮フォーマットかを取得します
+    static bool IsCompressFormat(Format format);
 
     //! 次元を変換します
     static D3D12_RESOURCE_DIMENSION ConvertDimension(Dimension dimension);
@@ -55,12 +59,11 @@ private:
     };
 
 private:
-    std::unique_ptr<ID3D12Resource, ComDeleter>       mpTexture;
-    std::unique_ptr<ID3D12DescriptorHeap, ComDeleter> mpDescriptorHeap;
-    Format                                            mFormat      = Format::R8_G8_B8_A8_UNORM;
-    Dimension                                         mDimension   = Dimension::Texture2D;
-    uint32_t                                          mNumArray    = 1;
-    uint32_t                                          mNumMipLevel = 1;
+    std::unique_ptr<ID3D12Resource, ComDeleter> mpTexture;
+    Format                                      mFormat      = Format::R8_G8_B8_A8_UNORM;
+    Dimension                                   mDimension   = Dimension::Texture2D;
+    uint32_t                                    mNumArray    = 1;
+    uint32_t                                    mNumMipLevel = 1;
 };
 
 }

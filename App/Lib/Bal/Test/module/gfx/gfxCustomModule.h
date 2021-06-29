@@ -13,6 +13,7 @@ namespace bal { class IConstantBuffer; }
 namespace bal { class IDescriptorHeap; }
 namespace bal { class IPipeline; }
 namespace bal { class ShaderArchive; }
+namespace bal { class TextureResource; }
 
 // ----------------------------------------------------------------------------
 namespace app::mod::gfx {
@@ -47,11 +48,15 @@ public:
     virtual void onDraw(const bal::FrameworkCallback::DrawArg& arg, const bal::mod::IModule& mod) override;
 
 private:
-    std::unique_ptr<bal::ShaderArchive> mpShaderArchive;
+    std::unique_ptr<bal::ShaderArchive>   mpShaderArchive;
+    std::unique_ptr<bal::TextureResource> mpTextureResource;
 
     std::unique_ptr<bal::IPipeline>       mpSamplePipeline;
     std::unique_ptr<bal::IDescriptorHeap> mpSampleDescriptorHeap;
     std::unique_ptr<bal::IConstantBuffer> mpSampleConstantBuffer;
+    std::unique_ptr<bal::Texture>         mpSampleTexture;
+
+    float mCameraLength = 10.f;
 };
 
 }

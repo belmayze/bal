@@ -27,6 +27,8 @@ public:
     //! テクスチャーフォーマット
     enum class Format
     {
+        Unknown,
+
         R8_UNORM,
         R8_SNORM,
         R16_FLOAT,
@@ -71,13 +73,14 @@ public:
     //! 初期化構造体
     struct InitializeArg
     {
-        IGraphics* mpGraphics = nullptr;
-        MathSize   mSize;
-        Dimension  mDimension = Dimension::Texture2D;
-        Format     mFormat    = Format::R8_G8_B8_A8_UNORM;
-        uint32_t   mMipNum    = 1;
-        uint32_t   mArrayNum  = 1;
-        void*      mpBuffer   = nullptr;
+        IGraphics*  mpGraphics = nullptr;
+        MathSize    mSize;
+        Dimension   mDimension  = Dimension::Texture2D;
+        Format      mFormat     = Format::R8_G8_B8_A8_UNORM;
+        uint32_t    mMipNum     = 1;
+        uint32_t    mArrayNum   = 1;
+        void*       mpGpuBuffer = nullptr;
+        const void* mpBuffer    = nullptr;
     };
 
 public:

@@ -92,10 +92,12 @@
 #endif
 // 使っていい C++ の include
 #include <array>
+#include <atomic>
 #include <bitset>
 #include <cstdint>
 #include <memory>
 #include <tuple>
+#include <mutex>
 // bal
 #include <io/balLog.h>
 #include <memory/balUniquePtr.h>

@@ -57,12 +57,16 @@ struct OUTPUT
     float4 Color0 : SV_TARGET0;
 };
 
+Texture2D    ColorTexture : register(t0);
+SamplerState ColorSampler : register(s0);
+
 OUTPUT main(VARYING input)
 {
     OUTPUT output;
 
     // サーフェース
-    float3 albedo       = float3(1.0, 1.0, 1.0);
+    float  tex          = ColorTexture.Sample(ColorSampler, input.Texcoord).x;
+    float3 albedo       = float3(1.0, 1.0, 1.0) * tex;
     float3 normal_world = normalize(input.Normal);
 
     // 簡易ライティング

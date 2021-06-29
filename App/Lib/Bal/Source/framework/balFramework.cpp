@@ -266,6 +266,12 @@ void Framework::applicationLoop_()
     sw_for_second.start();
     TimeSpan diff(std::chrono::microseconds(16666));
 
+    // コマンド処理
+    {
+        mpGraphics->postDraw();
+        mpGraphics->present(false);
+    }
+
     // ループ処理開始
     while (mEnableLoop)
     {

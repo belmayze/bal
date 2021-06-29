@@ -258,6 +258,8 @@ int CommandListDirect::convertResourceBarrierType_(ResourceBarrierType type)
             return D3D12_RESOURCE_STATE_DEPTH_WRITE;
         case ICommandListDirect::ResourceBarrierType::GenericRead:
             return D3D12_RESOURCE_STATE_GENERIC_READ;
+        case ICommandListDirect::ResourceBarrierType::CopyDst:
+            return D3D12_RESOURCE_STATE_COPY_DEST;
     }
     return D3D12_RESOURCE_STATE_COMMON;
 }

@@ -24,8 +24,9 @@ bool CommandQueue::initialize(const InitializeArg& arg)
     D3D12_COMMAND_LIST_TYPE type;
     switch (arg.mType)
     {
-    case Type::Graphics: type = D3D12_COMMAND_LIST_TYPE_DIRECT; break;
-    case Type::Compute:  type = D3D12_COMMAND_LIST_TYPE_COMPUTE; break;
+        case Type::Graphics: type = D3D12_COMMAND_LIST_TYPE_DIRECT;  break;
+        case Type::Compute:  type = D3D12_COMMAND_LIST_TYPE_COMPUTE; break;
+        case Type::Copy:     type = D3D12_COMMAND_LIST_TYPE_COPY;    break;
     }
 
     // キュー
@@ -66,7 +67,7 @@ bool CommandQueue::initialize(const InitializeArg& arg)
 
 void CommandQueue::execute(const ICommandListDirect& cmd_list, uint32_t buffer_index)
 {
-    Array cmd_lists = {reinterpret_cast<const CommandListDirect*>(&cmd_list)->getCommandList()};
+    Array<ID3D12CommandList*, 1> cmd_lists = {reinterpret_cast<const CommandListDirect*>(&cmd_list)->getCommandList()};
     mpCmdQueue->ExecuteCommandLists(1, cmd_lists.data());
 
     // コマンドの実行が終わったらフェンスが 1 になるようにしておく

@@ -9,7 +9,6 @@
 // bal
 #include <io/balFile.h>
 
-namespace bal { class File; }
 namespace bal { class StringPtr; }
 
 // ----------------------------------------------------------------------------

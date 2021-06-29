@@ -14,6 +14,7 @@
 #include <graphics/d3d12/balDescriptorHeapManagerD3D12.h>
 #include <graphics/d3d12/balGraphicsD3D12.h>
 #include <graphics/d3d12/balRenderTargetD3D12.h>
+#include <graphics/d3d12/balResourceUpdaterD3D12.h>
 #include <graphics/d3d12/balTextureD3D12.h>
 
 namespace bal::d3d12 {
@@ -106,6 +107,18 @@ bool Graphics::initialize(const InitializeArg& arg)
             return false;
         }
     }
+    // コピーコマンドキュー
+    mpCopyCmdQueue = make_unique<CommandQueue>(nullptr);
+    {
+        CommandQueue::InitializeArg init_arg;
+        init_arg.mpGraphics   = this;
+        init_arg.mType        = CommandQueue::Type::Copy;
+        init_arg.mBufferCount = 1;
+        if (!mpCopyCmdQueue->initialize(init_arg))
+        {
+            return false;
+        }
+    }
 
     // コマンドリスト
     mpCmdLists = make_unique<CommandListDirect[]>(nullptr, arg.mBufferCount);
@@ -174,9 +187,9 @@ bool Graphics::initialize(const InitializeArg& arg)
             std::unique_ptr<Texture> p_color_buffer = make_unique<Texture>(nullptr);
             {
                 Texture::InitializeArg init_arg;
-                init_arg.mpGraphics = this;
-                init_arg.mpBuffer   = p_resource.Detach();
-                init_arg.mFormat    = Texture::Format::R8_G8_B8_A8_UNORM;
+                init_arg.mpGraphics  = this;
+                init_arg.mpGpuBuffer = p_resource.Detach();
+                init_arg.mFormat     = Texture::Format::R8_G8_B8_A8_UNORM;
                 p_color_buffer->initialize(init_arg);
             }
             {
@@ -203,11 +216,23 @@ bool Graphics::initialize(const InitializeArg& arg)
         }
     }
 
+    // リソースアップデーター
+    mpResourceUpdater = make_unique<ResourceUpdater>(nullptr);
+    {
+        ResourceUpdater::InitializeArg init_arg;
+        init_arg.mpGraphics  = this;
+        init_arg.mNumCmdList = 32;
+        mpResourceUpdater->initialize(init_arg);
+    }
+
     // 情報
     mBufferCount = arg.mBufferCount;
 
     // 必要な COM を保存
     mpSwapChain.reset(p_swap_chain.Detach());
+
+    // 初期化時にもコマンドが使えるように何か書いておく
+    preDraw();
 
     return true;
 }
@@ -246,16 +271,44 @@ bool Graphics::destroy()
     mpSwapChainFrameBuffers.reset();
     mpSwapChainRenderTargets.reset();
 
+    // アップデータ
+    mpResourceUpdater.reset();
+
     // 破棄
     mpCmdLists.reset();
     mpCmdQueue.reset();
+    mpCopyCmdQueue.reset();
     mpSwapChain.reset();
     mpDevice.reset();
 
     return true;
 }
 // ----------------------------------------------------------------------------
+void Graphics::executeCopyCommand(CommandListCopy& cmd_list)
+{
+    // @TODO: 複数スレッドの対応が未完成なので実装する
+    // ExecuteCommandLists～Signal が順序良く積まれるとは限らない
+    uint64_t counter = mCopyCommandCounter.fetch_add(1);
 
+    // インターフェース取得
+    ID3D12CommandQueue* p_cmd_queue = mpCopyCmdQueue->getCommandQueue();
+    ID3D12Fence*        p_fence     = mpCopyCmdQueue->getFence(0);
+
+    // コマンド実行
+    Array<ID3D12CommandList*, 1> cmd_lists = { reinterpret_cast<const CommandListDirect*>(&cmd_list)->getCommandList() };
+    p_cmd_queue->ExecuteCommandLists(1, cmd_lists.data());
+
+    // 実行待ち
+    p_cmd_queue->Signal(p_fence, counter);
+    HANDLE handle = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+    p_fence->SetEventOnCompletion(1, handle);
+    if (p_fence->GetCompletedValue() < counter)
+    {
+        WaitForSingleObject(handle, INFINITE);
+    }
+    CloseHandle(handle);
+}
+// ----------------------------------------------------------------------------
 ICommandListDirect* Graphics::getCommandList()
 {
     return &mpCmdLists[mCurrentBufferIndex];
