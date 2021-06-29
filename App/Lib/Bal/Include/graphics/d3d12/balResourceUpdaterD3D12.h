@@ -29,6 +29,7 @@ public:
         IGraphics*  mpGraphics    = nullptr;
         void*       mpDstResource = nullptr;
         const void* mpSrcResource = nullptr;
+        uint32_t    mRowPitch     = 0;
     };
 
 public:

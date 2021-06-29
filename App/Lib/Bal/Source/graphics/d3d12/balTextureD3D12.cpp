@@ -97,6 +97,7 @@ bool Texture::initialize(const InitializeArg& arg)
                 update_arg.mpGraphics    = arg.mpGraphics;
                 update_arg.mpDstResource = p_texture.Get();
                 update_arg.mpSrcResource = arg.mpBuffer;
+                update_arg.mRowPitch     = arg.mRowPitch;
                 p_updater->updateResource(update_arg);
             }
         }

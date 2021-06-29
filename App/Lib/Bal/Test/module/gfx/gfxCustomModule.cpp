@@ -48,7 +48,7 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
     mpTextureResource = bal::make_unique<bal::TextureResource>(nullptr);
     {
         bal::File file;
-        if (!file.loadFromFile("Texture\\Font_jis_font.dds")) { return; }
+        if (!file.loadFromFile("Texture\\Sample_24053971_p0.dds")) { return; }
         if (!mpTextureResource->load(std::move(file))) { return; }
     }
 
@@ -81,32 +81,15 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
                 if (!mpSampleConstantBuffer->initialize(init_arg)) { return; }
             }
 
-            // テクスチャー
-            mpSampleTexture = bal::make_unique<bal::Texture>(nullptr);
-            {
-                bal::ITexture::InitializeArg init_arg;
-                init_arg.mpGraphics = p_graphics;
-                init_arg.mDimension = mpTextureResource->getDimension();
-                init_arg.mFormat    = mpTextureResource->getFormat();
-                init_arg.mArrayNum  = 1;
-                init_arg.mMipNum    = 1;
-                init_arg.mSize      = bal::MathSize(mpTextureResource->getWidth(), mpTextureResource->getHeight());
-                init_arg.mpBuffer   = mpTextureResource->getDataPtr();
-                mpSampleTexture->initialize(init_arg);
-            }
-
             // デスクリプターヒープ
             mpSampleDescriptorHeap = bal::make_unique<bal::DescriptorHeap>(nullptr);
             {
                 const bal::IConstantBuffer* p_content_buffers[] = { &gfx_module.getSceneConstantBuffer(), mpSampleConstantBuffer.get() };
-                const bal::ITexture*        p_textures[] = { mpSampleTexture.get() };
                 bal::IDescriptorHeap::InitializeArg init_arg;
                 init_arg.mpGraphics         = p_graphics;
                 init_arg.mConstantRangeBase = 0;
                 init_arg.mNumConstantBuffer = 2;
                 init_arg.mpConstantBuffers  = p_content_buffers;
-                init_arg.mNumTexture        = 1;
-                init_arg.mpTextures         = p_textures;
                 if (!mpSampleDescriptorHeap->initialize(init_arg)) { return; }
             }
 
@@ -131,6 +114,86 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
                 init_arg.mpPixelShaderBuffer     = shader_container.mPixelShader.mBuffer;
                 init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
                 if (!mpSamplePipeline->initialize(init_arg)) { return; }
+            }
+        }
+        // テクスチャー描画
+        {
+            // 頂点レイアウト
+            std::unique_ptr<bal::InputLayout> p_input_layout = bal::make_unique<bal::InputLayout>(nullptr);
+            {
+                std::unique_ptr<bal::IInputLayout::InputLayoutDesc[]> descs = bal::make_unique<bal::IInputLayout::InputLayoutDesc[]>(nullptr, 3);
+                descs[0] = { .mName = "POSITION", .mType = bal::IInputLayout::Type::Vec3, .mOffset = bal::mod::gfx::MeshContainer::cOffsetPosition };
+                descs[1] = { .mName = "NORMAL",   .mType = bal::IInputLayout::Type::Vec3, .mOffset = bal::mod::gfx::MeshContainer::cOffsetNormal };
+                descs[2] = { .mName = "TEXCOORD", .mType = bal::IInputLayout::Type::Vec2, .mOffset = bal::mod::gfx::MeshContainer::cOffsetTexcoord };
+
+                bal::IInputLayout::InitializeArg init_arg;
+                init_arg.mpGraphics = p_graphics;
+                init_arg.mNumInputLayout = 3;
+                init_arg.mpInputLayouts = descs.get();
+                if (!p_input_layout->initialize(init_arg)) { return; }
+            }
+
+            // 定数バッファ
+            mpSampleTextureConstantBuffer = bal::make_unique<bal::ConstantBuffer>(nullptr);
+            {
+                bal::IConstantBuffer::InitializeArg init_arg;
+                init_arg.mpGraphics   = p_graphics;
+                init_arg.mBufferCount = 1;
+                init_arg.mBufferSize  = gfx_module.getMeshConstantBufferSize();
+                if (!mpSampleTextureConstantBuffer->initialize(init_arg)) { return; }
+            }
+
+            // テクスチャー
+            mpSampleTexture = bal::make_unique<bal::Texture>(nullptr);
+            {
+                bal::ITexture::InitializeArg init_arg;
+                init_arg.mpGraphics = p_graphics;
+                init_arg.mDimension = mpTextureResource->getDimension();
+                init_arg.mFormat    = mpTextureResource->getFormat();
+                init_arg.mArrayNum  = 1;
+                init_arg.mMipNum    = 1;
+                init_arg.mSize      = bal::MathSize(mpTextureResource->getWidth(), mpTextureResource->getHeight());
+                init_arg.mpBuffer   = mpTextureResource->getDataPtr();
+                init_arg.mRowPitch  = mpTextureResource->getRowPitch();
+                mpSampleTexture->initialize(init_arg);
+            }
+
+            // デスクリプターヒープ
+            mpSampleTextureDescriptorHeap = bal::make_unique<bal::DescriptorHeap>(nullptr);
+            {
+                const bal::IConstantBuffer* p_content_buffers[] = { &gfx_module.getSceneConstantBuffer(), mpSampleTextureConstantBuffer.get() };
+                const bal::ITexture*        p_textures[] = { mpSampleTexture.get() };
+                bal::IDescriptorHeap::InitializeArg init_arg;
+                init_arg.mpGraphics         = p_graphics;
+                init_arg.mConstantRangeBase = 0;
+                init_arg.mNumConstantBuffer = 2;
+                init_arg.mpConstantBuffers  = p_content_buffers;
+                init_arg.mNumTexture        = 1;
+                init_arg.mpTextures         = p_textures;
+                if (!mpSampleTextureDescriptorHeap->initialize(init_arg)) { return; }
+            }
+
+            // パイプライン
+            mpSampleTexturePipeline = bal::make_unique<bal::Pipeline>(nullptr);
+            {
+                const bal::IDescriptorHeap* p_heaps[] = { mpSampleTextureDescriptorHeap.get() };
+                bal::IPipeline::InitializeArg init_arg;
+                init_arg.mpGraphics         = p_graphics;
+                init_arg.mNumOutput         = 1;
+                init_arg.mOutputFormats[0]  = gfx_module.getDefaultRenderTarget().getTexture()->getFormat();
+                init_arg.mNumDescriptorHeap = 1;
+                init_arg.mpDescriptorHeaps  = p_heaps;
+                init_arg.mpInputLayout      = p_input_layout.get();
+
+                init_arg.mDepthSettings.mEnableTest = true;
+                init_arg.mDepthSettings.mEnableWrite = true;
+
+                const bal::ShaderArchive::ShaderContainer& shader_container = mpShaderArchive->getShaderContainer(mpShaderArchive->findProgram("SampleTexture"));
+                init_arg.mpVertexShaderBuffer    = shader_container.mVertexShader.mBuffer;
+                init_arg.mVertexShaderBufferSize = shader_container.mVertexShader.mBufferSize;
+                init_arg.mpPixelShaderBuffer     = shader_container.mPixelShader.mBuffer;
+                init_arg.mPixelShaderBufferSize  = shader_container.mPixelShader.mBufferSize;
+                if (!mpSampleTexturePipeline->initialize(init_arg)) { return; }
             }
         }
     }
@@ -198,6 +261,12 @@ void CustomModule::onUpdate(const bal::FrameworkCallback::UpdateArg& arg, const 
         p_cb->mWorldMatrix      .setIdentity();
         p_cb->mNormalWorldMatrix.setIdentity();
     }
+    {
+        bal::mod::gfx::Module::MeshConstantBufferBase* p_cb = mpSampleTextureConstantBuffer->getBufferPtr<bal::mod::gfx::Module::MeshConstantBufferBase>();
+        p_cb->mWorldMatrix.setScale(bal::MathVector3(1.f, 1.f, 1.f));
+        p_cb->mWorldMatrix.setTranslate(bal::MathVector3(2.f, 1.f, 0.f));
+        p_cb->mNormalWorldMatrix.setIdentity();
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -206,13 +275,17 @@ void CustomModule::onDraw(const bal::FrameworkCallback::DrawArg& arg, const bal:
 {
     arg.mpCommandList->beginEvent(0xFFFFFFFF, "DrawSphere");
 
-    // 環境定数バッファ
+    // 仮レンダリング
     arg.mpCommandList->bindPipeline(*mpSamplePipeline);
     arg.mpCommandList->setDescriptorHeap(*mpSampleDescriptorHeap);
     arg.mpCommandList->setDescriptorTable(0, *mpSampleDescriptorHeap);
+    arg.mpCommandList->drawMesh(*bal::mod::gfx::MeshContainer::GetInstance().getBuffer(bal::mod::gfx::MeshContainer::Type::Sphere));
 
     // 仮レンダリング
-    arg.mpCommandList->drawMesh(*bal::mod::gfx::MeshContainer::GetInstance().getBuffer(bal::mod::gfx::MeshContainer::Type::Sphere));
+    arg.mpCommandList->bindPipeline(*mpSampleTexturePipeline);
+    arg.mpCommandList->setDescriptorHeap(*mpSampleTextureDescriptorHeap);
+    arg.mpCommandList->setDescriptorTable(0, *mpSampleTextureDescriptorHeap);
+    arg.mpCommandList->drawMesh(*bal::mod::gfx::MeshContainer::GetInstance().getBuffer(bal::mod::gfx::MeshContainer::Type::Quad));
 
     arg.mpCommandList->endEvent();
 }

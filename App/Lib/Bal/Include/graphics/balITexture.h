@@ -79,6 +79,7 @@ public:
         Format      mFormat     = Format::R8_G8_B8_A8_UNORM;
         uint32_t    mMipNum     = 1;
         uint32_t    mArrayNum   = 1;
+        uint32_t    mRowPitch   = 0;
         void*       mpGpuBuffer = nullptr;
         const void* mpBuffer    = nullptr;
     };

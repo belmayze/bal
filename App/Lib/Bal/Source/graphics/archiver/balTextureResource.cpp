@@ -48,7 +48,8 @@ bool TextureResource::load(File&& file)
 
     // フォーマットチェック
     ITexture::Format format;
-    uintptr_t        data_offset = 4 + sizeof(DDS::Header);
+    uintptr_t        data_offset   = 4 + sizeof(DDS::Header);
+    uint32_t         block_height  = 1;
 
     if (header.mPixelFormat.mFlags == DDS::PixelFlag::FourCC)
     {
@@ -98,12 +99,17 @@ bool TextureResource::load(File&& file)
         {
             format = ITexture::Format::BC5_UNORM;
         }
+
+        block_height = 4;
     }
     else
     {
         // @TODO
         return false;
     }
+
+    // フォーマットからビット数を計算
+    uint32_t bpp = getBitPerPixel_(format);
 
     // 情報保持
     mFormat     = format;
@@ -112,7 +118,66 @@ bool TextureResource::load(File&& file)
     mDataSize   = mFile.getBufferSize() - data_offset;
     mDataOffset = data_offset;
 
+    // 横ラインのバイト数
+    mDataSize = bpp * mWidth * mHeight / 8;
+    mRowPitch = static_cast<uint32_t>(mDataSize / mHeight * block_height);
+
     return true;
+}
+// ----------------------------------------------------------------------------
+uint32_t TextureResource::getBitPerPixel_(ITexture::Format format)
+{
+    switch (format)
+    {
+        case bal::ITexture::Format::BC1_UNORM:
+        case bal::ITexture::Format::BC1_SRGB:
+        case bal::ITexture::Format::BC4_UNORM:
+        case bal::ITexture::Format::BC4_SNORM:
+            return 4;
+
+        case bal::ITexture::Format::R8_UNORM:
+        case bal::ITexture::Format::R8_SNORM:
+        case bal::ITexture::Format::BC2_UNORM:
+        case bal::ITexture::Format::BC3_UNORM:
+        case bal::ITexture::Format::BC3_SRGB:
+        case bal::ITexture::Format::BC5_UNORM:
+        case bal::ITexture::Format::BC5_SNORM:
+        case bal::ITexture::Format::BC6H_UF16:
+        case bal::ITexture::Format::BC6H_SF16:
+        case bal::ITexture::Format::BC7_UNORM:
+        case bal::ITexture::Format::BC7_SRGB:
+            return 8;
+
+        case bal::ITexture::Format::R16_FLOAT:
+        case bal::ITexture::Format::R8_G8_UNORM:
+        case bal::ITexture::Format::R8_G8_SNORM:
+        case bal::ITexture::Format::R5_G6_B5_UNORM:
+        case bal::ITexture::Format::R5_G5_B5_A1_UNORM:
+        case bal::ITexture::Format::D16_UNORM:
+            return 16;
+
+        case bal::ITexture::Format::R32_FLOAT:
+        case bal::ITexture::Format::R16_G16_FLOAT:
+        case bal::ITexture::Format::R11_G11_B10_FLOAT:
+        case bal::ITexture::Format::R8_G8_B8_A8_UNORM:
+        case bal::ITexture::Format::R8_G8_B8_A8_SNORM:
+        case bal::ITexture::Format::R8_G8_B8_A8_SRGB:
+        case bal::ITexture::Format::R10_G10_B10_A2_UNORM:
+        case bal::ITexture::Format::D24_UNORM_S8_UINT:
+        case bal::ITexture::Format::D32_FLOAT:
+            return 32;
+
+        case bal::ITexture::Format::R32_G32_FLOAT:
+        case bal::ITexture::Format::R16_G16_B16_A16_FLOAT:
+            return 64;
+
+        case bal::ITexture::Format::R32_G32_B32_FLOAT:
+            return 96;
+
+        case bal::ITexture::Format::R32_G32_B32_A32_FLOAT:
+            return 128;
+    }
+    return 32;
 }
 // ----------------------------------------------------------------------------
 

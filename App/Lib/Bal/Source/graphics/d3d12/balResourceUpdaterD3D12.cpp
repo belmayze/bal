@@ -132,7 +132,7 @@ void ResourceUpdater::updateResource(const UpdateArg& arg)
                 {
                     std::memcpy(
                         p_gpu_ptr + layout.Footprint.RowPitch * i_row,
-                        static_cast<const uint8_t*>(arg.mpSrcResource) + layout.Footprint.RowPitch * i_row,
+                        static_cast<const uint8_t*>(arg.mpSrcResource) + arg.mRowPitch * i_row,
                         row_sizes_in_bytes
                     );
                 }

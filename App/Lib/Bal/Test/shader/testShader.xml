@@ -11,5 +11,9 @@
       <Vertex Source="sample.hlsl" />
       <Pixel Source="sample.hlsl" />
     </Program>
+    <Program Name="SampleTexture">
+      <Vertex Source="sampleTexture.hlsl" />
+      <Pixel Source="sampleTexture.hlsl" />
+    </Program>
   </ProgramArray>
 </Shader>

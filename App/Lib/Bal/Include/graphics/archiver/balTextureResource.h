@@ -29,6 +29,8 @@ public:
     uint32_t getWidth() const { return mWidth; }
     //! テクスチャーの高さ
     uint32_t getHeight() const { return mHeight; }
+    //! 横ラインのバイト数
+    uint32_t getRowPitch() const { return mRowPitch; }
     //! 次元（雑）
     ITexture::Dimension getDimension() const { return ITexture::Dimension::Texture2D; }
     //! フォーマット
@@ -42,8 +44,13 @@ private:
     ITexture::Format mFormat;
     uint32_t         mWidth       = 0;
     uint32_t         mHeight      = 0;
+    uint32_t         mRowPitch    = 0;
     size_t           mDataSize    = 0;
     uintptr_t        mDataOffset  = 0;
+
+private:
+    //! フォーマットからビット数を取得する関数
+    uint32_t getBitPerPixel_(ITexture::Format format);
 };
 
 }
