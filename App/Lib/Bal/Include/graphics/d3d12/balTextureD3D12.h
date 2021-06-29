@@ -50,6 +50,7 @@ public:
 
     //! 次元を変換します
     static D3D12_RESOURCE_DIMENSION ConvertDimension(Dimension dimension);
+    static Dimension ConvertDimensionD3D12(D3D12_RESOURCE_DIMENSION dimension);
 
 private:
     // Com の deleter

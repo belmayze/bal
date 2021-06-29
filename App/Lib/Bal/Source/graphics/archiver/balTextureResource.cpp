@@ -47,9 +47,10 @@ bool TextureResource::load(File&& file)
     std::memcpy(&header, mFile.getBuffer() + 4, sizeof(DDS::Header));
 
     // フォーマットチェック
-    ITexture::Format format;
-    uintptr_t        data_offset   = 4 + sizeof(DDS::Header);
-    uint32_t         block_height  = 1;
+    ITexture::Format    format;
+    ITexture::Dimension dimension     = ITexture::Dimension::Texture2D;
+    uintptr_t           data_offset   = 4 + sizeof(DDS::Header);
+    uint32_t            block_height  = 1;
 
     if (header.mPixelFormat.mFlags == DDS::PixelFlag::FourCC)
     {
@@ -61,7 +62,13 @@ bool TextureResource::load(File&& file)
             std::memcpy(&header_dxt10, mFile.getBuffer() + data_offset, sizeof(DDS::HeaderDXT10));
             data_offset += sizeof(DDS::HeaderDXT10);
 
-            format = bal::d3d12::Texture::ConvertFormatDxgi(header_dxt10.mFormat);
+            format     = bal::d3d12::Texture::ConvertFormatDxgi(header_dxt10.mFormat);
+            switch (static_cast<DDS::EResourceDimension>(header_dxt10.mResourceDimension))
+            {
+                case DDS::EResourceDimension::Texture1D: dimension = ITexture::Dimension::Texture1D; break;
+                case DDS::EResourceDimension::Texture2D: dimension = ITexture::Dimension::Texture2D; break;
+                case DDS::EResourceDimension::Texture3D: dimension = ITexture::Dimension::Texture3D; break;
+            }
         }
         else if (std::memcmp(header.mPixelFormat.mFourCC, cFourCC_DXT1, sizeof(uint8_t) * 4) == 0)
         {
@@ -113,6 +120,7 @@ bool TextureResource::load(File&& file)
 
     // 情報保持
     mFormat     = format;
+    mDimension  = dimension;
     mWidth      = header.mWidth;
     mHeight     = header.mHeight;
     mDataSize   = mFile.getBufferSize() - data_offset;

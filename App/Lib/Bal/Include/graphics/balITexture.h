@@ -20,6 +20,8 @@ public:
     //! テクスチャーの次元
     enum class Dimension
     {
+        Unknown,
+
         Texture1D,
         Texture2D,
         Texture3D

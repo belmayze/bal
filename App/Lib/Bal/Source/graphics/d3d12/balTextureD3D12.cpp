@@ -289,6 +289,16 @@ D3D12_RESOURCE_DIMENSION Texture::ConvertDimension(Dimension dimension)
 
     return D3D12_RESOURCE_DIMENSION_UNKNOWN;
 }
+Texture::Dimension Texture::ConvertDimensionD3D12(D3D12_RESOURCE_DIMENSION dimension)
+{
+    switch (dimension)
+    {
+        case D3D12_RESOURCE_DIMENSION_TEXTURE1D: return ITexture::Dimension::Texture1D;
+        case D3D12_RESOURCE_DIMENSION_TEXTURE2D: return ITexture::Dimension::Texture2D;
+        case D3D12_RESOURCE_DIMENSION_TEXTURE3D: return ITexture::Dimension::Texture3D;
+    }
+    return ITexture::Dimension::Unknown;
+}
 
 // ----------------------------------------------------------------------------
 
