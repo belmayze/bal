@@ -107,6 +107,9 @@ private:
     //! 計測結果情報
     struct ProcessTimeInfo
     {
+        ProcessTimeInfo(const String<128>& name, const TimeSpan& diff, const MathColor& color)
+            : mName(name), mDiff(diff), mColor(color) {}
+
         String<128> mName;
         TimeSpan    mDiff;
         MathColor   mColor;

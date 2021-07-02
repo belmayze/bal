@@ -299,6 +299,7 @@ void Graphics::executeCopyCommand(CommandListCopy& cmd_list)
     p_cmd_queue->ExecuteCommandLists(1, cmd_lists.data());
 
     // 実行待ち
+    p_fence->Signal(counter - 1);
     p_cmd_queue->Signal(p_fence, counter);
     HANDLE handle = CreateEvent(nullptr, FALSE, FALSE, nullptr);
     p_fence->SetEventOnCompletion(1, handle);

@@ -108,7 +108,7 @@ void ProcessTimeHolder::clear()
     {
         if (info.mpRootNode->getChild())
         {
-            TreeMap<ProcessTimeInfo>::Node* p_node = mTreeMapInfo.emplaceChild(nullptr, info.mpRootNode->getData().mName, info.mpRootNode->getData().mDiff);
+            TreeMap<ProcessTimeInfo>::Node* p_node = mTreeMapInfo.emplaceChild(nullptr, info.mpRootNode->getData().mName, info.mpRootNode->getData().mDiff, info.mpRootNode->getData().mColor);
             
             TreeMap<ProcessHandle::Data>::Node* p_data_node = info.mpRootNode->getChild();
             p_node = mTreeMapInfo.emplaceChild(p_node, p_data_node->getData().mName, p_data_node->getData().mDiff, p_data_node->getData().mColor);
