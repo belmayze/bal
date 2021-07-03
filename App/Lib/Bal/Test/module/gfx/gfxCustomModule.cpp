@@ -65,9 +65,9 @@ void CustomModule::initialize(const bal::mod::IModule::InitializeArg& arg, const
                 descs[2] = { .mName = "TEXCOORD", .mType = bal::IInputLayout::Type::Vec2, .mOffset = bal::mod::gfx::MeshContainer::cOffsetTexcoord };
 
                 bal::IInputLayout::InitializeArg init_arg;
-                init_arg.mpGraphics = p_graphics;
+                init_arg.mpGraphics      = p_graphics;
                 init_arg.mNumInputLayout = 3;
-                init_arg.mpInputLayouts = descs.get();
+                init_arg.mpInputLayouts  = descs.get();
                 if (!p_input_layout->initialize(init_arg)) { return; }
             }
 

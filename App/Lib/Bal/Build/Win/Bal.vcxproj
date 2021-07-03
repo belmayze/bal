@@ -88,6 +88,7 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\time\balDateTime.cpp" />
     <ClCompile Include="..\..\Source\time\balStopwatch.cpp" />
+    <ClCompile Include="..\..\Source\ui\balDebugTextWriter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Include\app\balApiEntry.h" />
@@ -227,6 +228,7 @@
     <ClInclude Include="..\..\Include\time\balDateTime.h" />
     <ClInclude Include="..\..\Include\time\balStopwatch.h" />
     <ClInclude Include="..\..\Include\time\balTimeSpan.h" />
+    <ClInclude Include="..\..\Include\ui\balDebugTextWriter.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

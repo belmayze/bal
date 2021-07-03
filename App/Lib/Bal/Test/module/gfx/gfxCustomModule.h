@@ -58,7 +58,7 @@ private:
     std::unique_ptr<bal::IPipeline>       mpSampleTexturePipeline;
     std::unique_ptr<bal::IDescriptorHeap> mpSampleTextureDescriptorHeap;
     std::unique_ptr<bal::IConstantBuffer> mpSampleTextureConstantBuffer;
-    std::unique_ptr<bal::Texture>         mpSampleTexture;
+    std::unique_ptr<bal::ITexture>        mpSampleTexture;
 
     float mCameraLength = 10.f;
 };

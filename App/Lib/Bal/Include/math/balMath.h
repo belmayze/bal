@@ -14,6 +14,7 @@ namespace bal { class MathX64Vector2; }
 namespace bal { class MathX64Vector3; }
 namespace bal { class MathX64Vector4; }
 namespace bal { class MathX64Matrix44; }
+namespace bal { class MathX64Matrix34; }
 namespace bal { class MathX64Size; }
 namespace bal { class MathX64Color; }
 
@@ -22,6 +23,7 @@ namespace bal { using MathVector2  = MathX64Vector2;  }
 namespace bal { using MathVector3  = MathX64Vector3;  }
 namespace bal { using MathVector4  = MathX64Vector4;  }
 namespace bal { using MathMatrix44 = MathX64Matrix44; }
+namespace bal { using MathMatrix34 = MathX64Matrix34; }
 namespace bal { using MathSize     = MathX64Size;     }
 namespace bal { using MathColor    = MathX64Color;    }
 #else
@@ -38,6 +40,7 @@ namespace bal { using MathVector2  = MathCommonVector2;  }
 namespace bal { using MathVector3  = MathCommonVector3;  }
 namespace bal { using MathVector4  = MathCommonVector4;  }
 namespace bal { using MathMatrix44 = MathCommonMatrix44; }
+namespace bal { using MathMatrix34 = MathCommonMatrix34; }
 namespace bal { using MathSize     = MathCommonSize;     }
 namespace bal { using MathColor    = MathCommonColor;    }
 #endif

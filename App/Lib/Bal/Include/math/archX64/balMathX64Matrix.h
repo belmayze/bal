@@ -33,6 +33,13 @@ public:
     inline MathX64Vector4 operator*(const MathX64Vector4& rhs) const;
 }; 
 
+class MathX64Matrix34 : public MathCommonMatrix34
+{
+public:
+    //! コンストラクター
+    using MathCommonMatrix34::MathCommonMatrix34;
+};
+
 }
 
 #include <math/archX64/balMathX64Matrix_inl.h>

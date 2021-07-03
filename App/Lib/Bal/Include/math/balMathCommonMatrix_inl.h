@@ -13,6 +13,8 @@
 namespace bal {
 
 // ------------------------------------------------------------------------
+// MathCommonMatrix44
+// ------------------------------------------------------------------------
 
 inline void MathCommonMatrix44::setIdentity()
 {
@@ -249,6 +251,199 @@ inline MathCommonVector4 MathCommonMatrix44::operator*(const MathCommonVector4& 
     result[1] = m[1][0] * rhs[0] + m[1][1] * rhs[1] + m[1][2] * rhs[2] + m[1][3] * rhs[3];
     result[2] = m[2][0] * rhs[0] + m[2][1] * rhs[1] + m[2][2] * rhs[2] + m[2][3] * rhs[3];
     result[3] = m[3][0] * rhs[0] + m[3][1] * rhs[1] + m[3][2] * rhs[2] + m[3][3] * rhs[3];
+    return result;
+}
+
+// ------------------------------------------------------------------------
+// MathCommonMatrix34
+// ------------------------------------------------------------------------
+
+inline void MathCommonMatrix34::setIdentity()
+{
+    m[0][0] = 1.f; m[0][1] = 0.f; m[0][2] = 0.f; m[0][3] = 0.f;
+    m[1][0] = 0.f; m[1][1] = 1.f; m[1][2] = 0.f; m[1][3] = 0.f;
+    m[2][0] = 0.f; m[2][1] = 0.f; m[2][2] = 1.f; m[2][3] = 0.f;
+}
+
+// ------------------------------------------------------------------------
+
+inline void MathCommonMatrix34::setScale(const MathVector3& scale)
+{
+    m[0][0] = scale.getX(); m[0][1] = 0.f;          m[0][2] = 0.f;
+    m[1][0] = 0.f;          m[1][1] = scale.getY(); m[1][2] = 0.f;
+    m[2][0] = 0.f;          m[2][1] = 0.f;          m[2][2] = scale.getZ();
+}
+
+// ------------------------------------------------------------------------
+
+inline void MathCommonMatrix34::setRotateX(const Radian& radian)
+{
+    float sin = Math::Sin(radian);
+    float cos = Math::Cos(radian);
+    m[0][0] = 1.f; m[0][1] = 0.f; m[0][2] =  0.f;
+    m[1][0] = 0.f; m[1][1] = cos; m[1][2] = -sin;
+    m[2][0] = 0.f; m[2][1] = sin; m[2][2] =  cos;
+}
+
+// ------------------------------------------------------------------------
+
+inline void MathCommonMatrix34::setRotateY(const Radian& radian)
+{
+    float sin = Math::Sin(radian);
+    float cos = Math::Cos(radian);
+    m[0][0] =  cos; m[0][1] = 0.f; m[0][2] = sin;
+    m[1][0] =  0.f; m[1][1] = 1.f; m[1][2] = 0.f;
+    m[2][0] = -sin; m[2][1] = 0.f; m[2][2] = cos;
+}
+
+// ------------------------------------------------------------------------
+
+inline void MathCommonMatrix34::setRotateZ(const Radian& radian)
+{
+    float sin = Math::Sin(radian);
+    float cos = Math::Cos(radian);
+    m[0][0] = cos; m[0][1] = -sin; m[0][2] = 0.f;
+    m[1][0] = sin; m[1][1] =  cos; m[1][2] = 0.f;
+    m[2][0] = 0.f; m[2][1] =  0.f; m[2][2] = 1.f;
+}
+
+// ------------------------------------------------------------------------
+
+inline void MathCommonMatrix34::setRotate(const Radian& x, const Radian& y, const Radian& z)
+{
+    float sinX = Math::Sin(x), sinY = Math::Sin(y), sinZ = Math::Sin(z);
+    float cosX = Math::Cos(x), cosY = Math::Cos(y), cosZ = Math::Cos(z);
+
+    //         | cosZ -sinZ 0 | |  cosY 0 sinY | | 1  0     0   |
+    // ZYX   = | sinZ  cosZ 0 | |   0   1  0   | | 0 cosX -sinX |
+    //         |  0     0   1 | | -sinY 0 cosY | | 0 sinX  cosX |
+    //
+    //         | cosYcosZ -sinZ sinYcosZ | | 1  0     0   |
+    // (ZY)X = | cosYsinZ  cosZ sinYsinZ | | 0 cosX -sinX |
+    //         |  -sinY     0     cosY   | | 0 sinX  cosX |
+    //
+    //         | cosYcosZ sinXsinYcosZ-cosXsinZ cosXsinYcosZ+sinXsinZ |
+    // (ZYX) = | cosYsinZ sinXsinYsinZ+cosXcosZ cosXsinYsinZ-sinXcosZ |
+    //         |  -sinY           sinXcosY              cosXcosY      |
+
+    m[0][0] = cosY * cosZ; m[0][1] = sinX * sinY * cosZ - cosX * sinZ; m[0][2] = cosX * sinY * cosZ + sinX * sinZ;
+    m[1][0] = cosY * sinZ; m[1][1] = sinX * sinY * sinZ + cosX * cosZ; m[1][2] = cosX * sinY * sinZ - sinX * cosZ;
+    m[2][0] =       -sinY; m[2][1] =                      sinX * cosY; m[2][2] =                      cosX * cosY;
+}
+
+// ------------------------------------------------------------------------
+
+inline void MathCommonMatrix34::setYawPitchRoll(const Radian& yaw, const Radian& pitch, const Radian& roll)
+{
+    float sinX = Math::Sin(pitch), sinY = Math::Sin(yaw), sinZ = Math::Sin(roll);
+    float cosX = Math::Cos(pitch), cosY = Math::Cos(yaw), cosZ = Math::Cos(roll);
+
+    //         | cosZ -sinZ 0 | | 1  0     0   | |  cosY 0 sinY |
+    // ZXY   = | sinZ  cosZ 0 | | 0 cosX -sinX | |   0   1  0   |
+    //         |  0     0   1 | | 0 sinX  cosX | | -sinY 0 cosY |
+    //
+    //         | cosZ -cosXsinZ  sinXsinZ | |  cosY 0 sinY |
+    // (ZX)Y = | sinZ  cosXcosZ -sinXcosZ | |   0   1  0   |
+    //         |  0      sinX      cosX   | | -sinY 0 cosY |
+    //
+    //         | cosYcosZ-sinXsinYsinZ -cosXsinZ sinYcosZ+sinXcosYsinZ |
+    // (ZXY) = | cosYsinZ+sinXsinYcosZ  cosXcosZ sinYsinZ-sinXcosYcosZ |
+    //         |      -cosXsinY           sinX         cosXcosY        |
+        
+    m[0][0] = cosY * cosZ - sinX * sinY * sinZ; m[0][1] = -cosX * sinZ; m[0][2] = sinY * cosZ + sinX * cosY * sinZ;
+    m[1][0] = cosY * sinZ + sinX * sinY * cosZ; m[1][1] =  cosX * cosZ; m[1][2] = sinY * sinZ - sinX * cosY * cosZ;
+    m[2][0] =                     -cosX * sinY; m[2][1] =         sinX; m[2][2] =                      cosX * cosY;
+}
+
+// ------------------------------------------------------------------------
+
+inline void MathCommonMatrix34::setTranslate(const MathVector3& translate)
+{
+    m[0][3] = translate.getX(); m[1][3] = translate.getY(); m[2][3] = translate.getZ();
+}
+
+// ------------------------------------------------------------------------
+
+inline void MathCommonMatrix34::setLookAtRH(const MathVector3& eye_pt, const MathVector3& look_at, const MathVector3& up)
+{
+    // カメラの姿勢ベクトルを計算する
+    MathVector3 x, y, z;
+    z = (eye_pt - look_at).calcNormalize(); // 視線ベクトル
+    y = up.calcNormalize();
+    x = y.calcCross(z);
+    x.setNormalize();
+    y = z.calcCross(x); // 上方向ベクトルを再計算
+    y.setNormalize();
+
+    // 行列をセットします
+    // View 行列は、姿勢ベクトルは逆行列（倒置）になり、移動量は反転する
+    m[0][0] = x.getX(); m[0][1] = x.getY(); m[0][2] = x.getZ(); m[0][3] = -x.calcDot(eye_pt);
+    m[1][0] = y.getX(); m[1][1] = y.getY(); m[1][2] = y.getZ(); m[1][3] = -y.calcDot(eye_pt);
+    m[2][0] = z.getX(); m[2][1] = z.getY(); m[2][2] = z.getZ(); m[2][3] = -z.calcDot(eye_pt);
+}
+
+// ------------------------------------------------------------------------
+
+inline void MathCommonMatrix34::setCol(int index, const MathVector4& v)
+{
+    std::memcpy(m[index], static_cast<const float*>(v), sizeof(float) * 4);
+}
+
+// ------------------------------------------------------------------------
+
+inline void MathCommonMatrix34::setRow(int index, const MathVector3& v)
+{
+    m[0][index] = v[0];
+    m[1][index] = v[1];
+    m[2][index] = v[2];
+}
+
+// ------------------------------------------------------------------------
+
+inline MathVector4 MathCommonMatrix34::getCol(int index) const
+{
+    return MathVector4(m[index][0], m[index][1], m[index][2], m[index][3]);
+}
+
+// ------------------------------------------------------------------------
+
+inline MathVector3 MathCommonMatrix34::getRow(int index) const
+{
+    return MathVector3(m[0][index], m[1][index], m[2][index]);
+}
+
+// ------------------------------------------------------------------------
+// operator -+*/
+// ------------------------------------------------------------------------
+inline MathCommonMatrix34 MathCommonMatrix34::operator*(const MathCommonMatrix34& rhs) const
+{
+    MathCommonMatrix34 result;
+    result.m[0][0] = m[0][0] * rhs.m[0][0] + m[0][1] * rhs.m[1][0] + m[0][2] * rhs.m[2][0];
+    result.m[0][1] = m[0][0] * rhs.m[0][1] + m[0][1] * rhs.m[1][1] + m[0][2] * rhs.m[2][1];
+    result.m[0][2] = m[0][0] * rhs.m[0][2] + m[0][1] * rhs.m[1][2] + m[0][2] * rhs.m[2][2];
+    result.m[0][3] = m[0][0] * rhs.m[0][3] + m[0][1] * rhs.m[1][3] + m[0][2] * rhs.m[2][3] + m[0][3];
+
+    result.m[1][0] = m[1][0] * rhs.m[0][0] + m[1][1] * rhs.m[1][0] + m[1][2] * rhs.m[2][0];
+    result.m[1][1] = m[1][0] * rhs.m[0][1] + m[1][1] * rhs.m[1][1] + m[1][2] * rhs.m[2][1];
+    result.m[1][2] = m[1][0] * rhs.m[0][2] + m[1][1] * rhs.m[1][2] + m[1][2] * rhs.m[2][2];
+    result.m[1][3] = m[1][0] * rhs.m[0][3] + m[1][1] * rhs.m[1][3] + m[1][2] * rhs.m[2][3] + m[1][3];
+
+    result.m[2][0] = m[2][0] * rhs.m[0][0] + m[2][1] * rhs.m[1][0] + m[2][2] * rhs.m[2][0];
+    result.m[2][1] = m[2][0] * rhs.m[0][1] + m[2][1] * rhs.m[1][1] + m[2][2] * rhs.m[2][1];
+    result.m[2][2] = m[2][0] * rhs.m[0][2] + m[2][1] * rhs.m[1][2] + m[2][2] * rhs.m[2][2];
+    result.m[2][3] = m[2][0] * rhs.m[0][3] + m[2][1] * rhs.m[1][3] + m[2][2] * rhs.m[2][3] + m[2][3];
+    return result;
+}
+
+// ------------------------------------------------------------------------
+
+inline MathCommonVector4 MathCommonMatrix34::operator*(const MathCommonVector4& rhs) const
+{
+    MathCommonVector4 result;
+    result[0] = m[0][0] * rhs[0] + m[0][1] * rhs[1] + m[0][2] * rhs[2] + m[0][3] * rhs[3];
+    result[1] = m[1][0] * rhs[0] + m[1][1] * rhs[1] + m[1][2] * rhs[2] + m[1][3] * rhs[3];
+    result[2] = m[2][0] * rhs[0] + m[2][1] * rhs[1] + m[2][2] * rhs[2] + m[2][3] * rhs[3];
+    result[3] = rhs[3];
     return result;
 }
 

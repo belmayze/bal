@@ -61,6 +61,9 @@
     <Filter Include="font">
       <UniqueIdentifier>{9b756876-4487-4664-8c64-12370042788e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{c2bf105b-4e61-460a-a42d-f36900b01120}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Source\framework\balFramework.cpp">
@@ -215,6 +218,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Source\graphics\d3d12\balCommandListCopyD3D12.cpp">
       <Filter>graphics\d3d12</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\ui\balDebugTextWriter.cpp">
+      <Filter>ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -511,6 +517,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\graphics\d3d12\balCommandListCopyD3D12.h">
       <Filter>graphics\d3d12</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Include\ui\balDebugTextWriter.h">
+      <Filter>ui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
