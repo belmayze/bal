@@ -49,11 +49,18 @@ private:
 
 private:
     //! 定数バッファ
+    struct CBInstanceData
+    {
+        MathVector2 mOffset;
+        MathVector2 mTexcoord;
+    };
     struct CBData
     {
-        MathMatrix34 mMatrix;
-        MathVector2  mTexcoord;
-        float unused0_[2];
+        MathVector2 mBaseMatrix0;
+        MathVector2 mBaseMatrix1;
+        MathVector2 mBaseTranslate;
+        MathVector2 mInvTexcoordScale;
+        CBInstanceData mInstanceData[1024];
     };
 
 private:
